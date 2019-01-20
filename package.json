@@ -1,0 +1,34 @@
+{
+	"name": "list-utils",
+	"description": "List and iterators utility functions and definitions.",
+	"keywords": [
+		"iterables",
+		"list",
+		"iterators"
+	],
+	"version": "0.0.1",
+	"author": {
+		"name": "Leonardo Val",
+		"email": "leonardo.val@creatartis.com"
+	},
+	"homepage": "http://creatartis.com",
+	"contributors": [],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/LeonardoVal/list-utils.js"
+	},
+	"main": "build/list-utils.min.js",
+	"files": [
+		"build",
+		"LICENSE.md"
+	],
+	"dependencies": {},
+	"devDependencies": {
+		"creatartis-grunt": "~0.0.16-alpha",
+		"karma-chrome-launcher": "~1.0.1"
+	},
+	"scripts": {
+		"test": "grunt test"
+	}
+}
