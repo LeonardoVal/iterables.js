@@ -7,7 +7,10 @@ Iterable.emptyIterator = function emptyIterator() {
 	return { 
 		next: function next_emptyIterator() {
 			return { done: true };
-		} 
+		},
+		return: function return_emptyIterator() {
+			return { done: true };
+		}
 	};
 };
 
