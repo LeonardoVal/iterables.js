@@ -11,8 +11,10 @@ Iterable.prototype.foldl = function foldl(foldFunction, initial) {
 	if (typeof initial === 'undefined') {
 		initial = iter.next().value;
 	}
-	for (x = iter.next(); !x.done; x = iter.next()) {
-		initial = foldFunction(initial, x.value);
+	var x = iter.next();
+	for (var i = 0; !x.done; i++) {
+		initial = foldFunction(initial, x.value, i, iter);
+		x = iter.next();
 	}
 	return initial;
 };
