@@ -7,14 +7,15 @@ Iterable.iteratorFromString = function iteratorFromString(string) {
 	if (typeof string !== 'string') {
 		throw new TypeError('Argument must be a string, but is a `'+ typeof string +'`!');
 	}
-	var i = 0;
+	var i = 0,
+		done = false;
 	return {
 		next: function next_stringIterator() {
-			i++;
-			return (i <= string.length) ? { value: string.charAt(i - 1) } : { done: true };
+			done = done && (i++) >= string.length;
+			return done ? { done: true } : { value: string.charAt(i - 1) };
 		},
 		return: function return_stringIterator() {
-			i = string.length + 1;
+			done = true;
 			return { done: true };
 		}
 	};

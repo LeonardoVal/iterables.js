@@ -4,13 +4,15 @@
 /**
 */
 Iterable.singletonIterator = function singletonIterator(value) {
-	var i = 0;
+	var i = 0,
+		done = false;
 	return { 
 		next: function next_singletonIterator() {
-			return (i++ < 1) ? { value: value } : { done: true };
+			done = done && (i++) > 1;
+			return done ? { done: true } : { value: value };
 		},
 		return: function return_singletonIterator() {
-			i = 1;
+			done = true;
 			return { done: true };
 		}
 	};

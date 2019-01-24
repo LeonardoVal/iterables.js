@@ -7,14 +7,15 @@ Iterable.iteratorFromArray = function iteratorFromArray(array) {
 	if (!Array.isArray(array)) {
 		throw new TypeError('Argument must be an array, but is a `'+ typeof array +'`!');
 	}
-	var i = 0;
+	var i = 0,
+		done = false;
 	return {
 		next: function next_iteratorFromArray() {
-			i++;
-			return (i <= array.length) ? { value: array[i - 1] } : { done: true };
+			done = done && (i++) >= array.length;
+			return done ? { done: true } : { value: array[i - 1] };
 		},
 		return: function return_iteratorFromArray() {
-			i = array.length + 1;
+			done = true;
 			return { done: true }; 
 		}
 	};
