@@ -11,7 +11,7 @@ Iterable.iteratorFromString = function iteratorFromString(string) {
 		done = false;
 	return {
 		next: function next_stringIterator() {
-			done = done && (i++) >= string.length;
+			done = done || (i++) >= string.length;
 			return done ? { done: true } : { value: string.charAt(i - 1) };
 		},
 		return: function return_stringIterator() {
@@ -21,10 +21,24 @@ Iterable.iteratorFromString = function iteratorFromString(string) {
 	};
 };
 
+/**
+*/
+exports.StringIterable = Iterable.subclass(function StringIterable(string) {
+	Iterable.call(this, Iterable.iteratorFromString, string);
+	this.__string__ = string;
+}, {
+	length: function length() {
+		return this.__string__.length;
+	},
+	get: function get(i, defaultValue) {
+		return i < 0 || i >= this.length() ? defaultValue : this.__string__.charAt(i);
+	}
+});
+
 /** 
 */
 Iterable.fromString = function fromString(string) {
-	return new Iterable(Iterable.iteratorFromString, string);
+	return new exports.StringIterable(string);
 };
 
 /** `join(sep='')` concatenates all strings in the sequence using `sep` as separator. If `sep` is
