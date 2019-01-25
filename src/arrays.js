@@ -11,7 +11,7 @@ Iterable.iteratorFromArray = function iteratorFromArray(array) {
 		done = false;
 	return {
 		next: function next_iteratorFromArray() {
-			done = done && (i++) >= array.length;
+			done = done || (i++) >= array.length;
 			return done ? { done: true } : { value: array[i - 1] };
 		},
 		return: function return_iteratorFromArray() {
@@ -22,7 +22,7 @@ Iterable.iteratorFromArray = function iteratorFromArray(array) {
 };
 
 exports.ArrayIterable = Iterable.subclass(function ArrayIterable(array) {
-	Iterable.call(this, Iterable.iteratorFromArray(array));
+	Iterable.call(this, Iterable.iteratorFromArray, array);
 	this.__array__ = array;
 }, {
 	length: function length() {

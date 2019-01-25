@@ -13,7 +13,7 @@ Iterable.rangeIterator = function rangeIterator(from, to, step) {
 	var done = false;
 	return {
 		next: function next_rangeIterator() {
-			done = done && from > to;
+			done = done || from > to;
 			var value = from;
 			from += step;
 			return done ? { done: true } : { value: value };
@@ -38,7 +38,7 @@ The big difference with `range` is that the enumeration can go in either directi
 */
 Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
 	if (typeof from === 'undefined') {
-		from = 0
+		from = 0;
 	}
 	if (typeof then === 'undefined') {
 		then = from + 1;
@@ -50,7 +50,7 @@ Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
 		done = false;
 	return {
 		next: function next_enumFromThenToIterator() {
-			done = done && (step > 0 ? from > to : from < to);
+			done = done || (step > 0 ? from > to : from < to);
 			var value = from;
 			from += step;
 			return done ? { done: true } : { value: value };
@@ -79,7 +79,7 @@ Iterable.repeatIterator = function repeatIterator(value, n) {
 		done = false;
 	return {
 		next: function next_repeatIterator() {
-			done = done && (i++) >= n;
+			done = done || (i++) >= n;
 			return done ? { done: true } : { value: value };
 		},
 		return: function return_repeatIterator() {
@@ -102,7 +102,7 @@ Iterable.iterateIterator = function iterateIterator(f, x, n) {
 		done = false;
 	return {
 		next: function next_iterateIterator() {
-			done = done && (i++) >= n;
+			done = done || (i++) >= n;
 			if (done) {
 				return { done: true };
 			} else {

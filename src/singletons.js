@@ -8,7 +8,7 @@ Iterable.singletonIterator = function singletonIterator(value) {
 		done = false;
 	return { 
 		next: function next_singletonIterator() {
-			done = done && (i++) > 1;
+			done = done || (i++) > 0;
 			return done ? { done: true } : { value: value };
 		},
 		return: function return_singletonIterator() {
