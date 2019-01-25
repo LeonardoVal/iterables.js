@@ -6,11 +6,12 @@
 
 	function expectIterator(iterator) {
 		expect(iterator.next).toBeOfType('function');
+		expect(iterator.return).toBeOfType('function');
 		var x;
 		for (var i = 1; i < arguments.length; i++) {
 			x = iterator.next();
 			expect(x.done).toBeFalsy();
-			expect(x.value).toEqual(arguments[i]);
+			expect(x.value).toBe(arguments[i]);
 		}
 		x = iterator.next();
 		expect(x.done).toBeTruthy();

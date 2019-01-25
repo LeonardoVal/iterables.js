@@ -4,6 +4,7 @@
 			expect(list_utils.Iterable.singletonIterator).toBeOfType('function');
 			var it = list_utils.Iterable.singletonIterator(Math.PI);
 			expect(it.next).toBeOfType('function');
+			expect(it.return).toBeOfType('function');
 			var x = it.next();
 			expect(x.done).toBeFalsy();
 			expect(x.value).toBe(Math.PI);
