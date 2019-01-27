@@ -55,6 +55,14 @@
 			expectList(fromValues(1, 2), 1, 2);
 			expectList(fromValues('a', 'b', 'c'), 'a', 'b', 'c');
 		});
-		//TODO More tests.
+
+		it("`Iterable.toArray` function", function () {
+			expect(list_utils.Iterable.prototype.toArray).toBeOfType('function');
+			var fromValues = list_utils.Iterable.fromValues.bind(list_utils.Iterable);
+			expect(fromValues().toArray()).toEqual([]);
+			expect(fromValues(true).toArray()).toEqual([true]);
+			expect(fromValues(1, 2).toArray()).toEqual([1, 2]);
+			expect(fromValues('a', 'b', 'c').toArray()).toEqual(['a', 'b', 'c']);
+		});
 	}); // describe "Lists from arrays:"
 }); //// define
