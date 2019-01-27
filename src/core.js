@@ -82,8 +82,8 @@ Iterable.prototype.forEach = function forEach(doFunction, ifFunction) {
 		current = iter.next(), 
 		result = current.value;
 	while (!current.done) {
-		if (!ifFunction || ifFunction(current, i, iter)) {
-			result = doFunction(current, i, iter);
+		if (!ifFunction || ifFunction(current.value, i, iter)) {
+			result = doFunction(current.value, i, iter);
 		}
 		current = iter.next();
 		i++;
