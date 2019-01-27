@@ -6,8 +6,9 @@ var Iterable = exports.Iterable = function Iterable(iteratorFunction) {
 	if (typeof iteratorFunction !== 'function') {
 		throw new TypeError('Iterator function is not a function!');
 	}
-	iteratorFunction = iteratorFunction.bind
-		.apply(iteratorFunction, [this].concat(Array.prototype.slice(arguments, 1)));
+	iteratorFunction = iteratorFunction.bind.apply(iteratorFunction, 
+		[this].concat(Array.prototype.slice.call(arguments, 1))
+	);
 	if (Symbol && Symbol.iterator) {
 		this[Symbol.iterator] = iteratorFunction;
 	}
