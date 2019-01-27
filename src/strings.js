@@ -11,8 +11,8 @@ Iterable.iteratorFromString = function iteratorFromString(string) {
 		done = false;
 	return {
 		next: function next_stringIterator() {
-			done = done || (i++) >= string.length;
-			return done ? { done: true } : { value: string.charAt(i - 1) };
+			done = done || i >= string.length;
+			return done ? { done: true } : { value: string.charAt(i++) };
 		},
 		return: function return_stringIterator() {
 			done = true;

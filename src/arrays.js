@@ -11,8 +11,8 @@ Iterable.iteratorFromArray = function iteratorFromArray(array) {
 		done = false;
 	return {
 		next: function next_iteratorFromArray() {
-			done = done || (i++) >= array.length;
-			return done ? { done: true } : { value: array[i - 1] };
+			done = done || i >= array.length;
+			return done ? { done: true } : { value: array[i++] };
 		},
 		return: function return_iteratorFromArray() {
 			done = true;
