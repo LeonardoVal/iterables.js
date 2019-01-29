@@ -91,3 +91,7 @@ Iterable.prototype.forEach = function forEach(doFunction, ifFunction) {
 	return result;
 };
 
+function __toBool__(x) {
+	return !!x;
+}
+
