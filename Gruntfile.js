@@ -8,10 +8,11 @@ module.exports = function (grunt) {
 	require('creatartis-grunt').config(grunt, {
 		globalName: 'list_utils',
 		sourceNames: ['__prologue__',
-			'core', 
+			'_utils', 'core',
 			'empty', 'singletons', 'strings', 'arrays', 'objects', 
 			'builders',
 			'selections', 'folds', 'indices',
+			'combinatorics',
 			'__epilogue__'],
 		deps: [ ],
 		jshint: { loopfunc: true, boss: true, evil: true, proto: true },
