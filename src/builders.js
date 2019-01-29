@@ -6,14 +6,15 @@ the given `step`. For example, `range(2,12,3)` represents the sequence `[2, 5, 8
 */
 Iterable.rangeIterator = function rangeIterator(from, to, step) {
 	switch (arguments.length) {
-		case 0: from = 0; to = 0; step = 1; break;
-		case 1: to = from; from = 0; step = 1; break;
-		case 2: step = 1; break;
+		case 0: return rangeIterator(0, 0, 1);
+		case 1: return rangeIterator(0, from, 1);
+		case 2: return rangeIterator(from, to, 1);
+		//default: continue;
 	}
 	var done = false;
 	return {
 		next: function next_rangeIterator() {
-			done = done || from > to;
+			done = done || from >= to;
 			var value = from;
 			from += step;
 			return done ? { done: true } : { value: value };
@@ -26,7 +27,12 @@ Iterable.rangeIterator = function rangeIterator(from, to, step) {
 };
 
 Iterable.range = function range(from, to, step) {
-	return new Iterable(Iterable.rangeIterator, from, to, step);
+	switch (arguments.length) {
+		case 0: return new Iterable(Iterable.rangeIterator, 0, 0, 1);
+		case 1: return new Iterable(Iterable.rangeIterator, 0, from, 1);
+		case 2: return new Iterable(Iterable.rangeIterator, from, to, 1);
+		default: new Iterable(Iterable.rangeIterator, from, to, step);
+	}
 };
 
 /** `enumFromThenTo(from=0, then=from+1, to=Infinity)` builds an Iterable object that goes over 
@@ -36,7 +42,7 @@ For example, `enumFromThenTo(1,3,8)` represents the sequence `[1,3,5,7]`.
 The big difference with `range` is that the enumeration can go in either direction. For example,
 `enumFromThenTo(10,7,0)` represents the sequence `[10,7,4,1]`.
 */
-Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
+Iterable.enumFromThenToIterator = function enumFromThenToIterator(from, then, to) {
 	if (typeof from === 'undefined') {
 		from = 0;
 	}
@@ -60,6 +66,10 @@ Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
 			return { done: true };
 		}
 	};
+};
+
+Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
+	return new Iterable(Iterable.enumFromThenToIterator, from, then, to);
 };
 
 Iterable.enumFromThen = function enumFromThen(from, then) {
