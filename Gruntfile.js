@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 			'_utils', 'core',
 			'empty', 'singletons', 'strings', 'arrays', 'objects', 
 			'builders',
-			'selections', 'folds', 'indices',
+			'selections', 'maps', 'folds', 'indices',
 			'combinatorics',
 			'__epilogue__'],
 		deps: [ ],
