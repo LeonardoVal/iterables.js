@@ -40,18 +40,18 @@ Iterable.filterMapIterator = function filterMapIterator(list, condition, mapFunc
 		done = false;
 	condition = condition || __toBool__;
 	return {
-		next: function next_filterIterator() {
+		next: function next_filterMapIterator() {
 			if (!done) do {
 				i++;
 				var x = iter.next();
 				done = x.done;
 				if (!done && condition(x.value, i, iter)) {
-					return { value: mapFunction(x.value) };
+					return { value: mapFunction(x.value, i, iter) };
 				}
 			} while (!done);
 			return { done: true };
 		},
-		return: function return_filterIterator() {
+		return: function return_filterMapIterator() {
 			done = true;
 			return { done: true };
 		}
@@ -168,5 +168,5 @@ Iterable.prototype.drop = function drop(n) {
 /** `tail()` returns an iterable with the same elements than this, except the first one.
 */
 Iterable.prototype.tail = function tail() {
-	return this.drop(1);		
+	return this.drop(1); //FIXME Should raise an error if this is empty.
 };
