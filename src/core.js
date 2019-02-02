@@ -2,7 +2,7 @@
 */
 var ITERATOR = Symbol && Symbol.iterator || '__iter__';
 
-var Iterable = exports.Iterable = function Iterable(iteratorFunction) {
+function Iterable(iteratorFunction) {
 	if (typeof iteratorFunction !== 'function') {
 		throw new TypeError('Iterator function is not a function!');
 	}
@@ -13,7 +13,8 @@ var Iterable = exports.Iterable = function Iterable(iteratorFunction) {
 		this[Symbol.iterator] = iteratorFunction;
 	}
 	this.__iter__ = iteratorFunction;
-};
+}
+exports.Iterable = Iterable; 
 
 function __iter__(iterable) {
 	return iterable[ITERATOR]();
