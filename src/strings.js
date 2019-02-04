@@ -31,7 +31,11 @@ exports.StringIterable = Iterable.subclass(function StringIterable(string) {
 		return this.__string__.length;
 	},
 	get: function get(i, defaultValue) {
-		return i < 0 || i >= this.length() ? defaultValue : this.__string__.charAt(i);
+		var found = i >= 0 && i < this.length();
+		if (!found && arguments.length < 2) {
+			throw new Error("Cannot get value at "+ i +"!");
+		}
+		return found ? this.__string__.charAt(i) : defaultValue;
 	}
 });
 

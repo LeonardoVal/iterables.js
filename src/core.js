@@ -59,18 +59,22 @@ Iterable.prototype.length = function length() {
 /**
 */
 Iterable.prototype.get = function get(index, defaultValue) {
-	var result = defaultValue;
 	index = +index;
+	var found = false,
+		result;
 	if (!isNaN(index)) {
 		this.forEach(function (value, i, iter) {
 			if (i === index) {
 				result = value;
+				found = true;
 				iter.return(); // Abort the iteration.
 			}
 		});
 	}
-	//TODO Raise exception is no `defaultValue` is given.
-	return result;
+	if (!found && arguments.length < 2) {
+		throw new Error("Cannot get value at "+ i +"!");
+	}
+	return found ? result : defaultValue;
 };
 
 /** `forEach(doFunction, ifFunction)` applies `doFunction` to all elements complying with
