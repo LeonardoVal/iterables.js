@@ -1,19 +1,25 @@
 ﻿define(['list-utils'], function (list_utils) { "use strict";
-	function expectList(list) {
+	function expectList(list, expectedList) {
 		expect(list.__iter__).toBeOfType('function');
-		expectIterator.apply(null, 
-			[list.__iter__()].concat(Array.prototype.slice.call(arguments, 1))
-		);
+		expect(list.length()).toBe(expectedList.length);
+		expectedList.forEach(function (expectedValue, index) {
+			expect(list.get(index)).toBe(expectedValue);
+		});
+		expect(list.get.bind(list, expectedList.length + 1)).toThrow();
+		expect(list.get.bind(list, -1)).toThrow();
+		expect(list.get(expectList.length + 1, null)).toBe(null);
+		expect(list.get(-1, '-1')).toBe('-1');
+		expectIterator(list.__iter__(), expectedList);
 	}
 
-	function expectIterator(iterator) {
+	function expectIterator(iterator, expectedList) {
 		expect(iterator.next).toBeOfType('function');
 		expect(iterator.return).toBeOfType('function');
 		var x;
-		for (var i = 1; i < arguments.length; i++) {
+		for (var i = 0; i < expectedList.length; i++) {
 			x = iterator.next();
 			expect(x.done).toBeFalsy();
-			expect(x.value).toBe(arguments[i]);
+			expect(x.value).toBe(expectedList[i]);
 		}
 		x = iterator.next();
 		expect(x.done).toBeTruthy();
@@ -24,27 +30,27 @@
 		it("`Iterable.iteratorFromString` function", function () {
 			expect(list_utils.Iterable.iteratorFromString).toBeOfType('function');
 			var iteratorFromString = list_utils.Iterable.iteratorFromString.bind(list_utils.Iterable);
-			expectIterator(iteratorFromString(""));
-			expectIterator(iteratorFromString("a"), "a");
-			expectIterator(iteratorFromString("ab"), "a", "b");
-			expectIterator(iteratorFromString("abc"), "a", "b", "c");
+			expectIterator(iteratorFromString(""), []);
+			expectIterator(iteratorFromString("a"), ["a"]);
+			expectIterator(iteratorFromString("ab"), ["a", "b"]);
+			expectIterator(iteratorFromString("abc"), ["a", "b", "c"]);
 		});
 
 		it("`StringIterable` class", function () {
 			expect(list_utils.StringIterable).toBeOfType('function');
-			expectList(new list_utils.StringIterable(""));
-			expectList(new list_utils.StringIterable("a"), "a");
-			expectList(new list_utils.StringIterable("ab"), "a", "b");
-			expectList(new list_utils.StringIterable("abc"), "a", "b", "c");
+			expectList(new list_utils.StringIterable(""), []);
+			expectList(new list_utils.StringIterable("a"), ["a"]);
+			expectList(new list_utils.StringIterable("ab"), ["a", "b"]);
+			expectList(new list_utils.StringIterable("abc"), ["a", "b", "c"]);
 		});
 
 		it("`Iterable.fromString` function", function () {
 			expect(list_utils.Iterable.fromString).toBeOfType('function');
 			var fromString = list_utils.Iterable.fromString.bind(list_utils.Iterable);
-			expectList(fromString(""));
-			expectList(fromString("a"), "a");
-			expectList(fromString("ab"), "a", "b");
-			expectList(fromString("abc"), "a", "b", "c");
+			expectList(fromString(""), []);
+			expectList(fromString("a"), ["a"]);
+			expectList(fromString("ab"), ["a", "b"]);
+			expectList(fromString("abc"), ["a", "b", "c"]);
 		});
 
 		it("`Iterable.join` function", function () {
