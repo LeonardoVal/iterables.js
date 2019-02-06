@@ -21,7 +21,11 @@ exports.EmptyIterable = Iterable.subclass(function EmptyIterable() {
 		return 0;
 	},
 	get: function get(i, defaultValue) {
-		return defaultValue;
+		if (arguments.length < 2) {
+			throw new Error("Cannot get value at "+ i +"!");
+		} else {
+			return defaultValue;
+		}
 	}
 });
 
