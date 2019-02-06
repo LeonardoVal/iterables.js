@@ -43,6 +43,7 @@
 	});
 })({
 	"paths": {
-		"list-utils": "../build/list-utils"
+		"list-utils": "../build/list-utils",
+		"tests-common": "../build/tests-common"
 	}
 });

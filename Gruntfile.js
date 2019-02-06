@@ -14,7 +14,12 @@ module.exports = function (grunt) {
 			'selections', 'maps', 'folds', 'indices',
 			'combinatorics',
 			'__epilogue__'],
-		deps: [ ],
+		deps: [
+			{ id: 'tests-common', path: 'build/tests-common.js', dev: true, module: false }
+		],
+		copy: {
+			'build/': 'src/tests-common.js'
+		},
 		jshint: { loopfunc: true, boss: true, evil: true, proto: true },
 		karma: ['Firefox', 'Chrome'],
 		connect: {
