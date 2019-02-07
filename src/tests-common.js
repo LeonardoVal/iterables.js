@@ -3,7 +3,7 @@ define([], function () {
 		expect(list.__iter__).toBeOfType('function');
 		expect(list.length()).toBe(expectedList.length);
 		expectedList.forEach(function (expectedValue, index) {
-			expect(list.get(index)).toBe(expectedValue);
+			expect(list.get(index)).toEqual(expectedValue);
 		});
 		expect(list.get.bind(list, expectedList.length + 1)).toThrow();
 		expect(list.get.bind(list, -1)).toThrow();
@@ -19,7 +19,7 @@ define([], function () {
 		for (var i = 0; i < expectedList.length; i++) {
 			x = iterator.next();
 			expect(x.done).toBeFalsy();
-			expect(x.value).toBe(expectedList[i]);
+			expect(x.value).toEqual(expectedList[i]);
 		}
 		x = iterator.next();
 		expect(x.done).toBeTruthy();
