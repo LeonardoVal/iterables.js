@@ -72,7 +72,7 @@ Iterable.prototype.get = function get(index, defaultValue) {
 		});
 	}
 	if (!found && arguments.length < 2) {
-		throw new Error("Cannot get value at "+ i +"!");
+		throw new Error("Cannot get value at "+ index +"!");
 	}
 	return found ? result : defaultValue;
 };
