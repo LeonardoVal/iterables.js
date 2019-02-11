@@ -7,7 +7,7 @@ define([], function () {
 		});
 		expect(list.get.bind(list, expectedList.length + 1)).toThrow();
 		expect(list.get.bind(list, -1)).toThrow();
-		expect(list.get(expectList.length + 1, null)).toBe(null);
+		expect(list.get(expectedList.length + 1, null)).toBe(null);
 		expect(list.get(-1, '-1')).toBe('-1');
 		expectIterator(list.__iter__(), expectedList);
 	}
