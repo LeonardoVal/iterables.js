@@ -71,7 +71,7 @@ Iterable.takeWhileIterator = function takeWhileIterator(list, condition) {
 			if (!done) {
 				i++;
 				x = iter.next();
-				done = x.done && !condition(x.value, i, iter);
+				done = x.done || !condition(x.value, i, iter);
 			}
 			if (!done) {
 				return { value: x.value };
@@ -169,4 +169,42 @@ Iterable.prototype.drop = function drop(n) {
 */
 Iterable.prototype.tail = function tail() {
 	return this.drop(1); //FIXME Should raise an error if this is empty.
+};
+
+/** `greater(evaluation)` returns an array with the elements of the iterable with greater evaluation
+(or numerical conversion by default).
+*/
+Iterable.prototype.greater = function greater(evaluation) {
+	evaluation = typeof evaluation === 'function' ? evaluation : __toNumber__;
+	var maxEval = -Infinity,
+		result = [];
+	this.forEach(function (x) {
+		var e = evaluation(x);
+		if (maxEval < e) {
+			maxEval = e;
+			result = [x];
+		} else if (maxEval === e) {
+			result.push(x);
+		}
+	});
+	return result;
+};
+
+/** `lesser(evaluation)` returns an array with the elements of the iterable with lesser evaluation
+(or numerical conversion by default).
+*/
+Iterable.prototype.lesser = function lesser(evaluation) {
+	evaluation = typeof evaluation === 'function' ? evaluation : __toNumber__;
+	var minEval = +Infinity,
+		result = [];
+	this.forEach(function (x) {
+		var e = evaluation(x);
+		if (minEval > e) {
+			minEval = e;
+			result = [x];
+		} else if (minEval === e) {
+			result.push(x);
+		}
+	});
+	return result;
 };
