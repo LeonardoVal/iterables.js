@@ -39,5 +39,60 @@
 					return x.length % 2;
 				}), ['a', 'aaa']);
 		});
+
+		it("`Iterable.takeWhile` function", function () {
+			expect(list_utils.Iterable.prototype.takeWhile).toBeOfType('function');
+			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
+			expectList(fromArray([0,1,0,1,0,1]).takeWhile(), []);
+			expectList(fromArray([1,1,0,1,0,1]).takeWhile(), [1, 1]);
+			expectList(fromArray([0,1,0,1,0,1]).takeWhile(function (n) {
+					return !n;
+				}), [0]);
+			expectList(fromArray([0,0,0,1,0,1]).takeWhile(function (n) {
+					return !n;
+				}), [0, 0, 0]);
+		});
+
+		it("`Iterable.take` function", function () {
+			expect(list_utils.Iterable.prototype.take).toBeOfType('function');
+			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable),
+				array = [0,1,2,3,4,5];
+			for (var i = 0; i <= array.length; i++) {
+				expectList(fromArray(array).take(i), array.slice(0,i));
+			}
+		});
+
+		it("`Iterable.head` function", function () {
+			expect(list_utils.Iterable.prototype.head).toBeOfType('function');
+			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
+			expect(fromArray([false, true, false]).head()).toBe(false);
+			expect(fromArray([0, 1, 2]).head()).toBe(0);
+			expect(fromArray([77, 7]).head()).toBe(77);
+			expect(fromArray(['a']).head()).toBe('a');
+			expect(list_utils.Iterable.prototype.head.bind(fromArray([]))).toThrow();
+			expect(fromArray([]).head(null)).toBe(null);
+		});
+
+		it("`Iterable.dropWhile` function", function () {
+			expect(list_utils.Iterable.prototype.dropWhile).toBeOfType('function');
+			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
+			expectList(fromArray([0,1,0]).dropWhile(), [0,1,0]);
+			expectList(fromArray([1,1,0,1,0,1]).dropWhile(), [0,1,0,1]);
+			expectList(fromArray([0,1,0]).dropWhile(function (n) {
+					return !n;
+				}), [1,0]);
+			expectList(fromArray([0,0,0,1,0,1]).dropWhile(function (n) {
+					return !n;
+				}), [1,0,1]);
+		});
+
+		it("`Iterable.drop` function", function () {
+			expect(list_utils.Iterable.prototype.drop).toBeOfType('function');
+			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable),
+				array = [0,1,2,3,4,5];
+			for (var i = 0; i <= array.length; i++) {
+				expectList(fromArray(array).drop(i), array.slice(i));
+			}
+		});
 	}); // describe "Lists from arrays:"
 }); //// define
