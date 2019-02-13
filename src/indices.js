@@ -22,7 +22,7 @@ that comply with the given `condition`.
 */
 Iterable.prototype.indicesWhere = function indexesWhere(condition, from) {
 	from = from|0;
-	return new Iterable(this.filterMapIterator, this, 
+	return new Iterable(Iterable.filterMapIterator, this, 
 		function (v, i, iter) { 
 			return condition(v, i, iter) && i >= from; 
 		},
@@ -52,7 +52,7 @@ Iterable.prototype.indexOf = function indexOf(value, from) {
 */
 Iterable.prototype.indicesOf = function indexesOf(value, from) {
 	from = from|0;
-	return new Iterable(this.filterMapIterator, this, 
+	return new Iterable(Iterable.filterMapIterator, this, 
 		function (v, i) {
 			return v === value && i >= from;
 		},
