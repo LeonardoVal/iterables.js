@@ -29,5 +29,26 @@
 				expectList(Iterable.zip.apply(Iterable, lists), test.expectedResult); 
 			});
 		});
+
+		it("product()", function () {
+			var Iterable = list_utils.Iterable;
+			expect(Iterable.prototype.product).toBeOfType('function');
+			expect(Iterable.product).toBeOfType('function');
+			[{	lists: ['ab', 'xy'],
+				expectedResult: [['a','x'],['a','y'],['b','x'],['b','y']]
+			 }, { lists: ['ab', 'x'],
+			 	expectedResult: [['a','x'],['b','x']]
+			 }, { lists: ['a', 'xy'],
+				expectedResult: [['a','x'],['a','y']]
+			 }, { lists: ['ab', ''],
+				expectedResult: []
+			 }, { lists: ['', 'xy'],
+				expectedResult: []
+			 }].forEach(function (test) {
+				var lists = test.lists;
+				expectList(Iterable.prototype.product.apply(lists[0], lists.slice(1)), test.expectedResult);
+				expectList(Iterable.product.apply(Iterable, lists), test.expectedResult);
+			});
+		});
 	}); // describe "Empty lists:"
 }); //// define
