@@ -18,3 +18,7 @@ function factorial(n, k) {
 	}
 	return r;
 }
+
+function __id__(x) {
+	return x;
+}
