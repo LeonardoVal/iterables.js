@@ -3,18 +3,18 @@
 
 /** 
 */
-Iterable.iteratorFromArray = function iteratorFromArray(array) {
+Iterable.arrayIterator = function arrayIterator(array) {
 	if (!Array.isArray(array)) {
 		throw new TypeError('Argument must be an array, but is a `'+ typeof array +'`!');
 	}
 	var i = 0,
 		done = false;
 	return {
-		next: function next_iteratorFromArray() {
+		next: function next_arrayIterator() {
 			done = done || i >= array.length;
 			return done ? { done: true } : { value: array[i++] };
 		},
-		return: function return_iteratorFromArray() {
+		return: function return_arrayIterator() {
 			done = true;
 			return { done: true }; 
 		}
@@ -22,7 +22,7 @@ Iterable.iteratorFromArray = function iteratorFromArray(array) {
 };
 
 exports.ArrayIterable = Iterable.subclass(function ArrayIterable(array) {
-	Iterable.call(this, Iterable.iteratorFromArray, array);
+	Iterable.call(this, Iterable.arrayIterator, array);
 	this.__array__ = array;
 }, {
 	length: function length() {

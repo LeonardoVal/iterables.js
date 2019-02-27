@@ -3,13 +3,13 @@
 		expectList = test_common.expectList;
 
 	describe("Lists from strings:", function () {
-		it("`Iterable.iteratorFromString` function", function () {
-			expect(list_utils.Iterable.iteratorFromString).toBeOfType('function');
-			var iteratorFromString = list_utils.Iterable.iteratorFromString.bind(list_utils.Iterable);
-			expectIterator(iteratorFromString(""), []);
-			expectIterator(iteratorFromString("a"), ["a"]);
-			expectIterator(iteratorFromString("ab"), ["a", "b"]);
-			expectIterator(iteratorFromString("abc"), ["a", "b", "c"]);
+		it("`Iterable.stringIterator` function", function () {
+			expect(list_utils.Iterable.stringIterator).toBeOfType('function');
+			var stringIterator = list_utils.Iterable.stringIterator.bind(list_utils.Iterable);
+			expectIterator(stringIterator(""), []);
+			expectIterator(stringIterator("a"), ["a"]);
+			expectIterator(stringIterator("ab"), ["a", "b"]);
+			expectIterator(stringIterator("abc"), ["a", "b", "c"]);
 		});
 
 		it("`StringIterable` class", function () {

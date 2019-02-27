@@ -3,13 +3,13 @@
 		expectList = test_common.expectList;
 
 	describe("Lists from arrays:", function () {
-		it("`Iterable.iteratorFromArray` function", function () {
-			expect(list_utils.Iterable.iteratorFromArray).toBeOfType('function');
-			var iteratorFromArray = list_utils.Iterable.iteratorFromArray.bind(list_utils.Iterable);
-			expectIterator(iteratorFromArray([]), []);
-			expectIterator(iteratorFromArray([true]), [true]);
-			expectIterator(iteratorFromArray([1, 2]), [1, 2]);
-			expectIterator(iteratorFromArray(['a', 'b', 'c']), ['a', 'b', 'c']);
+		it("`Iterable.arrayIterator` function", function () {
+			expect(list_utils.Iterable.arrayIterator).toBeOfType('function');
+			var arrayIterator = list_utils.Iterable.arrayIterator.bind(list_utils.Iterable);
+			expectIterator(arrayIterator([]), []);
+			expectIterator(arrayIterator([true]), [true]);
+			expectIterator(arrayIterator([1, 2]), [1, 2]);
+			expectIterator(arrayIterator(['a', 'b', 'c']), ['a', 'b', 'c']);
 		});
 
 		it("`ArrayIterable` class", function () {

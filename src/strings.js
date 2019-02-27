@@ -3,7 +3,7 @@
 
 /** 
 */
-Iterable.iteratorFromString = function iteratorFromString(string) {
+Iterable.stringIterator = function stringIterator(string) {
 	if (typeof string !== 'string') {
 		throw new TypeError('Argument must be a string, but is a `'+ typeof string +'`!');
 	}
@@ -24,7 +24,7 @@ Iterable.iteratorFromString = function iteratorFromString(string) {
 /**
 */
 exports.StringIterable = Iterable.subclass(function StringIterable(string) {
-	Iterable.call(this, Iterable.iteratorFromString, string);
+	Iterable.call(this, Iterable.stringIterator, string);
 	this.__string__ = string;
 }, {
 	length: function length() {

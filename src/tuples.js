@@ -5,12 +5,12 @@
 at the same time, yielding an array of the values of each and stopping at the first sequence
 finishing.
 */
-Iterable.zipWithIterator = function zipWith(zipFunction, lists) {
+Iterable.zipIterator = function zipIterator(zipFunction, lists) {
 	var iters = lists.map(__iter__),
 		i = -1,
 		done = false;
 	return {
-		next: function next_mapIterator() {
+		next: function next_zipIterator() {
 			if (!done) {
 				i++;
 				var values = iters.map(function (iter) {
@@ -24,7 +24,7 @@ Iterable.zipWithIterator = function zipWith(zipFunction, lists) {
 			}
 			return { done: true };
 		},
-		return: function return_mapIterator() {
+		return: function return_zipIterator() {
 			done = true;
 			return { done: true };
 		}
@@ -33,12 +33,12 @@ Iterable.zipWithIterator = function zipWith(zipFunction, lists) {
 
 Iterable.prototype.zipWith = function zipWith(zipFunction) {
 	var lists = [this].concat(Array.prototype.slice.call(arguments, 1));
-	return new Iterable(Iterable.zipWithIterator, zipFunction, lists);
+	return new Iterable(Iterable.zipIterator, zipFunction, lists);
 };
 
 Iterable.zipWith = function zipWith(zipFunction) {
 	var lists = Array.prototype.slice.call(arguments, 1);
-	return new Iterable(Iterable.zipWithIterator, zipFunction, lists);
+	return new Iterable(Iterable.zipIterator, zipFunction, lists);
 };
 
 Iterable.prototype.zip = function zip() {
