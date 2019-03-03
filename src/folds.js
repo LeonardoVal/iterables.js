@@ -114,7 +114,7 @@ Iterable.prototype.all = function all(predicate, strict) {
 	predicate = typeof predicate === 'function' ? predicate : __toBool__;
 	var result = true;
 	this.forEach(function (x, i, iter) {
-		if (!predicate(x, i)) {
+		if (!predicate(x, i, iter)) {
 			result = false;
 			if (!strict) {
 				iter.return(); // Shortcircuit.
@@ -131,7 +131,7 @@ Iterable.prototype.any = function any(predicate, strict) {
 	predicate = typeof predicate === 'function' ? predicate : __toBool__;
 	var result = false;
 	this.forEach(function (x, i, iter) {
-		if (predicate(x, i)) {
+		if (predicate(x, i, iter)) {
 			result = true;
 			if (!strict) {
 				iter.return(); // Shortcircuit.
