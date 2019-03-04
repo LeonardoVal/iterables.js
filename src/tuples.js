@@ -6,7 +6,7 @@ at the same time, yielding an array of the values of each and stopping at the fi
 finishing.
 */
 Iterable.zipIterator = function zipIterator(zipFunction, lists) {
-	var iters = lists.map(__iter__),
+	var iters = __iters__(lists),
 		i = -1,
 		done = false;
 	return {
@@ -59,7 +59,7 @@ Iterable.productIterator = function productIterator(lists) {
 		next: function next_productIterator() {
 			if (!done) {
 				if (!iters) { // First tuple.
-					iters = lists.map(__iter__);
+					iters = __iters__(lists);
 					tuple = iters.map(function (iter) {
 						var x = iter.next();
 						done = done || x.done;
