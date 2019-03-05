@@ -26,8 +26,70 @@ define([], function () {
 		expect(x.value).not.toBeDefined();
 	}
 
+	function expectAsyncList(list, expectedList) {
+		expect(list.__aiter__).toBeOfType('function');
+		var p = list.length();
+		expect(p).toBeOfType(Promise);
+		return p.then(function (value) {
+			expect(value).toBe(expectedList.length);
+		}).then(function () {
+			var tests = expectedList.map(function (expectedValue, index) {
+					return [[index], expectedValue];
+				}).concat([
+					[[expectedList.length + 1, null], null],
+					[[-1, '-1'], '-1'],
+					[[expectedList.length + 1]],
+					[[-1]]
+				]);
+			return Promise.all(
+				tests.map(function (test) {
+					var p = list.get.apply(list, test[0]);
+					expect(p).toBeOfType(Promise);
+					return p.then(function (value) {
+						if (test.length > 1) {
+							expect(value).toEqual(test[1]);
+						} else {
+							fail("[list Iterable].get("+ test[0] +") should fail!");
+						}
+					}, function (reason) {
+						if (test.length > 1) {
+							fail("[list Iterable].get("+ test[0] +") should not fail!");
+						}
+					});
+				})
+			);
+		}).then(function () {
+			return expectAsyncIterator(list.__aiter__(), expectedList);
+		});
+	}
+
+	function expectAsyncIterator(iterator, expectedList) {
+		expect(iterator.next).toBeOfType('function');
+		expect(iterator.return).toBeOfType('function');
+		var p = iterator.next(),
+			i = 0,
+			callback = function (x) {
+				if (i < expectedList.length) {
+					expect(x.done).toBeFalsy();
+					expect(x.value).toEqual(expectedList[i]);
+					i++;
+					p = iterator.next();
+					expect(p).toBeOfType(Promise);
+					return p.then(callback);
+				} else {
+					expect(x.done).toBeTruthy();
+					expect(x.value).not.toBeDefined();
+					return x;
+				}
+			};
+		expect(p).toBeOfType(Promise);
+		return p.then(callback);
+	}
+
 	return {
 		expectList: expectList,
-		expectIterator: expectIterator
+		expectAsyncList: expectAsyncList,
+		expectIterator: expectIterator,
+		expectAsyncIterator: expectAsyncIterator
 	};
 });
