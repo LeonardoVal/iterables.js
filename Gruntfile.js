@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 	require('creatartis-grunt').config(grunt, {
 		globalName: 'list_utils',
 		sourceNames: ['__prologue__',
-			'_utils', 'core',
+			'_utils', 'core', 'async',
 			'empty', 'singletons', 'strings', 'arrays', 'objects', 
 			'builders',
 			'selections', 'maps', 'folds', 'tuples', 'indices',
