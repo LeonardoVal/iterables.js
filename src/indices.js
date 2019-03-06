@@ -52,12 +52,12 @@ Iterable.prototype.indexOf = function indexOf(value, from) {
 */
 Iterable.prototype.indicesOf = function indexesOf(value, from) {
 	from = from|0;
-	return new Iterable(Iterable.filterMapIterator, this, 
-		function (v, i) {
-			return v === value && i >= from;
-		},
+	return new Iterable(Iterable.filteredMapIterator, this, 
 		function (_, i) {
 			return i;
+		},
+		function (v, i) {
+			return v === value && i >= from;
 		}
 	);
 };
