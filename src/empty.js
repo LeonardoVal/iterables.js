@@ -4,14 +4,9 @@
 /**
 */
 Iterable.emptyIterator = function emptyIterator() {
-	return { 
-		next: function next_emptyIterator() {
-			return { done: true };
-		},
-		return: function return_emptyIterator() {
-			return { done: true };
-		}
-	};
+	return generatorIterator(function (obj) {
+		obj.done = true;
+	});
 };
 
 exports.EmptyIterable = Iterable.subclass(function EmptyIterable() {
@@ -42,5 +37,5 @@ Iterable.EMPTY = Iterable.empty();
 /** `isEmpty()` returns if the sequence has no elements.
 */
 Iterable.prototype.isEmpty = function isEmpty() {
-	return this[ITERATOR]().next().done;
+	return !!this[ITERATOR]().next().done;
 };
