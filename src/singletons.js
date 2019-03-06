@@ -4,18 +4,13 @@
 /**
 */
 Iterable.singletonIterator = function singletonIterator(value) {
-	var i = 0,
-		done = false;
-	return { 
-		next: function next_singletonIterator() {
-			done = done || (i++) > 0;
-			return done ? { done: true } : { value: value };
-		},
-		return: function return_singletonIterator() {
-			done = true;
-			return { done: true };
+	return generatorWithIndexIterator(function (obj, i) {
+		if (i > 0) {
+			obj.done = true;
+		} else {
+			obj.value = value; 
 		}
-	};
+	});
 };
 
 /** 
