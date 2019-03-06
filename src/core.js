@@ -161,3 +161,96 @@ Iterable.prototype.forEach = function forEach(doFunction, ifFunction) {
 		return result;
 	}
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ */
+function generatorIterator(nextFunction) {
+	var done = false;
+	return {
+		next: function () {
+			if (done) {
+				return { done: true };
+			} else {
+				var obj = {};
+				nextFunction(obj);
+				done = obj.done;
+				return obj;
+			}
+		},
+		return: function () {
+			done = true;
+			return { done: true };
+		}
+	};
+}
+Iterable.generatorIterator = generatorIterator;
+
+/**
+ */
+function generatorWithIndexIterator(nextFunction) {
+	var i = -1;
+	return generatorIterator(function (obj) {
+		i++;
+		return nextFunction(obj, i);
+	});
+}
+Iterable.generatorWithIndexIterator = generatorWithIndexIterator;
+
+/**
+ */
+function filteredMapIterator(list, valueFunction, checkFunction) {
+	var iter = __iter__(list),
+		i = -1;
+	return generatorIterator(function (obj) {
+		var x;
+		do {
+			x = iter.next();
+			i++;
+		} while (!x.done && checkFunction && !checkFunction(x.value, i, iter));
+		if (x.done) {
+			obj.done = true;
+		} else {
+			obj.value = valueFunction ? valueFunction(x.value, i, iter) : x.value;
+		}
+	});
+}
+Iterable.filteredMapIterator = filteredMapIterator;
+
+/**
+ */
+function lastFromIterator(iterator, defaultValue) {
+	var obj = iterator.next(),
+		value = defaultValue;
+	if (obj.done && arguments.length < 2) {
+		throw new Error("Attempted to get the last value of an empty iterator!");
+	}
+	for (; !obj.done; obj = iterator.next()){
+		value = obj.value;
+	}
+	return value;
+}
+Iterable.lastFromIterator = lastFromIterator;
+
+Iterable.prototype.lastValue = function lastValue() {
+	return lastFromIterator(__iter__(this));
+};
+
+function $builderMethods(iteratorFunction) {
+	var reMatch = /^function\s+(\w+)Iterator\(([^)]+)\)/.exec(iteratorFunction +''),
+		id = reMatch[1],
+		args = reMatch[2];
+	Iterable[id +'Iterator'] = iteratorFunction;
+	Iterable[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
+		id +'Iterator, '+ args +');\n})');
+}
+
+function $iterationMethods(iteratorFunction) {
+	var reMatch = /^function\s+(\w+)Iterator\(list,([^)]+)\)/.exec(iteratorFunction +''),
+		id = reMatch[1],
+		args = reMatch[2];
+	Iterable[id +'Iterator'] = iteratorFunction;
+	Iterable.prototype[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
+		id +'Iterator, this, '+ args +');\n})');
+}
