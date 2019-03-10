@@ -5,48 +5,46 @@
 at the same time, yielding an array of the values of each and stopping at the first sequence
 finishing.
 */
-Iterable.zipIterator = function zipIterator(zipFunction, lists) {
-	var iters = __iters__(lists),
-		i = -1,
-		done = false;
-	return {
-		next: function next_zipIterator() {
-			if (!done) {
-				i++;
-				var values = iters.map(function (iter) {
-						var x = iter.next();
-						done = done || x.done;
-						return x.value;
-					});
-				if (!done) {
-					return { value: zipFunction(values, i, iters) };
+Iterable.zipWithIterator = function zipWithIterator(lists, zipFunction) {
+	if (!lists || !lists.length || lists.length < 1) {
+		return Iterable.emptyIterator();
+	}
+	var otherIters = __iters__(lists.slice(1)),
+		values;
+	return filteredMapIterator(lists[0], 
+		function (value0, index, iter) {
+			return zipFunction ? zipFunction(values, index) : values;
+		}, function (value0, index, iter) {
+			values = [value0];
+			var obj;
+			for (var i = 0; i < otherIters.length; i++) {
+				obj = otherIters[i].next();
+				if (obj.done) {
+					iter.return();
+					return false;
 				}
+				values.push(obj.value);
 			}
-			return { done: true };
-		},
-		return: function return_zipIterator() {
-			done = true;
-			return { done: true };
+			return true;
 		}
-	};
+	);
 };
 
 Iterable.prototype.zipWith = function zipWith(zipFunction) {
 	var lists = [this].concat(Array.prototype.slice.call(arguments, 1));
-	return new Iterable(Iterable.zipIterator, zipFunction, lists);
+	return new Iterable(Iterable.zipWithIterator, lists, zipFunction);
 };
 
 Iterable.zipWith = function zipWith(zipFunction) {
 	var lists = Array.prototype.slice.call(arguments, 1);
-	return new Iterable(Iterable.zipIterator, zipFunction, lists);
+	return new Iterable(Iterable.zipWithIterator, lists, zipFunction);
 };
 
-Iterable.prototype.zip = function zip() {
-	var args = [__id__].concat(Array.prototype.slice.call(arguments));
-	return this.zipWith.apply(this, args);
+Iterable.zip = function zip() {
+	return this.zipWith.apply(this, [null].concat(Array.prototype.slice.call(arguments)));
 };
 
-Iterable.zip = Iterable.prototype.zip;
+Iterable.prototype.zip = Iterable.zip;
 
 /** `product(iterables...)` builds an iterable that iterates over the
 [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product) of this and all the given
