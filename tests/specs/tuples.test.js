@@ -7,26 +7,33 @@
 			var Iterable = list_utils.Iterable;
 			expect(Iterable.prototype.zip).toBeOfType('function');
 			expect(Iterable.zip).toBeOfType('function');
-			var fromString = Iterable.fromString.bind(Iterable);
-			[{ 
+			var fromString = Iterable.fromString.bind(Iterable),
+				test = function (testCase) {
+					var lists = testCase.lists;
+					expectList(Iterable.prototype.zip.apply(lists[0], lists.slice(1)),
+						testCase.expectedResult);
+					expectList(Iterable.zip.apply(Iterable, lists),
+						testCase.expectedResult); 
+				};
+			test({ 
 				lists: [fromString('abc'), fromString('xyz')], 
 				expectedResult: [['a','x'], ['b','y'], ['c','z']]
-			 }, {
+			});
+			test({
 				lists: [fromString('abc'), fromString('x')], 
 				expectedResult: [['a','x']]
-			 }, {
+			});
+			test({
 				lists: [fromString('a'), fromString('xyz')], 
 				expectedResult: [['a','x']]
-			 }, {
+			});
+			test({
 				lists: [fromString(''), fromString('xyz')], 
 				expectedResult: []
-			 }, {
+			});
+			test({
 				lists: [fromString('abc'), fromString('')], 
 				expectedResult: []
-			 }].forEach(function (test) {
-				var lists = test.lists;
-				expectList(Iterable.prototype.zip.apply(lists[0], lists.slice(1)), test.expectedResult);
-				expectList(Iterable.zip.apply(Iterable, lists), test.expectedResult); 
 			});
 		});
 
@@ -35,30 +42,34 @@
 			expect(Iterable.prototype.zipWith).toBeOfType('function');
 			expect(Iterable.zipWith).toBeOfType('function');
 			var fromString = Iterable.fromString.bind(Iterable),
-				fromValues = Iterable.fromValues.bind(Iterable);
-			[{	
+				fromValues = Iterable.fromValues.bind(Iterable),
+				test = function (testCase) {
+					var func = testCase.func,
+						lists = testCase.lists;
+					expectList(Iterable.prototype.zipWith.apply(lists[0], [func].concat(lists.slice(1))),
+						testCase.expectedResult);
+					expectList(Iterable.zipWith.apply(Iterable, [func].concat(lists)), 
+						testCase.expectedResult); 
+				};
+			test({
 				func: function (vs) { return vs[0] + vs[1]; },
 				lists: [fromString('abc'), fromString('xyz')], 
 				expectedResult: ['ax', 'by', 'cz']
-			 }, {
+			});
+			test({
 				func: function (vs) { return (+vs[0]) + (+vs[1]); },
 				lists: [fromString('123'), fromString('77')], 
 				expectedResult: [8, 9]
-			 }, {
+			});
+			test({
 				func: function (vs) { return (+vs[0]) + (+vs[1]); },
 				lists: [fromString('123'), fromString('')], 
 				expectedResult: []
-			 }, {
+			});
+			test({
 				func: function (vs) { return [vs[2], vs[0], vs[1]]; },
 				lists: [fromValues(1,2,3), fromString('abc'), fromValues(true,false,null)],
 				expectedResult: [[true,1,'a'], [false,2,'b'], [null,3,'c']]
-			 }].forEach(function (test) {
-				var func = test.func,
-					lists = test.lists;
-				expectList(Iterable.prototype.zipWith.apply(lists[0], [func].concat(lists.slice(1))),
-					test.expectedResult);
-				expectList(Iterable.zipWith.apply(Iterable, [func].concat(lists)), 
-					test.expectedResult); 
 			});
 		});
 
@@ -66,20 +77,32 @@
 			var Iterable = list_utils.Iterable;
 			expect(Iterable.prototype.product).toBeOfType('function');
 			expect(Iterable.product).toBeOfType('function');
-			[{	lists: ['ab', 'xy'],
+			var test = function (testCase) {
+					var lists = testCase.lists;
+					expectList(Iterable.prototype.product.apply(lists[0], lists.slice(1)),
+						testCase.expectedResult);
+					expectList(Iterable.product.apply(Iterable, lists),
+						testCase.expectedResult);
+				};
+			test({
+				lists: ['ab', 'xy'],
 				expectedResult: [['a','x'],['a','y'],['b','x'],['b','y']]
-			 }, { lists: ['ab', 'x'],
+			});
+			test({
+				lists: ['ab', 'x'],
 			 	expectedResult: [['a','x'],['b','x']]
-			 }, { lists: ['a', 'xy'],
+			});
+			test({
+				lists: ['a', 'xy'],
 				expectedResult: [['a','x'],['a','y']]
-			 }, { lists: ['ab', ''],
+			});
+			test({
+				lists: ['ab', ''],
 				expectedResult: []
-			 }, { lists: ['', 'xy'],
+			});
+			test({
+				lists: ['', 'xy'],
 				expectedResult: []
-			 }].forEach(function (test) {
-				var lists = test.lists;
-				expectList(Iterable.prototype.product.apply(lists[0], lists.slice(1)), test.expectedResult);
-				expectList(Iterable.product.apply(Iterable, lists), test.expectedResult);
 			});
 		});
 	}); // describe "Empty lists:"
