@@ -4,14 +4,14 @@
 /** `filter(filterFunction)` returns an iterable of this iterable elements for which `condition`
 returns true.
 */
-$iterationMethods(function filterIterator(list, condition) {
+$methodOn1List(function filterIterator(list, condition) {
 	return filteredMapIterator(list, null, condition || __toBool__);
 });
 
 /** `takeWhile(condition)` return an iterable with the first elements that verify the given
 `condition`.
 */
-$iterationMethods(function takeWhileIterator(list, condition) {
+$methodOn1List(function takeWhileIterator(list, condition) {
 	condition = condition || __toBool__;
 	return filteredMapIterator(list, null, function (value, i, iter) {
 		if (!condition(value, i, iter)) {
@@ -25,7 +25,7 @@ $iterationMethods(function takeWhileIterator(list, condition) {
 
 /** `take(n=1)` return an iterable with the first `n` elements of this one.
 */
-$iterationMethods(function takeIterator(list, n) {
+$methodOn1List(function takeIterator(list, n) {
 	n = isNaN(n) ? 1 : Math.floor(n);
 	return filteredMapIterator(list, null, function (value, i, iter) {
 		if (i >= n) {
@@ -56,7 +56,7 @@ Iterable.prototype.head = function head(defaultValue) {
 /** `dropWhile(condition)` returns an iterable with the same elements than this, except the
 first ones that comply with the condition.
 */
-$iterationMethods(function dropWhileIterator(list, condition) {
+$methodOn1List(function dropWhileIterator(list, condition) {
 	condition = condition || __toBool__;
 	var dropping = true;
 	return filteredMapIterator(list, null, function (value, i, iter) {
@@ -67,7 +67,7 @@ $iterationMethods(function dropWhileIterator(list, condition) {
 
 /** `drop(n=1)` returns an iterable with the same elements than this, except the first `n` ones.
 */
-$iterationMethods(function dropIterator(list, n) {
+$methodOn1List(function dropIterator(list, n) {
 	n = isNaN(n) ? 1 : Math.floor(n);
 	return filteredMapIterator(list, null, function (value, i, iter) {
 		return i >= n;

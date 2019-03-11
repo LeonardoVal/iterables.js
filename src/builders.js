@@ -4,7 +4,7 @@
 /** `range(from=0, to, step=1)` builds an Iterable object with number from `from` upto `to` with
 the given `step`. For example, `range(2,12,3)` represents the sequence `[2, 5, 8, 11]`.
 */
-$builderMethods(function rangeIterator(from, to, step) {
+$builderMethod(function rangeIterator(from, to, step) {
 	if (typeof from === 'undefined') {
 		from = 0;
 	}
@@ -35,7 +35,7 @@ For example, `enumFromThenTo(1,3,8)` represents the sequence `[1,3,5,7]`.
 The big difference with `range` is that the enumeration can go in either direction. For example,
 `enumFromThenTo(10,7,0)` represents the sequence `[10,7,4,1]`.
 */
-Iterable.enumFromThenToIterator = function enumFromThenToIterator(from, then, to) {
+$builderMethod(function enumFromThenToIterator(from, then, to) {
 	if (typeof from === 'undefined') {
 		from = 0;
 	}
@@ -54,11 +54,7 @@ Iterable.enumFromThenToIterator = function enumFromThenToIterator(from, then, to
 			from += step;
 		}
 	});
-};
-
-Iterable.enumFromThenTo = function enumFromThenTo(from, then, to) {
-	return new Iterable(Iterable.enumFromThenToIterator, from, then, to);
-};
+});
 
 Iterable.enumFromThen = function enumFromThen(from, then) {
 	return Iterable.enumFromThenTo(from, then, then > from ? +Infinity : -Infinity);
@@ -71,7 +67,7 @@ Iterable.enumFrom = function enumFrom(from) {
 /** `repeat(value, n=Infinity)` builds an iterable that repeats the given `value` `n` times (or
 forever by default).
 */
-$builderMethods(function repeatIterator(value, n) {
+$builderMethod(function repeatIterator(value, n) {
 	n = isNaN(n) ? Infinity : +n;
 	return generatorWithIndexIterator(function (obj, i) {
 		if (i >= n) {
@@ -85,7 +81,7 @@ $builderMethods(function repeatIterator(value, n) {
 /** `iterate(f, x, n=Infinity)` returns an iterable that repeatedly applies the function `f` to
 the value `x`, `n` times (or indefinitely by default).
 */
-$builderMethods(function iterateIterator(f, x, n) {
+$builderMethod(function iterateIterator(f, x, n) {
 	n = isNaN(n) ? Infinity : +n;
 	return generatorWithIndexIterator(function (obj, i) {
 		if (i >= n) {

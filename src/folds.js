@@ -5,7 +5,7 @@
 associative operator. Instead of returning the last result, it iterates over the intermediate values
 in the folding sequence.
 */
-$iterationMethods(function scanlIterator(list, foldFunction, initial) {
+$methodOn1List(function scanlIterator(list, foldFunction, initial) {
 	var folded = initial;
 	return filteredMapIterator(list, function (value, i, iter) {
 		folded = foldFunction(folded, value, i, iter);
@@ -18,7 +18,7 @@ associative operator. The `initial` value is used as a starting point, but if it
 then the first element in the sequence is used.
 */
 Iterable.prototype.foldl = function foldl(foldFunction, initial) {
-	return lastFromIterator(Iterable.scanlIterator(this, foldFunction, initial), initial);
+	return lastFromIterator(this.scanl(foldFunction, initial), initial);
 };
 
 /** `sum(n=0)` returns the sum of all numbers in the sequence, or `n` if the sequence is empty.
