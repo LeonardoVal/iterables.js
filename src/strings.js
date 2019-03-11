@@ -50,9 +50,9 @@ not given, '' is assumed.
 */
 Iterable.prototype.join = function join(sep) {
 	var result = '';
-	sep = ''+ (sep || '');
-	this.forEach(function (value, i) {
+	sep = sep || '';
+	return lastFromIterator(filteredMapIterator(this, function (value, i) {
 		result += (i === 0) ? value : sep + value;
-	});
-	return result;
+		return result;
+	}), result);
 };
