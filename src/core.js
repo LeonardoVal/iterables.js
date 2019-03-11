@@ -30,9 +30,14 @@ function Iterable(iteratorFunction) {
 exports.Iterable = Iterable; 
 
 function __iter__(iterable, async) {
-	var symbol = async ? ASYNC_ITERATOR : ITERATOR,
-		iterFunction = iterable[symbol],
-		iter;
+	var iterFunction, iter;
+	if (async === true) {
+		iterFunction = iterable[ASYNC_ITERATOR];
+	} else if (async === false) {
+		iterFunction = iterable[ITERATOR];
+	} else {
+		iterFunction = iterable[ITERATOR] || iterable[ASYNC_ITERATOR];
+	}
 	if (typeof iterFunction === 'function') {
 		iter = iterFunction.call(iterable);
 	}
@@ -73,92 +78,40 @@ Iterable.subclass = function subclass(constructor, members) {
 /** 
 */
 Iterable.prototype.length = function length() {
-	var result = 0,
-		p = this.forEach(function () {
-			result++;
-		});
-	return !this.isAsync() ? result :
-		p.then(function () {
-			return result;
-		});
+	var result = 0;
+	return lastFromIterator(filteredMapIterator(this, function () {
+		return ++result;
+	}), result);
 };
 
 /**
 */
 Iterable.prototype.get = function get(index, defaultValue) {
 	index = Math.floor(index);
-	var found = false,
-		hasDefaultValue = arguments.length < 2,
-		result = defaultValue,
-		p;
-	if (!isNaN(index)) {
-		p = this.forEach(function (value, i, iter) {
-			if (i === index) {
-				result = value;
-				found = true;
-				iter.return(); // Abort the iteration.
-			}
-		});
-	}
-	if (this.isAsync()) {
-		if (!p) {
-			return !hasDefaultValue ? Promise.resolve(defaultValue) :
-				Promise.reject(new Error("Cannot get value at "+ index +"!"));
-		} else {
-			return p.then(function () {
-				if (!found && hasDefaultValue) {
+	var hasDefault = arguments.length > 1,
+		obj = filteredMapIterator(this, null, function (value, i) {
+			return i === index;
+		}).next();
+	if (obj instanceof Promise) {
+		return obj.then(function (x) {
+			if (x.done) {
+				if (hasDefault) {
+					return defaultValue;
+				} else {
 					throw new Error("Cannot get value at "+ index +"!");
 				}
-				return result;
-			});
-		}
-	} else if (!found && hasDefaultValue) {
-		throw new Error("Cannot get value at "+ index +"!");
-	} else {
-		return result;
-	}
-};
-
-/** `forEach(doFunction, ifFunction)` applies `doFunction` to all elements complying with
-`ifFunction`, and returns the last result. If no `ifFunction` is given, it iterates through all
-the elements in the sequence. Both functions get the current value and position as arguments.
-
-Asynchronous iterables are supported, but `doFunction` and `ifFunction` callbacks are assumed to be
-synchronous.
-*/
-Iterable.prototype.forEach = function forEach(doFunction, ifFunction) {
-	var isAsync = this.isAsync(),
-		iter = __iter__(this, isAsync), 
-		i = 0,
-		current = iter.next(),
-		result;
-	if (isAsync) {
-		if (!current.then) {
-			throw new TypeError("List is supposed to be asynchronous, but next() returned `"+
-				current +"` instead of a Promise!");
-		}
-		var asyncForEach = function asyncForEach(x) {
-			if (x.done) {
-				return result; // Return last value when done.
 			} else {
-				if (!ifFunction || ifFunction(current.value, i, iter)) {
-					result = doFunction(x.value, i, iter);
-				}
-				i++;
-				return iter.next().then(asyncForEach);
+				return x.value;
 			}
-		};
-		return current.then(asyncForEach);
-	} else {
-		result = current.value;
-		while (!current.done) {
-			if (!ifFunction || ifFunction(current.value, i, iter)) {
-				result = doFunction(current.value, i, iter);
-			}
-			current = iter.next();
-			i++;
+		});
+	} else if (obj.done) {
+		if (hasDefault) {
+			return defaultValue;
+		} else {
+			throw new Error("Cannot get value at "+ index +"!");
 		}
-		return result;
+	} else {
+		return obj.value;
 	}
 };
 
@@ -173,10 +126,17 @@ function generatorIterator(nextFunction) {
 			if (done) {
 				return { done: true };
 			} else {
-				var obj = {};
-				nextFunction(obj);
-				done = obj.done;
-				return obj;
+				var obj = {},
+					p = nextFunction(obj);
+				if (p instanceof Promise) {
+					return p.then(function () {
+						done = obj.done;
+						return obj;		
+					});
+				} else {
+					done = obj.done;
+					return obj;
+				}
 			}
 		},
 		return: function () {
@@ -204,15 +164,36 @@ function filteredMapIterator(list, valueFunction, checkFunction) {
 	var iter = __iter__(list),
 		i = -1;
 	return generatorIterator(function (obj) {
-		var x;
-		do {
-			x = iter.next();
-			i++;
-		} while (!x.done && checkFunction && !checkFunction(x.value, i, iter));
-		if (x.done) {
-			obj.done = true;
+		var x = iter.next();
+		if (x instanceof Promise) {
+			var asyncLoop = function filteredMapIterator_asyncLoop(p) {
+				return p.then(function (x) {
+					if (x.done) {
+						obj.done = true;
+						return obj;
+					} else {
+						i++;
+						if (checkFunction && !checkFunction(x.value, i, iter)) {
+							return asyncLoop(iter.next());
+						} else {
+							obj.value = valueFunction ? valueFunction(x.value, i, iter) : x.value;
+							return obj;
+						}
+					}
+				});
+			};
+			return asyncLoop(x);
 		} else {
-			obj.value = valueFunction ? valueFunction(x.value, i, iter) : x.value;
+			i++;
+			while (!x.done && checkFunction && !checkFunction(x.value, i, iter)) {
+				x = iter.next();
+				i++;
+			}
+			if (x.done) {
+				obj.done = true;
+			} else {
+				obj.value = valueFunction ? valueFunction(x.value, i, iter) : x.value;
+			}
 		}
 	});
 }
@@ -222,35 +203,39 @@ Iterable.filteredMapIterator = filteredMapIterator;
  */
 function lastFromIterator(iterator, defaultValue) {
 	var obj = iterator.next(),
-		value = defaultValue;
-	if (obj.done && arguments.length < 2) {
-		throw new Error("Attempted to get the last value of an empty iterator!");
+		value = defaultValue,
+		hasValue = arguments.length > 1;
+	if (obj instanceof Promise) {
+		var asyncFor = function (p) {
+			return p.then(function (x) {
+				if (x.done) {
+					if (hasValue) {
+						return value;
+					} else {
+						throw new Error("Attempted to get the last value of an empty iterator!");
+					}
+				} else {
+					value = x.value;
+					hasValue = true;
+					return asyncFor(iterator.next());
+				}
+			});
+		};
+		return asyncFor(obj);
+	} else {
+		for (; !obj.done; obj = iterator.next()){
+			value = obj.value;
+			hasValue = true;
+		}
+		if (hasValue) {
+			return value;
+		} else {
+			throw new Error("Attempted to get the last value of an empty iterator!");
+		}
 	}
-	for (; !obj.done; obj = iterator.next()){
-		value = obj.value;
-	}
-	return value;
 }
 Iterable.lastFromIterator = lastFromIterator;
 
 Iterable.prototype.lastValue = function lastValue() {
 	return lastFromIterator(__iter__(this));
 };
-
-function $builderMethods(iteratorFunction) {
-	var reMatch = /^function\s+(\w+)Iterator\(([^)]+)\)/.exec(iteratorFunction +''),
-		id = reMatch[1],
-		args = reMatch[2];
-	Iterable[id +'Iterator'] = iteratorFunction;
-	Iterable[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
-		id +'Iterator, '+ args +');\n})');
-}
-
-function $iterationMethods(iteratorFunction) {
-	var reMatch = /^function\s+(\w+)Iterator\(list,([^)]+)\)/.exec(iteratorFunction +''),
-		id = reMatch[1],
-		args = reMatch[2];
-	Iterable[id +'Iterator'] = iteratorFunction;
-	Iterable.prototype[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
-		id +'Iterator, this, '+ args +');\n})');
-}
