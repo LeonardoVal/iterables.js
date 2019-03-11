@@ -7,18 +7,13 @@ Iterable.arrayIterator = function arrayIterator(array) {
 	if (!Array.isArray(array)) {
 		throw new TypeError('Argument must be an array, but is a `'+ typeof array +'`!');
 	}
-	var i = 0,
-		done = false;
-	return {
-		next: function next_arrayIterator() {
-			done = done || i >= array.length;
-			return done ? { done: true } : { value: array[i++] };
-		},
-		return: function return_arrayIterator() {
-			done = true;
-			return { done: true }; 
+	return generatorWithIndexIterator(function (obj, i) {
+		if (i >= array.length) {
+			obj.done = true;
+		} else {
+			obj.value = array[i];
 		}
-	};
+	});
 };
 
 exports.ArrayIterable = Iterable.subclass(function ArrayIterable(array) {
@@ -54,8 +49,8 @@ array is given, a new one is used.
 */
 Iterable.prototype.toArray = function toArray(array) {
 	array = array || [];
-	this.forEach(function (x) {
-		array.push(x);
-	});
-	return array;
+	return lastFromIterator(filteredMapIterator(this, function (value) {
+		array.push(value);
+		return array;
+	}), array);
 };
