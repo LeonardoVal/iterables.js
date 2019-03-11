@@ -9,9 +9,15 @@ module.exports = function (grunt) {
 		globalName: 'list_utils',
 		sourceNames: ['__prologue__',
 			'_utils', 'core', 'async',
-			'empty', 'singletons', 'strings', 'arrays', 'objects', 
-			'builders',
-			'selections', 'maps', 'folds', 'tuples', 'indices',
+			'empty', 'singleton', 'strings', 'arrays', 'objects', 
+		// builders
+			'builders/range', 'builders/enumFromThenTo', 'builders/repeat', 'builders/iterate',
+			'selections', 'maps',
+		// reductions
+			'reductions/scanl', 'reductions/foldl', 'reductions/sum', 'reductions/min',
+			'reductions/max', 'reductions/all', 'reductions/any',
+		// ... 
+			'tuples', 'indices',
 			'combinatorics',
 			'__epilogue__'],
 		deps: [
