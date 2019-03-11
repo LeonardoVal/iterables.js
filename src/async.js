@@ -19,19 +19,17 @@ var asyncIteratorFunction = Iterable.asyncIteratorFunction;
 testing purposes. 
 */
 Iterable.mockAsyncIterator = asyncIteratorFunction(function mockAsyncIterator(list) {
-	var iter = __iter__(list),
+	var iter = __iter__(list, false),
 		done = false;
-	return {
-		next: function next_mockAsyncIterator() { 
-			var x = done ? { done: true } : iter.next();
-			done = !!x.done;
-			return Promise.resolve(x);
-		},
-		return: function return_mockAsyncIterator() {
-			done = true;
-			return { done: true };
+	return generatorIterator(function (obj) {
+		var x = iter.next();
+		if (x.done) {
+			obj.done = true;
+		} else {
+			obj.value = x.value;
 		}
-	};
+		return Promise.resolve(obj);
+	});
 });
 
 /**
