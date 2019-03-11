@@ -37,5 +37,8 @@ Iterable.EMPTY = Iterable.empty();
 /** `isEmpty()` returns if the sequence has no elements.
 */
 Iterable.prototype.isEmpty = function isEmpty() {
-	return !!this[ITERATOR]().next().done;
+	var iter = __iter__(this);
+	return then(iter.next(), function (head) {
+		return head.done;
+	});
 };
