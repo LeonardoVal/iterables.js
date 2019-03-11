@@ -54,6 +54,7 @@ define([], function () {
 					}, function (reason) {
 						if (test.length > 1) {
 							fail("[list Iterable].get("+ test[0] +") should not fail!");
+							throw reason;
 						}
 					});
 				})
