@@ -35,6 +35,14 @@ function k(value) {
 	};
 }
 
+function then(p, callback) {
+	if (p instanceof Promise) {
+		return p.then(callback);
+	} else {
+		return callback(p);
+	}
+}
+
 function $builderMethod(iteratorFunction) {
 	var reMatch = /^function\s+(\w+)Iterator\(([^)]+)\)/.exec(iteratorFunction +''),
 		id = reMatch[1],

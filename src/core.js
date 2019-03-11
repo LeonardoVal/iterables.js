@@ -92,27 +92,17 @@ Iterable.prototype.get = function get(index, defaultValue) {
 		obj = filteredMapIterator(this, null, function (value, i) {
 			return i === index;
 		}).next();
-	if (obj instanceof Promise) {
-		return obj.then(function (x) {
-			if (x.done) {
-				if (hasDefault) {
-					return defaultValue;
-				} else {
-					throw new Error("Cannot get value at "+ index +"!");
-				}
+	return then(obj, function (x) {
+		if (x.done) {
+			if (hasDefault) {
+				return defaultValue;
 			} else {
-				return x.value;
+				throw new Error("Cannot get value at "+ index +"!");
 			}
-		});
-	} else if (obj.done) {
-		if (hasDefault) {
-			return defaultValue;
 		} else {
-			throw new Error("Cannot get value at "+ index +"!");
+			return x.value;
 		}
-	} else {
-		return obj.value;
-	}
+	});
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -126,17 +116,11 @@ function generatorIterator(nextFunction) {
 			if (done) {
 				return { done: true };
 			} else {
-				var obj = {},
-					p = nextFunction(obj);
-				if (p instanceof Promise) {
-					return p.then(function () {
-						done = obj.done;
-						return obj;		
-					});
-				} else {
+				var obj = {};
+				return then(nextFunction(obj), function () {
 					done = obj.done;
-					return obj;
-				}
+					return obj;		
+				});
 			}
 		},
 		return: function () {
