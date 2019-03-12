@@ -12,7 +12,9 @@ module.exports = function (grunt) {
 			'empty', 'singleton', 'strings', 'arrays', 'objects', 
 		// builders
 			'builders/range', 'builders/enumFromThenTo', 'builders/repeat', 'builders/iterate',
-			'selections', 'maps',
+			'selections', 
+		// conversions
+			'conversions/map',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 'reductions/sum', 'reductions/min',
 			'reductions/max', 'reductions/all', 'reductions/any',
