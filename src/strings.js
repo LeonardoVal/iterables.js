@@ -7,18 +7,13 @@ Iterable.stringIterator = function stringIterator(string) {
 	if (typeof string !== 'string') {
 		throw new TypeError('Argument must be a string, but is a `'+ typeof string +'`!');
 	}
-	var i = 0,
-		done = false;
-	return {
-		next: function next_stringIterator() {
-			done = done || i >= string.length;
-			return done ? { done: true } : { value: string.charAt(i++) };
-		},
-		return: function return_stringIterator() {
-			done = true;
-			return { done: true };
+	return generatorWithIndexIterator(function (obj, i) {
+		if (i >= string.length) {
+			obj.done = true;
+		} else {
+			obj.value = string.charAt(i);
 		}
-	};
+	});
 };
 
 /**
