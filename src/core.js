@@ -3,18 +3,19 @@
 var ITERATOR_ID = '__iter__',
 	ITERATOR = Symbol && Symbol.iterator || ITERATOR_ID,
 	ASYNC_ITERATOR_ID = '__aiter__',
-	ASYNC_ITERATOR = Symbol && Symbol.asyncIterator || ASYNC_ITERATOR_ID,
-	IS_ASYNC_ID = 'isAsync';
+	ASYNC_ITERATOR = Symbol && Symbol.asyncIterator || ASYNC_ITERATOR_ID;
 
 function Iterable(iteratorFunction) {
 	if (typeof iteratorFunction !== 'function') {
 		throw new TypeError('Iterator function is not a function!');
 	}
-	var isAsync = iteratorFunction[IS_ASYNC_ID];
-	iteratorFunction = iteratorFunction.bind.apply(iteratorFunction, 
-		[this].concat(Array.prototype.slice.call(arguments, 1))
-	);
-	iteratorFunction[IS_ASYNC_ID] = isAsync;
+	var isAsync = iteratorFunction.isAsync;
+	if (arguments.length > 1) {
+		iteratorFunction = iteratorFunction.bind.apply(iteratorFunction, 
+			[this].concat(Array.prototype.slice.call(arguments, 1))
+		);
+		iteratorFunction.isAsync = isAsync;
+	}
 	if (isAsync) {
 		if (Symbol && Symbol.asyncIterator) {
 			this[Symbol.asyncIterator] = iteratorFunction;
