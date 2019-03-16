@@ -5,7 +5,7 @@
 at the same time, yielding an array of the values of each and stopping at the first sequence
 finishing.
 */
-Iterable.zipWithIterator = function zipWithIterator(lists, zipFunction) {
+$methodOnNLists(function zipWithIterator(lists, zipFunction) {
 	if (!lists || !lists.length || lists.length < 1) {
 		return Iterable.emptyIterator();
 	}
@@ -28,20 +28,10 @@ Iterable.zipWithIterator = function zipWithIterator(lists, zipFunction) {
 			return true;
 		}
 	);
-};
-
-Iterable.prototype.zipWith = function zipWith(zipFunction) {
-	var lists = [this].concat(Array.prototype.slice.call(arguments, 1));
-	return new Iterable(Iterable.zipWithIterator, lists, zipFunction);
-};
-
-Iterable.zipWith = function zipWith(zipFunction) {
-	var lists = Array.prototype.slice.call(arguments, 1);
-	return new Iterable(Iterable.zipWithIterator, lists, zipFunction);
-};
+});
 
 Iterable.zip = function zip() {
-	return this.zipWith.apply(this, [null].concat(Array.prototype.slice.call(arguments)));
+	return this.zipWith(Array.prototype.slice.call(arguments));
 };
 
 Iterable.prototype.zip = Iterable.zip;

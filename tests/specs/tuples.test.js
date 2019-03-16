@@ -46,9 +46,9 @@
 				test = function (testCase) {
 					var func = testCase.func,
 						lists = testCase.lists;
-					expectList(Iterable.prototype.zipWith.apply(lists[0], [func].concat(lists.slice(1))),
+					expectList(Iterable.prototype.zipWith.apply(lists[0], [lists.slice(1)].concat([func])),
 						testCase.expectedResult);
-					expectList(Iterable.zipWith.apply(Iterable, [func].concat(lists)), 
+					expectList(Iterable.zipWith.apply(Iterable, [lists].concat([func])), 
 						testCase.expectedResult); 
 				};
 			test({
