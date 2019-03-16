@@ -43,29 +43,34 @@ function then(p, callback) {
 	}
 }
 
-function $builderMethod(iteratorFunction) {
+function $builderMethod(iteratorFunction, async) {
 	var reMatch = /^function\s+(\w+)Iterator\(([^)]+)\)/.exec(iteratorFunction +''),
 		id = reMatch[1],
 		args = reMatch[2];
+	iteratorFunction.isAsync = !!async;
 	Iterable[id +'Iterator'] = iteratorFunction;
 	Iterable[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
 		id +'Iterator, '+ args +');\n})');
 }
 
-function $methodOn1List(iteratorFunction) {
+function $methodOn1List(iteratorFunction, async) {
 	var reMatch = /^function\s+(\w+)Iterator\(list,([^)]+)\)/.exec(iteratorFunction +''),
 		id = reMatch[1],
 		args = reMatch[2];
+	iteratorFunction.isAsync = !!async;
 	Iterable[id +'Iterator'] = iteratorFunction;
 	Iterable.prototype[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
 		id +'Iterator, this, '+ args +');\n})');
 }
 
-function $methodOnNLists(iteratorFunction) {
+function $methodOnNLists(iteratorFunction, async) {
 	var reMatch = /^function\s+(\w+)Iterator\(lists,([^)]+)\)/.exec(iteratorFunction +''),
 		id = reMatch[1],
 		args = reMatch[2];
+	iteratorFunction.isAsync = !!async;		
 	Iterable[id +'Iterator'] = iteratorFunction;
-	Iterable[id] = eval('(function '+ id +'('+ args +') {\n\treturn new Iterable(Iterable.'+ 
-		id +'Iterator, '+ args +');\n})');
+	Iterable.prototype[id] = eval('(function '+ id +'(lists, '+ args +') {\n'+
+		'\treturn new Iterable(Iterable.'+ id +'Iterator, [this].concat(lists), '+ args +');\n})');
+	Iterable[id] = eval('(function '+ id +'(lists, '+ args +') {\n'+
+		'\treturn new Iterable(Iterable.'+ id +'Iterator, lists, '+ args +');\n})');
 }
