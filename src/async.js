@@ -1,9 +1,3 @@
-/**
-*/
-Iterable.prototype.isAsync = function isAsync() {
-	return !!this[ASYNC_ITERATOR];
-};
-
 /** A `mockAsyncIterator` asynchronously iterates over a synchronous iterable. Useful mostly for
 testing purposes. 
 */
