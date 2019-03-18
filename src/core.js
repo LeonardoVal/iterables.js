@@ -7,7 +7,7 @@ var ITERATOR_ID = '__iter__',
 
 function Iterable(iteratorFunction) {
 	if (typeof iteratorFunction !== 'function') {
-		throw new TypeError('Iterator function is not a function!');
+		throw new TypeError('Iterator function `'+ iteratorFunction +'` is not a function!');
 	}
 	var isAsync = iteratorFunction.isAsync;
 	if (arguments.length > 1) {
@@ -74,36 +74,6 @@ Iterable.subclass = function subclass(constructor, members) {
 		}
 	}
 	return constructor;
-};
-
-/** 
-*/
-Iterable.prototype.length = function length() {
-	var result = 0;
-	return lastFromIterator(filteredMapIterator(this, function () {
-		return ++result;
-	}), result);
-};
-
-/**
-*/
-Iterable.prototype.get = function get(index, defaultValue) {
-	index = Math.floor(index);
-	var hasDefault = arguments.length > 1,
-		obj = filteredMapIterator(this, null, function (value, i) {
-			return i === index;
-		}).next();
-	return then(obj, function (x) {
-		if (x.done) {
-			if (hasDefault) {
-				return defaultValue;
-			} else {
-				throw new Error("Cannot get value at "+ index +"!");
-			}
-		} else {
-			return x.value;
-		}
-	});
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
