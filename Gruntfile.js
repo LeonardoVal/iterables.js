@@ -9,18 +9,30 @@ module.exports = function (grunt) {
 		globalName: 'list_utils',
 		sourceNames: ['__prologue__',
 			'_utils', 'core', 'async',
-			'empty', 'singleton', 'strings', 'arrays', 'objects', 
 		// builders
-			'builders/range', 'builders/enumFromThenTo', 'builders/repeat', 'builders/iterate',
-			'selections', 
+			'builders/empty', 'builders/singleton', 'builders/strings', 'builders/arrays',
+			'builders/objects', 
+			'builders/range', 'builders/enumFromThenTo', 
+			'builders/repeat', 'builders/iterate',
+		// properties
+			'properties/isAsync', 'properties/isEmpty', 'properties/length',
+			'properties/indicesWhere', 'properties/indexWhere',
+			'properties/indicesOf', 'properties/indexOf', 
+		// selections
+			'selections/get', 'selections/filter', 'selections/head', 'selections/tail',
+			'selections/takeWhile', 'selections/take', 'selections/dropWhile', 'selections/drop',
+			'selections/greater', 'selections/lesser',
 		// conversions
-			'conversions/map',
+			'conversions/map', 'conversions/join', 
+			'conversions/toArray', 'conversions/toObject', 
+			'conversions/toMap', 'conversions/toSet',
+			'conversions/cycle',
 		// reductions
-			'reductions/scanl', 'reductions/foldl', 'reductions/sum', 'reductions/min',
-			'reductions/max', 'reductions/all', 'reductions/any',
+			'reductions/scanl', 'reductions/foldl', 
+			'reductions/sum', 'reductions/min', 'reductions/max',
+			'reductions/all', 'reductions/any',
 		// ... 
-			'tuples', 'indices',
-			'combinatorics',
+			'tuples', 'combinatorics',
 			'__epilogue__'],
 		deps: [
 			{ id: 'tests-common', path: 'build/tests-common.js', dev: true, module: false }
