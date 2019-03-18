@@ -14,12 +14,6 @@
 			expectList(new list_utils.EmptyIterable(), []);
 		});
 
-		it("`Iterable.empty` function", function () {
-			expect(list_utils.Iterable.empty).toBeOfType('function');
-			expect(list_utils.Iterable.empty()).toBeOfType(list_utils.EmptyIterable);
-			expectList(list_utils.Iterable.empty(), []);
-		});
-
 		it("`Iterable.EMPTY` singleton", function () {
 			expect(list_utils.Iterable.EMPTY).toBeOfType(list_utils.EmptyIterable);
 			expectList(list_utils.Iterable.EMPTY, []);
