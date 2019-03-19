@@ -5,3 +5,7 @@ then the first element in the sequence is used.
 Iterable.prototype.foldl = function foldl(foldFunction, initial) {
 	return lastFromIterator(this.scanl(foldFunction, initial), initial);
 };
+
+/** `reduce(foldFunction, initial)` is a synonym for `foldl`.
+ */
+Iterable.prototype.reduce = Iterable.prototype.foldl;
