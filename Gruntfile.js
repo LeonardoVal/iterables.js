@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 			'builders/objects', 
 			'builders/range', 'builders/enumFromThenTo', 
 			'builders/repeat', 'builders/iterate',
+			'builders/ticks',
 		// properties
 			'properties/isAsync', 'properties/isEmpty', 'properties/length',
 			'properties/indicesWhere', 'properties/indexWhere',
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
 			'conversions/map', 'conversions/join', 
 			'conversions/toArray', 'conversions/toObject', 
 			'conversions/toMap', 'conversions/toSet',
-			'conversions/cycle',
+			'conversions/cycle', 'conversions/reverse', 'conversions/sorted',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 
 			'reductions/sum', 'reductions/min', 'reductions/max',
