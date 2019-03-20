@@ -21,13 +21,15 @@ module.exports = function (grunt) {
 			'properties/indicesOf', 'properties/indexOf', 
 		// selections
 			'selections/get', 'selections/filter', 'selections/head', 'selections/tail',
-			'selections/takeWhile', 'selections/take', 'selections/dropWhile', 'selections/drop',
+			'selections/takeWhile', 'selections/dropWhile', 
+			'selections/slice', 'selections/take', 'selections/drop',
 			'selections/greater', 'selections/lesser',
 		// conversions
 			'conversions/map', 'conversions/join', 
 			'conversions/toArray', 'conversions/toObject', 
 			'conversions/toMap', 'conversions/toSet',
-			'conversions/cycle', 'conversions/reverse', 'conversions/sorted',
+		// unary
+			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 
 			'reductions/sum', 'reductions/min', 'reductions/max',
