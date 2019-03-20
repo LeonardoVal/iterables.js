@@ -51,8 +51,17 @@ function evalExp(code) {
 	} 
 }
 
+function functionMatch(re, func) {
+	var reMatch = re.exec(func +'');
+	if (!reMatch) {
+		throw new SyntaxError('Iterator function is not valid!\n```javascript\n\t'+ 
+			(func +'').replace('\n', '\n\t') +'\n```');
+	}
+	return reMatch;
+}
+
 function $builderMethod(iteratorFunction, async) {
-	var reMatch = /^function\s+(\w+)Iterator\(([^\)]*)\)/.exec(iteratorFunction +''),
+	var reMatch = functionMatch(/^function\s+(\w+)Iterator\(([^\)]*)\)/, iteratorFunction),
 		id = reMatch[1],
 		args = reMatch[2];
 	iteratorFunction.isAsync = !!async;
@@ -63,7 +72,7 @@ function $builderMethod(iteratorFunction, async) {
 }
 
 function $subtype(iteratorFunction, async) {
-	var reMatch = /^function\s+(\w+)Iterator\(([^\)]*)\)/.exec(iteratorFunction +''),
+	var reMatch = functionMatch(/^function\s+(\w+)Iterator\(([^\)]*)\)/, iteratorFunction),
 		id = reMatch[1],
 		args = reMatch[2];
 	iteratorFunction.isAsync = !!async;
@@ -82,8 +91,12 @@ function $subtype(iteratorFunction, async) {
 }
 
 function $methodOn1List(iteratorFunction, async) {
-	var reMatch = /^function\s+(\w+)Iterator\(list(?:|,([^\)]+))\)/.exec(iteratorFunction +''),
-		id = reMatch[1],
+	var reMatch = functionMatch(/^function\s+(\w+)Iterator\(list(?:|,([^\)]+))\)/, iteratorFunction);
+	if (!reMatch) {
+		throw new SyntaxError('Iterator function is not valid!\n```javascript\n\t'+ 
+			(iteratorFunction +''.replace('\n', '\n\t')) +'\n```');
+	}
+	var id = reMatch[1],
 		args = reMatch[2];
 	iteratorFunction.isAsync = !!async;
 	Iterable[id +'Iterator'] = iteratorFunction;
@@ -92,7 +105,7 @@ function $methodOn1List(iteratorFunction, async) {
 }
 
 function $methodOnNLists(iteratorFunction, async) {
-	var reMatch = /^function\s+(\w+)Iterator\(lists(?:|,([^\)]+))\)/.exec(iteratorFunction +''),
+	var reMatch = functionMatch(/^function\s+(\w+)Iterator\(lists(?:|,([^\)]+))\)/, iteratorFunction),
 		id = reMatch[1],
 		args = reMatch[2];
 	iteratorFunction.isAsync = !!async;		
