@@ -79,9 +79,9 @@
 			expect(Iterable.product).toBeOfType('function');
 			var test = function (testCase) {
 					var lists = testCase.lists;
-					expectList(Iterable.prototype.product.apply(lists[0], lists.slice(1)),
+					expectList(Iterable.prototype.product.call(lists[0], lists.slice(1)),
 						testCase.expectedResult);
-					expectList(Iterable.product.apply(Iterable, lists),
+					expectList(Iterable.product.call(Iterable, lists),
 						testCase.expectedResult);
 				};
 			test({
