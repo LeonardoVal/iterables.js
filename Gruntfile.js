@@ -30,12 +30,14 @@ module.exports = function (grunt) {
 			'conversions/toMap', 'conversions/toSet',
 		// unary
 			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices',
+		// variadic
+			'variadic/zipWith', 'variadic/zip', 'variadic/product',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 
 			'reductions/sum', 'reductions/min', 'reductions/max',
 			'reductions/all', 'reductions/any',
 		// ... 
-			'tuples', 'combinatorics',
+			'combinatorics',
 			'__epilogue__'],
 		deps: [
 			{ id: 'tests-common', path: 'build/tests-common.js', dev: true, module: false }
