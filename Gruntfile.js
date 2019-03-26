@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 			'_utils',
 		// base
 			'base/core', 'base/generatorIterator', 'base/generatorWithIndexIterator',
-			'base/filteredMapIterator', 'base/lastFromIterator', 'base/lastValue', 
+			'base/filteredMap', 'base/lastFromIterator', 'base/lastValue', 
 			'base/forEach', 'async',
 		// builders
 			'builders/empty', 'builders/singleton', 'builders/strings', 'builders/arrays',
@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 			'selections/get', 'selections/filter', 'selections/head', 'selections/tail',
 			'selections/takeWhile', 'selections/dropWhile', 
 			'selections/slice', 'selections/take', 'selections/drop',
-			'selections/greater', 'selections/lesser',
+			'selections/greater', 'selections/lesser', 'selections/sample',
 		// conversions
 			'conversions/map', 'conversions/join', 
 			'conversions/toArray', 'conversions/toObject', 
