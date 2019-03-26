@@ -37,4 +37,4 @@ function filteredMapIterator(list, valueFunction, checkFunction) {
 		}
 	});
 }
-Iterable.filteredMapIterator = filteredMapIterator;
+$methodOn1List(filteredMapIterator);
