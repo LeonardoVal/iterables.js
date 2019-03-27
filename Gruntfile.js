@@ -14,8 +14,8 @@ module.exports = function (grunt) {
 			'base/filteredMap', 'base/lastFromIterator', 'base/lastValue', 
 			'base/forEach', 'async',
 		// builders
-			'builders/empty', 'builders/singleton', 'builders/strings', 'builders/arrays',
-			'builders/objects', 
+			'builders/empty', 'builders/singleton', 'builders/fromString', 'builders/fromArray',
+			'builders/fromObject', 'builders/fromSet', 'builders/fromMap',
 			'builders/range', 'builders/enumFromThenTo', 
 			'builders/repeat', 'builders/iterate',
 			'builders/ticks',
