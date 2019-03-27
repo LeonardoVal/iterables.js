@@ -15,10 +15,10 @@ SingletonIterable.prototype.isEmpty = function isEmpty() {
 	return false;
 };
 
-StringIterable.prototype.isEmpty = function isEmpty() {
+FromStringIterable.prototype.isEmpty = function isEmpty() {
 	return this.length() < 1;
 };
 
-ArrayIterable.prototype.isEmpty = function isEmpty() {
+FromArrayIterable.prototype.isEmpty = function isEmpty() {
 	return this.length() < 1;
 };

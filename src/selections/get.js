@@ -31,7 +31,7 @@ EmptyIterable.prototype.get = function get(i, defaultValue) {
 
 /** 
  */
-StringIterable.prototype.get = function get(i, defaultValue) {
+FromStringIterable.prototype.get = function get(i, defaultValue) {
 	var found = i >= 0 && i < this.length();
 	if (!found && arguments.length < 2) {
 		throw new Error("Cannot get value at "+ i +"!");
@@ -41,7 +41,7 @@ StringIterable.prototype.get = function get(i, defaultValue) {
 
 /** 
  */
-ArrayIterable.prototype.get = function get(i, defaultValue) {
+FromArrayIterable.prototype.get = function get(i, defaultValue) {
 	var found = i >= 0 && i < this.length();
 	if (!found && arguments.length < 2) {
 		throw new Error("Cannot get value at "+ i +"!");

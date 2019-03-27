@@ -17,10 +17,10 @@ SingletonIterable.prototype.toArray = function toArray(array) {
 	return (array || []).concat([this.__value__]);
 };
 
-StringIterable.prototype.toArray = function toArray() {
+FromStringIterable.prototype.toArray = function toArray() {
 	return this.__string__.split('');
 };
 
-ArrayIterable.prototype.toArray = function toArray() {
+FromArrayIterable.prototype.toArray = function toArray() {
 	return this.__array__.slice();
 };
