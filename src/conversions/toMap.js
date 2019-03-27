@@ -1,6 +1,6 @@
 /** 
  */
-if (typeof Map === 'function') {
+if (MAP_TYPE_IS_DEFINED) {
 	Iterable.prototype.toMap = function toMap(map) {
 		map = map || new Map();
 		return lastFromIterator(filteredMapIterator(this, function (pair) {

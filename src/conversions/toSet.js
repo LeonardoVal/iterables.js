@@ -1,6 +1,6 @@
 /** 
  */
-if (typeof Set === 'function') {
+if (SET_TYPE_IS_DEFINED) {
 	var toSet = function toSet(set) {
 		set = set || new Set();
 		return lastFromIterator(filteredMapIterator(this, function (value) {
@@ -20,7 +20,7 @@ if (typeof Set === 'function') {
 		return set;
 	};
 
-	StringIterable.prototype.toSet = function toSet(set) {
+	FromStringIterable.prototype.toSet = function toSet(set) {
 		if (!set) {
 			return new Set(this.__string__);
 		} else {
@@ -28,7 +28,7 @@ if (typeof Set === 'function') {
 		}
 	};
 
-	ArrayIterable.prototype.toSet = function toSet(set) {
+	FromArrayIterable.prototype.toSet = function toSet(set) {
 		if (!set) {
 			return new Set(this.__array__);
 		} else {

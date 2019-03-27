@@ -75,3 +75,6 @@ Iterable.subclass = function subclass(constructor, members) {
 	}
 	return constructor;
 };
+
+var SET_TYPE_IS_DEFINED = typeof Set === 'function',
+	MAP_TYPE_IS_DEFINED = typeof Map === 'function';
