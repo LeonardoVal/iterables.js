@@ -4,8 +4,8 @@
 
 	describe("Lists from strings:", function () {
 		it("`Iterable.stringIterator` function", function () {
-			expect(list_utils.Iterable.stringIterator).toBeOfType('function');
-			var stringIterator = list_utils.Iterable.stringIterator.bind(list_utils.Iterable);
+			expect(list_utils.Iterable.fromStringIterator).toBeOfType('function');
+			var stringIterator = list_utils.Iterable.fromStringIterator.bind(list_utils.Iterable);
 			expectIterator(stringIterator(""), []);
 			expectIterator(stringIterator("a"), ["a"]);
 			expectIterator(stringIterator("ab"), ["a", "b"]);
@@ -13,11 +13,11 @@
 		});
 
 		it("`StringIterable` class", function () {
-			expect(list_utils.StringIterable).toBeOfType('function');
-			expectList(new list_utils.StringIterable(""), []);
-			expectList(new list_utils.StringIterable("a"), ["a"]);
-			expectList(new list_utils.StringIterable("ab"), ["a", "b"]);
-			expectList(new list_utils.StringIterable("abc"), ["a", "b", "c"]);
+			expect(list_utils.FromStringIterable).toBeOfType('function');
+			expectList(new list_utils.FromStringIterable(""), []);
+			expectList(new list_utils.FromStringIterable("a"), ["a"]);
+			expectList(new list_utils.FromStringIterable("ab"), ["a", "b"]);
+			expectList(new list_utils.FromStringIterable("abc"), ["a", "b", "c"]);
 		});
 
 		it("`Iterable.fromString` function", function () {

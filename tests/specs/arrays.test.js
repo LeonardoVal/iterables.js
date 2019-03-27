@@ -4,8 +4,8 @@
 
 	describe("Lists from arrays:", function () {
 		it("`Iterable.arrayIterator` function", function () {
-			expect(list_utils.Iterable.arrayIterator).toBeOfType('function');
-			var arrayIterator = list_utils.Iterable.arrayIterator.bind(list_utils.Iterable);
+			expect(list_utils.Iterable.fromArrayIterator).toBeOfType('function');
+			var arrayIterator = list_utils.Iterable.fromArrayIterator.bind(list_utils.Iterable);
 			expectIterator(arrayIterator([]), []);
 			expectIterator(arrayIterator([true]), [true]);
 			expectIterator(arrayIterator([1, 2]), [1, 2]);
@@ -13,11 +13,11 @@
 		});
 
 		it("`ArrayIterable` class", function () {
-			expect(list_utils.ArrayIterable).toBeOfType('function');
-			expectList(new list_utils.ArrayIterable([]), []);
-			expectList(new list_utils.ArrayIterable([true]), [true]);
-			expectList(new list_utils.ArrayIterable([1, 2]), [1, 2]);
-			expectList(new list_utils.ArrayIterable(['a', 'b', 'c']), ['a', 'b', 'c']);
+			expect(list_utils.FromArrayIterable).toBeOfType('function');
+			expectList(new list_utils.FromArrayIterable([]), []);
+			expectList(new list_utils.FromArrayIterable([true]), [true]);
+			expectList(new list_utils.FromArrayIterable([1, 2]), [1, 2]);
+			expectList(new list_utils.FromArrayIterable(['a', 'b', 'c']), ['a', 'b', 'c']);
 		});
 
 		it("`Iterable.fromArray` function", function () {
