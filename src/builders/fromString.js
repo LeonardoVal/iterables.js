@@ -1,6 +1,6 @@
 /**
  */
-var StringIterable = $subtype(function stringIterator(string) {
+var FromStringIterable = $subtype(function fromStringIterator(string) {
 	if (typeof string !== 'string') {
 		throw new TypeError('Argument must be a string, but is a `'+ typeof string +'`!');
 	}
@@ -16,5 +16,5 @@ var StringIterable = $subtype(function stringIterator(string) {
 /** 
  */
 Iterable.fromString = function fromString(string) {
-	return new exports.StringIterable(string);
+	return new exports.FromStringIterable(string);
 };

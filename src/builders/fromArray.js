@@ -1,6 +1,6 @@
 /**
  */
-var ArrayIterable = $subtype(function arrayIterator(array) {
+var FromArrayIterable = $subtype(function fromArrayIterator(array) {
 	if (!Array.isArray(array)) {
 		throw new TypeError('Argument must be an array, but is a `'+ typeof array +'`!');
 	}
@@ -16,7 +16,7 @@ var ArrayIterable = $subtype(function arrayIterator(array) {
 /** 
  */
 Iterable.fromArray = function fromArray(array) {
-	return new exports.ArrayIterable(array);
+	return new exports.FromArrayIterable(array);
 };
 
 /** 
