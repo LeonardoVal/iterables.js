@@ -12,7 +12,7 @@ module.exports = function (grunt) {
 		// base
 			'base/core', 'base/generatorIterator', 'base/generatorWithIndexIterator',
 			'base/filteredMap', 'base/lastFromIterator', 'base/lastValue', 
-			'base/forEach', 'async',
+			'base/forEach', 'async', 'base/choreographer',
 		// builders
 			'builders/empty', 'builders/singleton', 'builders/fromString', 'builders/fromArray',
 			'builders/fromObject', 'builders/fromSet', 'builders/fromMap',
@@ -35,7 +35,7 @@ module.exports = function (grunt) {
 		// unary
 			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices',
 		// variadic
-			'variadic/zipWith', 'variadic/zip', 'variadic/product',
+			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 
 			'reductions/sum', 'reductions/min', 'reductions/max',
