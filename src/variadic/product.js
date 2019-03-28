@@ -3,38 +3,23 @@
  * iterables, yielding an array of the values of each.
  */
 $methodOnNLists(function productIterator(lists) {
-	if (!Array.isArray(lists)) throw new TypeError('Expected array but got `'+ lists +'`!');//FIXME
-	var iters = __iters__(lists),
-		tuple;
-	return generatorIterator(function (obj) {
-		var done = false,
-			x;
-		if (!tuple) { // First tuple.
-			tuple = iters.map(function (iter) {
-				var x = iter.next();
-				done = done || x.done;
-				return x.value;
-			});
-		} else {
-			for (var i = iters.length - 1; i >= 0; i--) { // Subsequent tuples.
-				x = iters[i].next();
-				if (x.done) {
-					if (i > 0) {
-						iters[i] = __iter__(lists[i]);
-						tuple[i] = iters[i].next().value;
-					} else {
-						done = true;
-					}				
+	return choreographerIterator(lists, function (obj, xs) {
+		var length = xs.length;
+		for (var i = 0; i < length; i++) {
+			if (xs[i].done) {
+				if (i === length - 1) {
+					obj.done = true;
+					return false;
 				} else {
-					tuple[i] = x.value;
-					break;
+					xs[i].reset = true;
+					xs[i + 1].next = true;
+					return true;
 				}
 			}
 		}
-		if (done) {
-			obj.done = true;
-		} else { 
-			obj.value = tuple.slice(0); // Shallow array clone.
-		}
+		xs[0].next = true;
+		obj.value = xs.map(function (x) {
+			return x.value;
+		});
 	});
 });
