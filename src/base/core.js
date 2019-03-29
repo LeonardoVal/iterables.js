@@ -1,4 +1,4 @@
-/** 
+/**
 */
 var ITERATOR_ID = '__iter__',
 	ITERATOR = Symbol && Symbol.iterator || ITERATOR_ID,
@@ -78,3 +78,18 @@ Iterable.subclass = function subclass(constructor, members) {
 
 var SET_TYPE_IS_DEFINED = typeof Set === 'function',
 	MAP_TYPE_IS_DEFINED = typeof Map === 'function';
+
+function list(source) {
+	if (Array.isArray(source)) {
+		return Iterable.fromArray(source);
+	} else if (typeof source === 'string') {
+		return Iterable.fromString(source);
+	} else if (SET_TYPE_IS_DEFINED && source instanceof Set) {
+		return Iterable.fromSet(source);
+	} else if (MAP_TYPE_IS_DEFINED && source instanceof Map) {
+		return Iterable.fromMap(source);
+	} else {
+		return new Iterable(__iter__(source));
+	}
+}
+exports.list = list;
