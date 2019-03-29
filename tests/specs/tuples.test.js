@@ -86,7 +86,7 @@
 				};
 			test({
 				lists: ['ab', 'xy'],
-				expectedResult: [['a','x'],['a','y'],['b','x'],['b','y']]
+				expectedResult: [['a','x'],['b','x'],['a','y'],['b','y']]
 			});
 			test({
 				lists: ['ab', 'x'],
