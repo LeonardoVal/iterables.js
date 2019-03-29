@@ -7,7 +7,7 @@ $methodOnNLists(function productIterator(lists) {
 		var length = xs.length;
 		for (var i = 0; i < length; i++) {
 			if (xs[i].done) {
-				if (i === length - 1) {
+				if (i === length - 1 || xs[i + 1].done) {
 					obj.done = true;
 					return false;
 				} else {

@@ -1,6 +1,7 @@
 /**
  */
 function choreographerIterator(lists, stepFunction, initial) {
+	//FIXME Support any iterable `lists`. 
 	var iters = Array.apply(null, Array(lists.length)),
 		xs = initial || Array.apply(null, Array(lists.length)),
 		iteratorFunction = function choreographerIteratorFunction(obj) {
