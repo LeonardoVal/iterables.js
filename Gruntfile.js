@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 		// properties
 			'properties/isAsync', 'properties/isEmpty', 'properties/length',
 			'properties/indicesWhere', 'properties/indexWhere',
-			'properties/indicesOf', 'properties/indexOf', 
+			'properties/indicesOf', 'properties/indexOf', 'properties/has', 
 		// selections
 			'selections/get', 'selections/filter', 'selections/head', 'selections/tail',
 			'selections/takeWhile', 'selections/dropWhile', 
@@ -33,7 +33,7 @@ module.exports = function (grunt) {
 			'conversions/toArray', 'conversions/toObject', 
 			'conversions/toMap', 'conversions/toSet',
 		// unary
-			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices',
+			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices', 'unary/nub',
 		// variadic
 			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
 		// reductions
