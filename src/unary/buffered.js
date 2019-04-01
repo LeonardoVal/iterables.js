@@ -2,5 +2,6 @@
  * iterable.
  */
 Iterable.prototype.buffered = function buffered(array) {
+	array = array || [];
 	return Iterable.fromArray(this.toArray(array));
 };
