@@ -37,7 +37,7 @@ module.exports = function (grunt) {
 			'unary/buffered',
 		// variadic
 			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
-			'variadic/union',
+			'variadic/union', 'variadic/intersection', 'variadic/difference',
 		// reductions
 			'reductions/scanl', 'reductions/foldl', 
 			'reductions/sum', 'reductions/min', 'reductions/max',
