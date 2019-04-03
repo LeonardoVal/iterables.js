@@ -3,7 +3,7 @@ associative operator. The `initial` value is used as a starting point, but if it
 then the first element in the sequence is used.
 */
 Iterable.prototype.foldl = function foldl(foldFunction, initial) {
-	return lastFromIterator(this.scanl(foldFunction, initial), initial);
+	return this.scanl(foldFunction, initial).lastValue(initial);
 };
 
 /** `reduce(foldFunction, initial)` is a synonym for `foldl`.
