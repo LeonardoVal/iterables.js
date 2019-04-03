@@ -8,13 +8,14 @@ Iterable.prototype.nub = function nub(equality) {
 	if (SET_TYPE_IS_DEFINED && !equality) {
 		return Iterable.fromSet(new Set(this));
 	} else {
-		var buffer = this.toArray();
-		return this.filter(function (value, i) {
-			for (var j = i - 1; j >= 0; j--) {
-				if (equality ? equality(value, buffer[j]) : value === buffer[j]) {
+		var buffer = [];
+		return this.filter(function (value) {
+			for (var i = 0; i < buffer.length; i++) {
+				if (equality ? equality(value, buffer[i]) : (value === buffer[i])) {
 					return false;
 				}
 			}
+			buffer.push(value);
 			return true;
 		});
 	}
