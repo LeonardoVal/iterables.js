@@ -39,9 +39,9 @@ module.exports = function (grunt) {
 			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
 			'variadic/union', 'variadic/intersection', 'variadic/difference',
 		// reductions
-			'reductions/scanl', 'reductions/foldl', 
-			'reductions/sum', 'reductions/min', 'reductions/max',
-			'reductions/all', 'reductions/any',
+			'reductions/scanl', 'reductions/foldl',
+			'reductions/sum', 'reductions/all', 'reductions/any',
+			'reductions/min', 'reductions/minBy', 'reductions/max', 'reductions/maxBy',
 		// ... 
 			'combinatorics',
 			'__epilogue__'],
