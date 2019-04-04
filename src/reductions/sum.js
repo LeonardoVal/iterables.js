@@ -2,7 +2,7 @@
 */
 Iterable.prototype.sum = function sum(n) {
 	n = isNaN(n) ? 0 : +n;
-	return this.foldl(function (n1, n2) {
+	return this.reduce(function (n1, n2) {
 		return n1 + n2;
 	}, n);
 };

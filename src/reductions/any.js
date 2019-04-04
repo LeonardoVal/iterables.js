@@ -3,7 +3,7 @@ returns false, or if the sequence is empty.
 */
 Iterable.prototype.any = function any(predicate, strict) {
 	predicate = typeof predicate === 'function' ? predicate : __toBool__;
-	return this.foldl(function (result, value, i, iter) {
+	return this.reduce(function (result, value, i, iter) {
 		if (predicate(value, i, iter)) {
 			result = true;
 			if (!strict) {

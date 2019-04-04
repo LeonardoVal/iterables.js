@@ -4,7 +4,7 @@ returned.
 */
 Iterable.prototype.all = function all(predicate, strict) {
 	predicate = typeof predicate === 'function' ? predicate : __toBool__;
-	return this.foldl(function (result, value, i, iter) {
+	return this.reduce(function (result, value, i, iter) {
 		if (!predicate(value, i, iter)) {
 			result = false;
 			if (!strict) {
