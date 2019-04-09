@@ -34,12 +34,12 @@ module.exports = function (grunt) {
 			'conversions/toMap', 'conversions/toSet',
 		// unary
 			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices', 'unary/nub',
-			'unary/buffered',
+			'unary/buffered', 'unary/peephole',
 		// variadic
 			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
 			'variadic/union', 'variadic/intersection', 'variadic/difference',
 		// reductions
-			'reductions/scanl', 'reductions/foldl',
+			'reductions/scanl', 'reductions/reduce',
 			'reductions/sum', 'reductions/all', 'reductions/any',
 			'reductions/min', 'reductions/minBy', 'reductions/max', 'reductions/maxBy',
 		// ... 
