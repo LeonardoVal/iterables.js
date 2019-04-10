@@ -42,6 +42,7 @@ module.exports = function (grunt) {
 			'reductions/scanl', 'reductions/reduce',
 			'reductions/sum', 'reductions/all', 'reductions/any',
 			'reductions/min', 'reductions/minBy', 'reductions/max', 'reductions/maxBy',
+			'reductions/groupBy',
 		// ... 
 			'combinatorics',
 			'__epilogue__'],
