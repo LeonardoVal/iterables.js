@@ -1,6 +1,6 @@
 /**
  */
-class MapIterable extends Iterable {
+class SetIterable extends Iterable {
 	constructor (set) {
 		if (!(set instanceof Set)) {
 			throw new TypeError('Argument must be a `Set`, but is a `['+ 
