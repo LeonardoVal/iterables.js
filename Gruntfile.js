@@ -10,7 +10,7 @@ module.exports = function (grunt) {
 		sourceNames: ['__prologue__',
 			'_utils',
 		// base
-			'Iterable', 'generators',
+			'generators', 'Iterable', 'asyncGenerators', 'AsyncIterable',
 		// builders
 			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
 			'subtypes/ArrayIterable', 'subtypes/StringIterable',
