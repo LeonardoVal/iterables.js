@@ -13,7 +13,9 @@ module.exports = function (grunt) {
 			'Iterable', 'generators',
 		// builders
 			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
-			'subtypes/ArrayIterable',
+			'subtypes/ArrayIterable', 'subtypes/StringIterable',
+			'subtypes/ObjectIterable', 'subtypes/MapIterable',
+			'subtypes/SetIterable',
 		// ...
 			'__epilogue__'],
 		deps: [
