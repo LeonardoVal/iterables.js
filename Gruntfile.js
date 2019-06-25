@@ -10,41 +10,11 @@ module.exports = function (grunt) {
 		sourceNames: ['__prologue__',
 			'_utils',
 		// base
-			'base/core', 'base/generatorIterator', 'base/generatorWithIndexIterator',
-			'base/filteredMap', 'base/lastFromIterator', 'base/lastValue', 
-			'base/forEach', 'async', 'base/choreographer',
+			'Iterable', 'generators',
 		// builders
-			'builders/empty', 'builders/singleton', 'builders/fromString', 'builders/fromArray',
-			'builders/fromObject', 'builders/fromSet', 'builders/fromMap',
-			'builders/range', 'builders/enumFromThenTo', 
-			'builders/repeat', 'builders/iterate',
-			'builders/ticks',
-		// properties
-			'properties/isAsync', 'properties/isEmpty', 'properties/length',
-			'properties/indicesWhere', 'properties/indexWhere',
-			'properties/indicesOf', 'properties/indexOf', 'properties/has', 
-		// selections
-			'selections/get', 'selections/filter', 'selections/head', 'selections/tail',
-			'selections/takeWhile', 'selections/dropWhile', 
-			'selections/slice', 'selections/take', 'selections/drop',
-			'selections/greater', 'selections/lesser', 'selections/sample',
-		// conversions
-			'conversions/map', 'conversions/join', 
-			'conversions/toArray', 'conversions/toObject', 
-			'conversions/toMap', 'conversions/toSet',
-		// unary
-			'unary/cycle', 'unary/reverse', 'unary/sorted', 'unary/slices', 'unary/nub',
-			'unary/buffered', 'unary/peephole',
-		// variadic
-			'variadic/zipWith', 'variadic/zip', 'variadic/product', 'variadic/concat',
-			'variadic/union', 'variadic/intersection', 'variadic/difference',
-		// reductions
-			'reductions/scanl', 'reductions/reduce',
-			'reductions/sum', 'reductions/all', 'reductions/any',
-			'reductions/min', 'reductions/minBy', 'reductions/max', 'reductions/maxBy',
-			'reductions/groupBy',
-		// ... 
-			'combinatorics',
+			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
+			'subtypes/ArrayIterable',
+		// ...
 			'__epilogue__'],
 		deps: [
 			{ id: 'tests-common', path: 'build/tests-common.js', dev: true, module: false }
