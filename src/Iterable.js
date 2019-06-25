@@ -3,11 +3,11 @@
 class Iterable {
 	/**
 	 */
-	constructor (source, generator = null) {
-		Object.defineProperty(this, 'source', { value: source });
-		if (generator) {
-			Object.defineProperty(this, 'generator', { value: generator });
+	constructor (source) {
+		if (typeof source === 'function' && arguments.length > 1) {
+			source = source.bind(Array.prototype.slice.call(arguments, 1));
 		}
+		Object.defineProperty(this, 'source', { value: source });
 	}
 
 	/**
@@ -18,15 +18,14 @@ class Iterable {
 
 	/** 
 	 */
-	__iter__(iterator) {
+	static __iter__(iterator) {
 		if (iterator.return) {
 			return iterator;
 		} else {
 			let done = false;
 			return {
 				next() {
-					return done ? { done: true } 
-						: { value: iterator.next() };
+					return done ? { done: true } : iterator.next();
 				},
 				return() { 
 					done = true; 
@@ -39,44 +38,96 @@ class Iterable {
 	/** 
 	 */
 	[Symbol.iterator](){
-		let source = this.generator ? this.generator(this.source)
-				: this.source,
-			iterator = typeof source === 'function' ? source 
+		let iterator = typeof source === 'function' ? source() 
 				: source[Symbol.iterator]();
-		return this.__iter__(iterator);
+		return Iterable.__iter__(iterator);
+	}
+
+	/**
+	 */
+	filteredMap(valueFunction, checkFunction) {
+		return new Iterable(generators.filteredMap, this, valueFunction,
+			checkFunction);
 	}
 
 	/**
 	 */
 	forEach(doFunction, ifFunction) {
-		let iter = this[Symbol.iterator](),
-			iter2 = Iterable.filteredMapIterator(iter, doFunction, ifFunction);
-		return Iterable.lastValueFromIterator(iter2);
+		let result;
+		for (result in this.filteredMap(doFunction, ifFunction)) {
+			// Do nothing
+		}
+		return result;
 	}
 
 // Builders ////////////////////////////////////////////////////////////////////
 
+	/**
+	 */
+	range(from, to, step) {
+		return new Iterable(generators.range, from, to, step);
+	}
+
+	/**
+	 */
+	enumFromThenTo(from, then, to) {
+		return new Iterable(generators.enumFromThenTo, from, then, to);
+	}
+
+	/**
+	 */
+	enumFromThen(from, then) {
+		return new Iterable(generators.enumFromThen, from, then);
+	}
+
+	/**
+	 */
+	enumFrom(from) {
+		return new Iterable(generators.enumFrom, from);
+	}
+
+	/**
+	 */
+	repeat(value, n) {
+		return new Iterable(generators.repeat, value, n);
+	}
+
+	/**
+	 */
+	iterate(f, arg, n) {
+		return new Iterable(generators.iterate, f, arg, n);
+	}
+
+	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
+	 * with `foldFunction` as a left associative operator. Instead of returning 
+	 * the last result, it iterates over the intermediate values in the folding 
+	 * sequence.
+	 */
+	scanl(foldFunction, initial) {
+		return new Iterable(generators.scanl, this, foldFunction, initial);
+	}
+
 	/** 
 	 */
-	fromArray(array) {
+	static fromArray(array) {
 		return new ArrayIterable(array);
 	}
 
 	/** 
 	 */
-	fromValues() {
+	static fromValues() {
 		return this.fromArray(Array.prototype.slice.call(arguments));
 	}
 
 	/**
 	 */
-	fromObject(obj, sortKeys) {
+	static fromObject(obj, sortKeys) {
 		return new ObjectIterable(obj, sortKeys);
 	}
 
 	/**
 	 */
-	fromString(string) {
+	static fromString(string) {
 		return new StringIterable(string);
 	}
 

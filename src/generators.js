@@ -130,35 +130,6 @@ let generators = {
 			i++;
 		}
 	}
-};
+}; // generators
 
 exports.generators = generators;
-
-// Iterable methods for sequence builders. /////////////////////////////////////
-
-['range', 'enumFromThenTo', 'enumFromThen', 'enumFrom', 'repeat', 'iterate'
-].forEach((methodName) => {
-	let generator = generators[methodName];
-	if (generator && !Iterable[methodName]) {
-		Object.defineProperty(Iterable, methodName, { 
-			value: function () {
-				return new Iterable(generator.apply(this, arguments));
-			}
-		});
-	}
-});
-
-// Iterable methods for operations on one sequence. ////////////////////////////
-
-['filteredMap', 'scanl'
-].forEach((methodName) => {
-	let generator = generators[methodName];
-	if (generator && !Iterable[methodName]) {
-		Object.defineProperty(Iterable.prototype, methodName, { 
-			value: function () {
-				let args = [this, ...arguments];
-				return new Iterable(generator.apply(this, args));
-			}
-		});
-	}
-});
