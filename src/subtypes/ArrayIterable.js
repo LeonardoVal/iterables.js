@@ -12,6 +12,20 @@ class ArrayIterable extends Iterable {
 		return this.source[Symbol.iterator]();
 	}
 
+// Properties //////////////////////////////////////////////////////////////////
+
+	/** `isEmpty()` returns if the sequence has no elements.
+	 */
+	isEmpty() {
+		return this.source.length < 1;
+	}
+
+	/** `length` is the amount of values in the sequence.
+	 */
+	get length() {
+		return this.source.length;
+	}
+
 // Reductions //////////////////////////////////////////////////////////////////
 
 	/** `reduce(foldFunction, initial)` folds the elements of this iterable 

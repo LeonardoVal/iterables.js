@@ -9,6 +9,20 @@ class SingletonIterable extends Iterable {
 		yield value;
 	}
 
+// Properties //////////////////////////////////////////////////////////////////
+
+	/** `isEmpty()` returns if the sequence has no elements.
+	 */
+	isEmpty() {
+		return false;
+	}
+
+	/** `length` is the amount of values in the sequence.
+	 */
+	get length() {
+		return 1;
+	}
+
 // Conversions /////////////////////////////////////////////////////////////////
 
 	/** `toArray(array=[])`: appends to `array` the elements of the sequence 
