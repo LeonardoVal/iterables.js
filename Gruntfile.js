@@ -5,12 +5,13 @@ module.exports = function (grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 	});
 
-	require('creatartis-grunt').config(grunt, {
+	require('@creatartis/creatartis-grunt').config(grunt, {
 		globalName: 'list_utils',
 		sourceNames: ['__prologue__',
 			'_utils',
 		// base
-			'generators', 'Iterable', 'asyncGenerators', 'AsyncIterable',
+			'generators', 'generators-async', 
+			'Iterable', 'AsyncIterable',
 		// builders
 			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
 			'subtypes/ArrayIterable', 'subtypes/StringIterable',
@@ -24,7 +25,9 @@ module.exports = function (grunt) {
 		copy: {
 			'build/': 'src/tests-common.js'
 		},
-		jshint: { loopfunc: true, boss: true, evil: true, proto: true },
+		jshint: { esversion: 9,
+			loopfunc: true, boss: true, evil: true, proto: true 
+		},
 		karma: ['Firefox', 'Chrome'],
 		connect: {
 			console: 'tests/console.html'
