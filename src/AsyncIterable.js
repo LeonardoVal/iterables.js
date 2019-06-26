@@ -39,20 +39,23 @@ class AsyncIterable {
 	/** 
 	 */
 	[Symbol.asyncIterator](){
-		let source = this.generator ? this.generator(this.source)
-				: this.source,
-			iterator = typeof source === 'function' ? source 
-				: source[Symbol.iterator]();
+		let iterator = typeof source === 'function' ? source() 
+				: source[Symbol.asyncIterator]();
 		return AsyncIterable.__aiter__(iterator);
 	}
-
-
 	
+	/**
+	 */
+	filteredMap(valueFunction, checkFunction) {
+		return new AsyncIterable(generators.filteredMap, this, valueFunction,
+			checkFunction);
+	}
+
 	/**
 	 */
 	async forEach(doFunction, ifFunction) {
 		let result;
-		for (result in this.filteredMap(doFunction, ifFunction)) {
+		for await (result of this.filteredMap(doFunction, ifFunction)) {
 			// Do nothing
 		}
 		return result;
@@ -61,19 +64,7 @@ class AsyncIterable {
 // Builders ////////////////////////////////////////////////////////////////////
 
 	ticks(step, end) {
-		return generatorIterator(function (obj) {
-			if (Date.now() >= end) {
-				obj.done = true;
-				return Promise.resolve(obj);
-			} else {
-				return new Promise(function executor(resolve, reject) { 
-					setTimeout(function () {
-						obj.value = Date.now();
-						resolve(obj);
-					}, step);
-				});
-			}
-		});
+		return new AsyncIterator(generators.async.ticks, step, end);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
@@ -86,6 +77,15 @@ class AsyncIterable {
 
 // Reductions //////////////////////////////////////////////////////////////////
 
+	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
+	 * with `foldFunction` as a left associative operator. Instead of returning 
+	 * the last result, it iterates over the intermediate values in the folding 
+	 * sequence.
+	 */
+	scanl(foldFunction, initial) {
+		return new AsyncIterable(generators.async.scanl, this, foldFunction, 
+			initial);
+	}
 
 // Selections //////////////////////////////////////////////////////////////////
 
@@ -97,4 +97,4 @@ class AsyncIterable {
 	
 } // class Iterable
 
-exports.Iterable = Iterable;
+exports.AsyncIterable = AsyncIterable;
