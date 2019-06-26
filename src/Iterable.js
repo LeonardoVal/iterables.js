@@ -54,7 +54,7 @@ class Iterable {
 	 */
 	forEach(doFunction, ifFunction) {
 		let result;
-		for (result in this.filteredMap(doFunction, ifFunction)) {
+		for (result of this.filteredMap(doFunction, ifFunction)) {
 			// Do nothing
 		}
 		return result;
