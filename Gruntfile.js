@@ -11,7 +11,7 @@ module.exports = function (grunt) {
 			'_utils',
 		// base
 			'generators', 'generators-async', 
-			'Iterable', 'AsyncIterable',
+			'AbstractIterable', 'Iterable', 'AsyncIterable',
 		// builders
 			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
 			'subtypes/ArrayIterable', 'subtypes/StringIterable',

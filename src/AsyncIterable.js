@@ -1,13 +1,10 @@
 /**
  */
-class AsyncIterable {
+class AsyncIterable extends AbstractIterable {
 	/**
 	 */
-	constructor (source, generator = null) {
-		if (typeof source === 'function' && arguments.length > 1) {
-			source = source.bind(Array.prototype.slice.call(arguments, 1));
-		}
-		Object.defineProperty(this, 'source', { value: source });
+	constructor (source) {
+		super(source);
 	}
 
 	/**
