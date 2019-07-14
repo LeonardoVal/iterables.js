@@ -10,7 +10,8 @@ class StringIterable extends Iterable {
 	}
 
 	[Symbol.iterator]() {
-		return this.source[Symbol.iterator]();
+		let iter = this.source[Symbol.iterator]();
+		return Iterable.__iter__(iter);
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
@@ -25,6 +26,19 @@ class StringIterable extends Iterable {
 	 */
 	get length() {
 		return this.source.length;
+	}
+
+// Selections //////////////////////////////////////////////////////////////////
+
+	/** `get(index, defaultValue)` returns the value at the given `index`, or
+	 * `defaultValue` if there is not one.  
+	 */
+	get(index, defaultValue) {
+		let found = index >= 0 && index < this.length;
+		if (!found && arguments.length < 2) {
+			throw new Error(`Cannot get value at ${index}!`);
+		}
+		return found ? this.source.charAt(index) : defaultValue;
 	}
 
 } // class StringIterable
