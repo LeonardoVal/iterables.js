@@ -3,7 +3,7 @@
 		expectList = test_common.expectList;
 
 	describe("Lists selections:", function () {
-		it("`Iterable.filterIterator` function", function () {
+		xit("`Iterable.filterIterator` function", function () {
 			expect(list_utils.Iterable.filterIterator).toBeOfType('function');
 			var filterIterator = list_utils.Iterable.filterIterator.bind(list_utils.Iterable),
 				fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
@@ -22,7 +22,7 @@
 				}), ['a', 'aaa']);
 		});
 
-		it("`Iterable.filter` function", function () {
+		xit("`Iterable.filter` function", function () {
 			expect(list_utils.Iterable.prototype.filter).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expectList(fromArray([false, true, false]).filter(), [true]);
@@ -40,7 +40,7 @@
 				}), ['a', 'aaa']);
 		});
 
-		it("`Iterable.takeWhile` function", function () {
+		xit("`Iterable.takeWhile` function", function () {
 			expect(list_utils.Iterable.prototype.takeWhile).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expectList(fromArray([0,1,0,1,0,1]).takeWhile(), []);
@@ -53,7 +53,7 @@
 				}), [0, 0, 0]);
 		});
 
-		it("`Iterable.take` function", function () {
+		xit("`Iterable.take` function", function () {
 			expect(list_utils.Iterable.prototype.take).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable),
 				array = [0,1,2,3,4,5];
@@ -62,7 +62,7 @@
 			}
 		});
 
-		it("`Iterable.head` function", function () {
+		xit("`Iterable.head` function", function () {
 			expect(list_utils.Iterable.prototype.head).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expect(fromArray([false, true, false]).head()).toBe(false);
@@ -73,7 +73,7 @@
 			expect(fromArray([]).head(null)).toBe(null);
 		});
 
-		it("`Iterable.dropWhile` function", function () {
+		xit("`Iterable.dropWhile` function", function () {
 			expect(list_utils.Iterable.prototype.dropWhile).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expectList(fromArray([0,1,0]).dropWhile(), [0,1,0]);
@@ -86,7 +86,7 @@
 				}), [1,0,1]);
 		});
 
-		it("`Iterable.drop` function", function () {
+		xit("`Iterable.drop` function", function () {
 			expect(list_utils.Iterable.prototype.drop).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable),
 				array = [0,1,2,3,4,5];

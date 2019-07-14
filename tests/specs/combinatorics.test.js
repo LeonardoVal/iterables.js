@@ -3,7 +3,7 @@
 		expectList = test_common.expectList;
 
 	describe("Combinatorics:", function () {
-		it("`Iterable.permutations` function", function () {
+		xit("`Iterable.permutations` function", function () {
 			expect(list_utils.Iterable.prototype.permutations).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expectList(fromArray([0,1,2]).permutations(0), []);
@@ -15,7 +15,7 @@
 			expectList(fromArray([0,1,2]).permutations(4), []);
 		});
 
-		it("`Iterable.combinations` function", function () {
+		xit("`Iterable.combinations` function", function () {
 			expect(list_utils.Iterable.prototype.combinations).toBeOfType('function');
 			var fromArray = list_utils.Iterable.fromArray.bind(list_utils.Iterable);
 			expectList(fromArray([0,1,2]).combinations(0), []);

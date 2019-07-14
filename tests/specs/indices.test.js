@@ -3,7 +3,7 @@
 		expectList = test_common.expectList;
 
 	describe("Lists indices:", function () {
-		it("`Iterable.indexOf` function", function () {
+		xit("`Iterable.indexOf` function", function () {
 			expect(list_utils.Iterable.prototype.indexOf).toBeOfType('function');
 			var array = [7, 'a', false, null],
 				arrayIterable = list_utils.Iterable.fromArray(array);
@@ -14,7 +14,7 @@
 			expect(arrayIterable.indexOf(33)).toBeLessThan(0);
 		});
 
-		it("`Iterable.indicesOf` function", function () {
+		xit("`Iterable.indicesOf` function", function () {
 			expect(list_utils.Iterable.prototype.indicesOf).toBeOfType('function');
 			var array = [0,1,2,3,2,4,1,0,1,3],
 				arrayIterable = list_utils.Iterable.fromArray(array);
@@ -33,7 +33,7 @@
 			expectList(arrayIterable.indicesOf(5), []);
 		});
 
-		it("`Iterable.indexWhere` function", function () {
+		xit("`Iterable.indexWhere` function", function () {
 			expect(list_utils.Iterable.prototype.indexWhere).toBeOfType('function');
 			var array = [7, 'a', false, null],
 				arrayIterable = list_utils.Iterable.fromArray(array);

@@ -3,7 +3,7 @@
 		expectList = test_common.expectList;
 
 	describe("Lists of tuples:", function () {
-		it("zip()", function () {
+		xit("zip()", function () {
 			var Iterable = list_utils.Iterable;
 			expect(Iterable.prototype.zip).toBeOfType('function');
 			expect(Iterable.zip).toBeOfType('function');
@@ -37,7 +37,7 @@
 			});
 		});
 
-		it("zipWith()", function () {
+		xit("zipWith()", function () {
 			var Iterable = list_utils.Iterable;
 			expect(Iterable.prototype.zipWith).toBeOfType('function');
 			expect(Iterable.zipWith).toBeOfType('function');
@@ -73,7 +73,7 @@
 			});
 		});
 
-		it("product()", function () {
+		xit("product()", function () {
 			var Iterable = list_utils.Iterable;
 			expect(Iterable.prototype.product).toBeOfType('function');
 			expect(Iterable.product).toBeOfType('function');

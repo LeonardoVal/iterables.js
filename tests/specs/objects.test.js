@@ -3,7 +3,7 @@
 		expectList = test_common.expectList;
 
 	describe("Lists from objects:", function () {
-		it("`Iterable.fromObject` function", function () {
+		xit("`Iterable.fromObject` function", function () {
 			expect(list_utils.Iterable.fromObject).toBeOfType('function');
 			var fromObject = list_utils.Iterable.fromObject.bind(list_utils.Iterable);
 			expectList(fromObject({}), []);
@@ -13,7 +13,7 @@
 				[['a','a'], ['b','b'], ['c','c']]);
 		});
 
-		it("`Iterable.toObject` function", function () {
+		xit("`Iterable.toObject` function", function () {
 			expect(list_utils.Iterable.prototype.toObject).toBeOfType('function');
 			var fromValues = list_utils.Iterable.fromValues.bind(list_utils.Iterable);
 			expect(fromValues().toObject())

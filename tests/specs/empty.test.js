@@ -3,18 +3,18 @@
 		expectList = test_common.expectList;
 
 	describe("Empty lists:", function () {
-		it("`Iterable.emptyIterator` function", function () {
+		xit("`Iterable.emptyIterator` function", function () {
 			expect(list_utils.Iterable.emptyIterator).toBeOfType('function');
 			expectIterator(list_utils.Iterable.emptyIterator(), []);
 		});
 
-		it("`EmptyIterable` class", function () {
+		xit("`EmptyIterable` class", function () {
 			expect(list_utils.EmptyIterable).toBeOfType('function');
 			expect(list_utils.EmptyIterable.prototype).toBeOfType(list_utils.Iterable);
 			expectList(new list_utils.EmptyIterable(), []);
 		});
 
-		it("`Iterable.EMPTY` singleton", function () {
+		xit("`Iterable.EMPTY` singleton", function () {
 			expect(list_utils.Iterable.EMPTY).toBeOfType(list_utils.EmptyIterable);
 			expectList(list_utils.Iterable.EMPTY, []);
 		});

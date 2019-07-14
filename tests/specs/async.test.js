@@ -4,7 +4,7 @@
 		Iterable = list_utils.Iterable;
 
 	describe("Asynchronous lists:", function () {
-		it("`Iterable.mockAsyncIterator` function", function (done) {
+		xit("`Iterable.mockAsyncIterator` function", function (done) {
 			expect(Iterable.mockAsyncIterator).toBeOfType('function');
 			expectAsyncIterator(Iterable.mockAsyncIterator('abc'), ['a', 'b', 'c'])
 			.then(function () {
