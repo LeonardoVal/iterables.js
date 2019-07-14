@@ -35,7 +35,8 @@ class Iterable extends AbstractIterable {
 	/** 
 	 */
 	[Symbol.iterator](){
-		let iterator = typeof source === 'function' ? source() 
+		let source = this.source,
+			iterator = typeof source === 'function' ? source() 
 				: source[Symbol.iterator]();
 		return Iterable.__iter__(iterator);
 	}
@@ -43,8 +44,9 @@ class Iterable extends AbstractIterable {
 	/**
 	 */
 	filteredMap(valueFunction, checkFunction) {
-		return new Iterable(generators.filteredMap, this, valueFunction,
-			checkFunction);
+		let source = generators.filteredMap.bind(generators, this,
+			valueFunction, checkFunction);
+		return new Iterable(source);
 	}
 
 	/**
