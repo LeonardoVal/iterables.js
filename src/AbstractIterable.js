@@ -195,6 +195,17 @@ class AbstractIterable {
 		return this.filteredMap(condition || __toBool__);
 	}
 
+	/** `get(index, defaultValue)` returns the value at the given `index`, or
+	 * `defaultValue` if there is not one.  
+	 */
+	get(index, defaultValue) {
+		let filtered = this.filter((_value, i, _iter) => {
+			return i === index;
+		});
+		return (arguments.length < 2) ? filtered.head() : 
+			filtered.head(defaultValue);
+	}
+
 // Unary operations ////////////////////////////////////////////////////////////
 
 // Variadic operations /////////////////////////////////////////////////////////
