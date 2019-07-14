@@ -1,7 +1,7 @@
 define([], function () {
 	function expectList(list, expectedList) {
-		expect(list.__iter__).toBeOfType('function');
-		expect(list.length()).toBe(expectedList.length);
+		expect(list[Symbol.iterator]).toBeOfType('function');
+		expect(list.length).toBe(expectedList.length);
 		expectedList.forEach(function (expectedValue, index) {
 			expect(list.get(index)).toEqual(expectedValue);
 		});
@@ -9,7 +9,7 @@ define([], function () {
 		expect(list.get.bind(list, -1)).toThrow();
 		expect(list.get(expectedList.length + 1, null)).toBe(null);
 		expect(list.get(-1, '-1')).toBe('-1');
-		expectIterator(list.__iter__(), expectedList);
+		expectIterator(list[Symbol.iterator](), expectedList);
 	}
 
 	function expectIterator(iterator, expectedList) {
@@ -27,7 +27,7 @@ define([], function () {
 	}
 
 	function expectAsyncList(list, expectedList) {
-		expect(list.__aiter__).toBeOfType('function');
+		expect(list[Symbol.asyncIterator]).toBeOfType('function');
 		var p = list.length();
 		expect(p).toBeOfType(Promise);
 		return p.then(function (value) {
@@ -60,7 +60,7 @@ define([], function () {
 				})
 			);
 		}).then(function () {
-			return expectAsyncIterator(list.__aiter__(), expectedList);
+			return expectAsyncIterator(list[Symbol.asyncIterator](), expectedList);
 		});
 	}
 
