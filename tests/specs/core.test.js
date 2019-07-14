@@ -1,11 +1,14 @@
-﻿define(['list-utils'], function (list_utils) { "use strict";
+﻿define(['list-utils'], function (listUtils) { "use strict";
 	describe("Core definitions:", function () {
 		it("`Iterable` class", function () {
-			expect(list_utils.Iterable).toBeOfType('function');
-			expect(function () { return new list_utils.Iterable(); }).toThrow();
-			expect(function () { return new list_utils.Iterable([1,2,3]); }).toThrow();
+			let Iterable = listUtils.Iterable;
+			expect(Iterable).toBeOfType('function');
+			[
+				'abc', [1,2,3], {x:1, y:2}
+			].forEach((source) => {
+				let iter = new listUtils.Iterable(source);
+				expect(iter.source).toBe(source);
+			});
 		});
-
-		//TODO Tests for `Iterable.subclass`.
 	}); // describe "Core definitions:"
 }); //// define
