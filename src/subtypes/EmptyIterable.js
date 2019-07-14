@@ -59,6 +59,19 @@ class EmptyIterable extends Iterable {
 		return initial;
 	}
 
+// Selections //////////////////////////////////////////////////////////////////
+
+	/** `get(index, defaultValue)` returns the value at the given `index`, or
+	 * `defaultValue` if there is not one.  
+	 */
+	get(index, defaultValue) {
+		if (arguments.length < 2) {
+			throw new Error(`Cannot get value at ${index}!`);
+		} else {
+			return defaultValue;
+		}
+	}
+
 } // class EmptyIterable
 
 exports.EmptyIterable = EmptyIterable;
