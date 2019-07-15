@@ -10,6 +10,25 @@ class AbstractIterable {
 		Object.defineProperty(this, 'source', { value: source });
 	}
 
+	/** 
+	 */
+	static __iter__(iterator) {
+		if (!iterator.return) {
+			let done = false,
+				oldNext = iterator.next.bind(iterator);
+			iterator = {
+				next() {
+					return done ? { done: true } : oldNext();
+				},
+				return() { 
+					done = true; 
+					return { done: true };
+				}
+			};
+		}
+		return iterator;
+	}
+
 // Conversions /////////////////////////////////////////////////////////////////
 
 	/** `toArray(array=[])`: appends to `array` the elements of the sequence
@@ -76,6 +95,24 @@ class AbstractIterable {
 		return this.filteredMap( 
 			(_, i) => i,
 			(v, i) => v === value && i >= from
+		);
+	}
+
+	/** `indexWhere(condition, from=0)` returns the position of the first value
+	 * of this iterable that complies with the given `condition`, or -1 if 
+	 * there is none.
+	 */
+	indexWhere(condition, from = 0) {
+		return this.indicesWhere(condition, from).head(-1);
+	}
+
+	/** `indicesWhere(condition, from=0)` is a sequence of the positions in 
+	 * this iterable of values that comply with the given `condition`.
+ 	 */
+	indicesWhere(condition, from = 0) {
+		return this.filteredMap( 
+			(_, i) => i,
+			(v, i, iter) => condition(v, i, iter) && i >= from
 		);
 	}
 
@@ -192,7 +229,7 @@ class AbstractIterable {
 	 * for which `condition` returns true.
 	 */
 	filter(condition) {
-		return this.filteredMap(condition || __toBool__);
+		return this.filteredMap(null, condition || __toBool__);
 	}
 
 	/** `get(index, defaultValue)` returns the value at the given `index`, or
