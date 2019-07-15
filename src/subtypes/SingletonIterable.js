@@ -5,7 +5,7 @@ class SingletonIterable extends Iterable {
 		super(value, SingletonIterable.generator);
 	}
 
-	static *generator(value) {
+	static *generator(value) { //FIXME
 		yield value;
 	}
 

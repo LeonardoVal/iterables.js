@@ -14,25 +14,28 @@ class StringIterable extends Iterable {
 		return Iterable.__iter__(iter);
 	}
 
+// Conversions /////////////////////////////////////////////////////////////////
+
+	/** @inheritdoc */
+	toSet(set = null) {
+		return set ? super.toSet(set) : new Set(this.source);
+	}
+
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `isEmpty()` returns if the sequence has no elements.
-	 */
+	/** @inheritdoc */
 	isEmpty() {
 		return this.source.length < 1;
 	}
 
-	/** `length` is the amount of values in the sequence.
-	 */
+	/** @inheritdoc */
 	get length() {
 		return this.source.length;
 	}
 
 // Selections //////////////////////////////////////////////////////////////////
 
-	/** `get(index, defaultValue)` returns the value at the given `index`, or
-	 * `defaultValue` if there is not one.  
-	 */
+	/** @inheritdoc */
 	get(index, defaultValue) {
 		let found = index >= 0 && index < this.length;
 		if (!found && arguments.length < 2) {

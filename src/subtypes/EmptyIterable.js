@@ -24,46 +24,40 @@ class EmptyIterable extends Iterable {
 	[Symbol.iterator]() {
 		return EMPTY_ITERATOR;
 	}
-
-// Properties //////////////////////////////////////////////////////////////////
-
-	/** `isEmpty()` returns if the sequence has no elements.
-	 */
-	isEmpty() {
-		return true;
-	}
-
-	/** `length` is the amount of values in the sequence.
-	 */
-	get length() {
-		return 0;
-	}
-
 // Conversions /////////////////////////////////////////////////////////////////
 
-	/** `toArray(array=[])`: appends to `array` the elements of the sequence 
-	 * and returns it. If no array is given, a new one is used.
-	 */
+	/** @inheritdoc */
 	toArray(array) {
 		return (array || []);
 	}
 
+	/** @inheritdoc */
+	toSet(set = null) {
+		return set || new Set();
+	}
+
+// Properties //////////////////////////////////////////////////////////////////
+
+	/** @inheritdoc */
+	isEmpty() {
+		return true;
+	}
+
+	/** @inheritdoc */
+	get length() {
+		return 0;
+	}
+
 // Reductions //////////////////////////////////////////////////////////////////
 
-	/** `reduce(foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. The `initial` value 
-	 * is used as a starting point, but if it is not defined, then the first 
-	 * element in the sequence is used.
-	 */
+	/** @inheritdoc */
 	reduce(foldFunction, initial) {
 		return initial;
 	}
 
 // Selections //////////////////////////////////////////////////////////////////
 
-	/** `get(index, defaultValue)` returns the value at the given `index`, or
-	 * `defaultValue` if there is not one.  
-	 */
+	/** @inheritdoc */
 	get(index, defaultValue) {
 		if (arguments.length < 2) {
 			throw new Error(`Cannot get value at ${index}!`);
