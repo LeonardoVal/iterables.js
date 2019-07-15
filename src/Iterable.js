@@ -15,30 +15,11 @@ class Iterable extends AbstractIterable {
 
 	/** 
 	 */
-	static __iter__(iterator) {
-		if (iterator.return) {
-			return iterator;
-		} else {
-			let done = false;
-			return {
-				next() {
-					return done ? { done: true } : iterator.next();
-				},
-				return() { 
-					done = true; 
-					return { done: true };
-				}
-			};
-		}
-	}
-
-	/** 
-	 */
 	[Symbol.iterator](){
 		let source = this.source,
 			iterator = typeof source === 'function' ? source() 
 				: source[Symbol.iterator]();
-		return Iterable.__iter__(iterator);
+		return this.constructor.__iter__(iterator);
 	}
 
 	/**
@@ -161,7 +142,7 @@ class Iterable extends AbstractIterable {
 	 */
 	get length() {
 		let result = 0;
-		for (let v in this) {
+		for (let _ of this) {
 			result++;
 		}
 		return result;
@@ -176,10 +157,10 @@ class Iterable extends AbstractIterable {
 	 */
 	reduce(foldFunction, initial) {
 		let folded = initial,
-			iter = seq[Symbol.iterator](),
+			iter = this[Symbol.iterator](),
 			i = 0;
-		for (let value of iter) {
-			folded = foldFunction(folded, value, i, iter);
+		for (let entry = iter.next(); !entry.done; entry = iter.next()) {
+			folded = foldFunction(folded, entry.value, i, iter);
 			i++;
 		} 
 		return folded;
