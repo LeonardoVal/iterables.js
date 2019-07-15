@@ -106,8 +106,9 @@ let generators = {
 	*filteredMap(seq, valueFunction, checkFunction) {
 		let i = 0,
 			iter = seq[Symbol.iterator]();
-		for (let value of iter) {
-			if (!checkFunction && checkFunction(value, i, iter)) {
+		for (let entry = iter.next(); !entry.done; entry = iter.next()) {
+			let value = entry.value;
+			if (!checkFunction || checkFunction(value, i, iter)) {
 				yield (valueFunction ? valueFunction(value, i, iter) : value);
 			}
 			i++;
