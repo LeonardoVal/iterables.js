@@ -1,12 +1,12 @@
-﻿define(['list-utils', 'tests-common'], function (list_utils, test_common) { "use strict";
-	var expectIterator = test_common.expectIterator,
-		expectList = test_common.expectList;
+﻿define(['list-utils', 'tests-common'], function (listUtils, test_common) { "use strict";
+	var expectList = test_common.expectList;
 
 	describe("Lists indices:", function () {
-		xit("`Iterable.indexOf` function", function () {
-			expect(list_utils.Iterable.prototype.indexOf).toBeOfType('function');
+		it("`Iterable.indexOf` function", function () {
+			let Iterable = listUtils.Iterable;
+			expect(Iterable.prototype.indexOf).toBeOfType('function');
 			var array = [7, 'a', false, null],
-				arrayIterable = list_utils.Iterable.fromArray(array);
+				arrayIterable = Iterable.fromArray(array);
 			array.forEach(function (value, index) {
 				expect(arrayIterable.indexOf(value)).toBe(index);
 				expect(arrayIterable.indexOf(value, index + 1)).toBeLessThan(0);
@@ -14,10 +14,11 @@
 			expect(arrayIterable.indexOf(33)).toBeLessThan(0);
 		});
 
-		xit("`Iterable.indicesOf` function", function () {
-			expect(list_utils.Iterable.prototype.indicesOf).toBeOfType('function');
+		it("`Iterable.indicesOf` function", function () {
+			let Iterable = listUtils.Iterable;
+			expect(Iterable.prototype.indicesOf).toBeOfType('function');
 			var array = [0,1,2,3,2,4,1,0,1,3],
-				arrayIterable = list_utils.Iterable.fromArray(array);
+				arrayIterable = Iterable.fromArray(array);
 			expectList(arrayIterable.indicesOf(0), [0,7]);
 			expectList(arrayIterable.indicesOf(1), [1,6,8]);
 			expectList(arrayIterable.indicesOf(1, 2), [6,8]);
@@ -33,10 +34,11 @@
 			expectList(arrayIterable.indicesOf(5), []);
 		});
 
-		xit("`Iterable.indexWhere` function", function () {
-			expect(list_utils.Iterable.prototype.indexWhere).toBeOfType('function');
+		it("`Iterable.indexWhere` function", function () {
+			let Iterable = listUtils.Iterable;
+			expect(Iterable.prototype.indexWhere).toBeOfType('function');
 			var array = [7, 'a', false, null],
-				arrayIterable = list_utils.Iterable.fromArray(array);
+				arrayIterable = Iterable.fromArray(array);
 			array.forEach(function (value, index) {
 				expect(arrayIterable.indexWhere(function (v) {
 					return typeof v === typeof value;
