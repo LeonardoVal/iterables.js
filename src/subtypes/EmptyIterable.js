@@ -16,8 +16,8 @@ class EmptyIterable extends Iterable {
 		if (SINGLETON_EmptyIterable) {
 			return SINGLETON_EmptyIterable;
 		} else {
-			SINGLETON_EmptyIterable = this;
 			super(undefined);
+			SINGLETON_EmptyIterable = this;
 		}
 	}
 
