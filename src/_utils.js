@@ -23,12 +23,6 @@ function __id__(x) {
 	return x;
 }
 
-function __iters__(lists, async) {
-	return lists.map(function (list) {
-		return __iter__(list, async);
-	});
-}
-
 function k(value) {
 	return function() { 
 		return value; 
