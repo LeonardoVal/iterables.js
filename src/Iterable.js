@@ -34,10 +34,12 @@ class Iterable extends AbstractIterable {
 	 */
 	forEach(doFunction, ifFunction) {
 		let result;
-		for (result of this.filteredMap(doFunction, ifFunction)) {
-			// Do nothing
+		for (result of this) {
+			if (!ifFunction || ifFunction(value, i, iter)) {
+				result = (doFunction ? doFunction(value, i, iter) : value);
+			}
 		}
-		return result;
+		return result; //FIXME Should forEach return something.
 	}
 
 // Builders ////////////////////////////////////////////////////////////////////
@@ -84,7 +86,9 @@ class Iterable extends AbstractIterable {
 	 * sequence.
 	 */
 	scanl(foldFunction, initial) {
-		return new this.constructor(generators.scanl, this, foldFunction, initial);
+		let source = generators.scanl
+			.bind(generators, this, foldFunction, initial);
+		return new this.constructor(source);
 	}
 
 	/** 
@@ -128,6 +132,12 @@ class Iterable extends AbstractIterable {
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
+
+	/** `has(value)` checks if the given `value` occurs in the iterable.
+	 */
+	has(value) {
+		return this.indexOf(value) >= 0;
+	}
 
 	/** `isEmpty()` returns if the sequence has no elements.
 	 */
@@ -238,6 +248,17 @@ class Iterable extends AbstractIterable {
 
 // Variadic operations /////////////////////////////////////////////////////////
 	
+	/** `zipWith(zipFunction, ...iterables)` builds an iterable that iterates 
+	 * over all the given iterables at the same time, stopping at the first 
+	 * sequence finishing. Each value in the generated sequence is made by 
+	 * calling the given `zipFunction` with an array of the values of each 
+	 * iterable.
+	 */
+	static zipWith(zipFunction, ...iterables) {
+		let source = generators.zipWith.bind(generators, zipFunction, 
+			...iterables);
+		return new Iterable(source);
+	}
 } // class Iterable
 
 exports.Iterable = Iterable;
