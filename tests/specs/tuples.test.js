@@ -1,10 +1,9 @@
-﻿define(['list-utils', 'tests-common'], function (list_utils, test_common) { "use strict";
-	var expectIterator = test_common.expectIterator,
-		expectList = test_common.expectList;
+﻿define(['list-utils', 'tests-common'], function (listUtils, test_common) { "use strict";
+	var expectList = test_common.expectList;
 
 	describe("Lists of tuples:", function () {
-		xit("zip()", function () {
-			var Iterable = list_utils.Iterable;
+		it("zip()", function () {
+			var Iterable = listUtils.Iterable;
 			expect(Iterable.prototype.zip).toBeOfType('function');
 			expect(Iterable.zip).toBeOfType('function');
 			var fromString = Iterable.fromString.bind(Iterable),
@@ -37,8 +36,8 @@
 			});
 		});
 
-		xit("zipWith()", function () {
-			var Iterable = list_utils.Iterable;
+		it("zipWith()", function () {
+			var Iterable = listUtils.Iterable;
 			expect(Iterable.prototype.zipWith).toBeOfType('function');
 			expect(Iterable.zipWith).toBeOfType('function');
 			var fromString = Iterable.fromString.bind(Iterable),
@@ -46,9 +45,9 @@
 				test = function (testCase) {
 					var func = testCase.func,
 						lists = testCase.lists;
-					expectList(Iterable.prototype.zipWith.apply(lists[0], [lists.slice(1)].concat([func])),
+					expectList(Iterable.prototype.zipWith.call(lists[0], func, ...lists.slice(1)),
 						testCase.expectedResult);
-					expectList(Iterable.zipWith.apply(Iterable, [lists].concat([func])), 
+					expectList(Iterable.zipWith(func, ...lists), 
 						testCase.expectedResult); 
 				};
 			test({
