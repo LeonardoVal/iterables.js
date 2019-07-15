@@ -130,7 +130,35 @@ let generators = {
 			yield folded;
 			i++;
 		}
-	}
+	},
+
+// Operations on many sequences ////////////////////////////////////////////////
+
+	/** `zipWith(zipFunction, ...seqs)` generates a sequence that iterates over
+	 * all the given iterables at the same time, stopping at the first sequence 
+	 * finishing. Each value in the generated sequence is made by calling the 
+	 * given `zipFunction` with an array of the values of each iterable.
+	 */
+	*zipWith(zipFunction, ...iterables) {
+		let iters = iterables.map((iterable) => {
+				if (typeof iterable[Symbol.iterator] !== 'function') {
+					throw new Error(`Object ${iterable} is not iterable!`);
+				}
+				return iterable[Symbol.iterator]();
+			}),
+			done = false, 
+			values;
+		while (!done) {
+			values = iters.map((iter) => {
+				let entry = iter.next();
+				done = done || entry.done;
+				return entry.value;
+			});
+			if (!done) {
+				yield zipFunction(values);
+			}
+		}
+	} 
 }; // generators
 
 exports.generators = generators;
