@@ -15,8 +15,8 @@ define([], function () {
 	function expectIterator(iterator, expectedList) {
 		expect(iterator.next).toBeOfType('function');
 		expect(iterator.return).toBeOfType('function');
-		var x;
-		for (var i = 0; i < expectedList.length; i++) {
+		let x;
+		for (let i = 0; i < expectedList.length; i++) {
 			x = iterator.next();
 			expect(x.done).toBeFalsy();
 			expect(x.value).toEqual(expectedList[i]);
@@ -28,12 +28,12 @@ define([], function () {
 
 	function expectAsyncList(list, expectedList) {
 		expect(list[Symbol.asyncIterator]).toBeOfType('function');
-		var p = list.length();
+		let p = list.length();
 		expect(p).toBeOfType(Promise);
 		return p.then(function (value) {
 			expect(value).toBe(expectedList.length);
 		}).then(function () {
-			var tests = expectedList.map(function (expectedValue, index) {
+			let tests = expectedList.map(function (expectedValue, index) {
 					return [[index], expectedValue];
 				}).concat([
 					[[expectedList.length + 1, null], null],
@@ -43,7 +43,7 @@ define([], function () {
 				]);
 			return Promise.all(
 				tests.map(function (test) {
-					var p = list.get.apply(list, test[0]);
+					let p = list.get.apply(list, test[0]);
 					expect(p).toBeOfType(Promise);
 					return p.then(function (value) {
 						if (test.length > 1) {
@@ -67,7 +67,7 @@ define([], function () {
 	function expectAsyncIterator(iterator, expectedList) {
 		expect(iterator.next).toBeOfType('function');
 		expect(iterator.return).toBeOfType('function');
-		var p = iterator.next(),
+		let p = iterator.next(),
 			i = 0,
 			callback = function (x) {
 				if (i < expectedList.length) {
