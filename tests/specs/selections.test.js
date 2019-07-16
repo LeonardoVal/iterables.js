@@ -1,5 +1,5 @@
 ﻿define(['list-utils', 'tests-common'], function (listUtils, test_common) { "use strict";
-	var expectList = test_common.expectList;
+	let expectList = test_common.expectList;
 
 	describe("Lists selections:", function () {
 		it("`Iterable.filter` function", function () {
@@ -10,29 +10,20 @@
 			expectList(fromArray([0, 1, 2]).filter(), [1, 2]);
 			expectList(fromArray(['', 'a', 'aa', 'aaa']).filter(), ['a', 'aa', 'aaa']);
 			expectList(fromArray(['', 0, null, false]).filter(), []);
-			expectList(fromArray([0, 1, 2, 3, 4]).filter(function (n) {
-					return n % 2;
-				}), [1, 3]);
-			expectList(fromArray([0, 1, 2, 3, 4]).filter(function (n) {
-					return n > 2;
-				}), [3, 4]);
-			expectList(fromArray(['', 'a', 'aa', 'aaa']).filter(function (x) {
-					return x.length % 2;
-				}), ['a', 'aaa']);
+			expectList(fromArray([0, 1, 2, 3, 4]).filter((n) => n % 2), [1, 3]);
+			expectList(fromArray([0, 1, 2, 3, 4]).filter((n) => n > 2), [3, 4]);
+			expectList(fromArray(['', 'a', 'aa', 'aaa']).filter((x) => x.length % 2), ['a', 'aaa']);
 		});
 
-		xit("`Iterable.takeWhile` function", function () {
+		it("`Iterable.takeWhile` function", function () {
 			let Iterable = listUtils.Iterable,
-				fromArray = Iterable.fromArray.bind(Iterable);
+				fromArray = Iterable.fromArray.bind(Iterable),
+				notFunc = (n) => !n;
 			expect(Iterable.prototype.takeWhile).toBeOfType('function');
 			expectList(fromArray([0,1,0,1,0,1]).takeWhile(), []);
 			expectList(fromArray([1,1,0,1,0,1]).takeWhile(), [1, 1]);
-			expectList(fromArray([0,1,0,1,0,1]).takeWhile(function (n) {
-					return !n;
-				}), [0]);
-			expectList(fromArray([0,0,0,1,0,1]).takeWhile(function (n) {
-					return !n;
-				}), [0, 0, 0]);
+			expectList(fromArray([0,1,0,1,0,1]).takeWhile(notFunc), [0]);
+			expectList(fromArray([0,0,0,1,0,1]).takeWhile(notFunc), [0, 0, 0]);
 		});
 
 		it("`Iterable.take` function", function () {
@@ -57,18 +48,15 @@
 			expect(fromArray([]).head(null)).toBe(null);
 		});
 
-		xit("`Iterable.dropWhile` function", function () {
+		it("`Iterable.dropWhile` function", function () {
 			let Iterable = listUtils.Iterable,
-				fromArray = Iterable.fromArray.bind(Iterable);
+				fromArray = Iterable.fromArray.bind(Iterable),
+				notFunc = (n) => !n;
 			expect(Iterable.prototype.dropWhile).toBeOfType('function');
 			expectList(fromArray([0,1,0]).dropWhile(), [0,1,0]);
+			expectList(fromArray([0,1,0]).dropWhile(notFunc), [1,0]);
 			expectList(fromArray([1,1,0,1,0,1]).dropWhile(), [0,1,0,1]);
-			expectList(fromArray([0,1,0]).dropWhile(function (n) {
-					return !n;
-				}), [1,0]);
-			expectList(fromArray([0,0,0,1,0,1]).dropWhile(function (n) {
-					return !n;
-				}), [1,0,1]);
+			expectList(fromArray([0,0,0,1,0,1]).dropWhile(notFunc), [1,0,1]);
 		});
 
 		it("`Iterable.drop` function", function () {
