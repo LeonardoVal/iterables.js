@@ -171,6 +171,37 @@ class AbstractIterable {
 		}, false);
 	}
 
+	/** `histogram(key, map = null)` iterates over the whole sequence, counting
+	 * the occurance of each value. The results are kept in the given `map`, or
+	 * in a new one by default.
+	 */
+	histogram(key, map = null) {
+		let grouping = (group, _value, _i) => (group || 0) + 1;
+		return this.groupBy(key, grouping, map);
+	}
+
+	/** `groupBy(key, grouping, map = null)` iterates over the whole sequence,
+	 * grouping its values according to the key function (`key(value, i)`). 
+	 * These keys are used to build a `Map`, where groups are stored. If no 
+	 * `key` is given, the values themselves are used as keys.
+	 * 
+	 * The `grouping` function (`grouping(group, value, i)`) adds values to 
+	 * each group. By default values are grouped in arrays. 
+	 */
+	groupBy(key, grouping = null, map = null) {
+		grouping = grouping || ((group, value, i) => {
+				group = group || [];
+				group.push(value);
+				return group;
+			});
+		map = map || new Map();
+		return this.reduce((groupMap, value, i) => {
+			let k = key ? key(value, i) : value;
+			groupMap.set(k, grouping(groupMap.get(k), value, i));
+			return groupMap;
+		}, map);
+	}
+
 	/** `join(sep='')` concatenates all strings in the sequence using `sep` as
 	 * separator. If `sep` is not given, '' is assumed.
 	 */
@@ -249,6 +280,18 @@ class AbstractIterable {
 		return this.slice(n);
 	}
 
+	/** `dropWhile(condition)` returns an iterable with the same elements than
+	 * this, except the first ones that comply with the condition.
+	 */
+	dropWhile(condition = null) {
+		condition = condition || __toBool__;
+		let dropping = false;
+		return this.filteredMap(null, (value, i, iter) => {
+			dropping = (i === 0 || dropping) && condition(value, i, iter);
+			return !dropping;
+		});
+	}
+
 	/** `filter(filterFunction)` returns an iterable of this iterable elements
 	 * for which `condition` returns true.
 	 */
@@ -295,6 +338,21 @@ class AbstractIterable {
 	take(n = NaN) {
 		n = isNaN(n) ? 1 : Math.floor(n);
 		return this.slice(0, n);
+	}
+
+	/** `takeWhile(condition)` return an iterable with the first elements that
+	 * verify the given `condition`.
+	 */
+	takeWhile(condition = null) {
+		condition = condition || __toBool__;
+		return this.filteredMap(null, (value, i, iter) => {
+			if (!condition(value, i, iter)) {
+				iter.return();
+				return false;
+			} else {
+				return true;
+			}
+		});
 	}
 
 // Unary operations ////////////////////////////////////////////////////////////
