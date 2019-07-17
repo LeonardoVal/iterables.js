@@ -4,9 +4,6 @@ class AbstractIterable {
 	/**
 	 */
 	constructor (source) {
-		if (typeof source === 'function' && arguments.length > 1) {
-			source = source.bind(Array.prototype.slice.call(arguments, 1));
-		}
 		Object.defineProperty(this, 'source', { value: source });
 	}
 
@@ -27,6 +24,38 @@ class AbstractIterable {
 			};
 		}
 		return iterator;
+	}
+
+// Builders ////////////////////////////////////////////////////////////////////
+
+	/** `fromArray` makes an `Iterable` for the given `array`. 
+	 */
+	static fromArray(array) {
+		if (!Array.isArray(array)) {
+			throw new Error(`Expected an array, but got ${array}!`);
+		}
+		return new ArrayIterable(array);
+	}
+
+	/** `fromValues` makes an `Iterable` for the given arguments. 
+	 */
+	static fromValues() {
+		return this.fromArray(Array.prototype.slice.call(arguments));
+	}
+
+	/** `fromObject` makes an `Iterable` for the given object `obj`. The
+	 * sequence goes over array in the shape `[key, value]`. Key may be sorted
+	 * if `sortKeys` is truthy.
+	 */
+	static fromObject(obj, sortKeys = false) {
+		return new ObjectIterable(obj, sortKeys);
+	}
+
+	/** `fromString` makes an `Iterable` for the given `string`. If the 
+	 * argument is not a string, it is converted to one. 
+	 */
+	static fromString(string) {
+		return new StringIterable(string +"");
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
@@ -66,7 +95,7 @@ class AbstractIterable {
 	toObject(obj = null) {
 		obj = obj || {};
 		return this.reduce((obj, [key, value]) => {
-				obj[key] = pair[value];
+				obj[key] = value;
 				return obj;
 			}, obj);
 	}
@@ -310,6 +339,42 @@ class AbstractIterable {
 			filtered.head(defaultValue);
 	}
 
+	/** `greater(evaluation)` returns an array with the elements of the 
+	 * iterable with greater evaluation (or numerical conversion by default).
+	 */
+	greater(evaluation = null) {
+		evaluation = evaluation || __toNumber__;
+		var maxEval = -Infinity,
+			result = [];
+		return this.reduce((result, value) => {
+			var e = evaluation(value);
+			if (maxEval < e) {
+				maxEval = e;
+				result = [value];
+			} else if (maxEval === e) {
+				result.push(value);
+			}
+		}, result);
+	}
+
+	/** `lesser(evaluation)` returns an array with the elements of the iterable
+	 * with lesser evaluation (or numerical conversion by default).
+	 */
+	lesser(evaluation = null) {
+		evaluation = evaluation || __toNumber__;
+		var minEval = +Infinity,
+			result = [];
+		return this.reduce((result, value) => {
+			var e = evaluation(value);
+			if (minEval > e) {
+				minEval = e;
+				result = [value];
+			} else if (minEval === e) {
+				result.push(value);
+			}
+		}, result);
+	}
+
 	/** `slice(begin=0, end=Infinity)` return an iterable over a portion of the
 	 * this sequence from `begin` to `end`.
 	 */
@@ -375,6 +440,18 @@ class AbstractIterable {
 	 */
 	zipWith(zipFunction, ...iterables) {
 		return this.constructor.zipWith(zipFunction, this, ...iterables);
+	}
+
+	/** 
+	 */
+	product(...iterables) {
+		return this.constructor.product(this, ...iterables);
+	}
+
+	/** 
+	 */
+	concat(...iterables) {
+		return this.constructor.concat(this, ...iterables);
 	}
 
 } // class AbstractIterable
