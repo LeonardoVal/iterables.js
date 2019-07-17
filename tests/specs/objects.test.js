@@ -1,11 +1,11 @@
-﻿define(['list-utils', 'tests-common'], function (list_utils, test_common) { "use strict";
-	var expectIterator = test_common.expectIterator,
-		expectList = test_common.expectList;
+﻿define(['list-utils', 'tests-common'], function (listUtils, test_common) { "use strict";
+	var expectList = test_common.expectList;
 
 	describe("Lists from objects:", function () {
-		xit("`Iterable.fromObject` function", function () {
-			expect(list_utils.Iterable.fromObject).toBeOfType('function');
-			var fromObject = list_utils.Iterable.fromObject.bind(list_utils.Iterable);
+		it("`Iterable.fromObject` function", function () {
+			let Iterable = listUtils.Iterable,
+				fromObject = Iterable.fromObject.bind(Iterable);
+			expect(Iterable.fromObject).toBeOfType('function');
 			expectList(fromObject({}), []);
 			expectList(fromObject({true: true}), [['true', true]]);
 			expectList(fromObject({x:1, y:2}, true), [['x',1], ['y',2]]);
@@ -13,9 +13,10 @@
 				[['a','a'], ['b','b'], ['c','c']]);
 		});
 
-		xit("`Iterable.toObject` function", function () {
-			expect(list_utils.Iterable.prototype.toObject).toBeOfType('function');
-			var fromValues = list_utils.Iterable.fromValues.bind(list_utils.Iterable);
+		it("`Iterable.toObject` function", function () {
+			let Iterable = listUtils.Iterable,
+				fromValues = Iterable.fromValues.bind(Iterable);
+			expect(Iterable.prototype.toObject).toBeOfType('function');
 			expect(fromValues().toObject())
 				.toEqual({});
 			expect(fromValues(['t',true]).toObject())
