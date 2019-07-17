@@ -7,7 +7,7 @@ class AsyncIterable extends AbstractIterable {
 		super(source);
 	}
 
-	/**
+	/** `isAsync` returns `true` for `Iterable`.
 	 */
 	get isAsync() {
 		return true;
@@ -19,11 +19,12 @@ class AsyncIterable extends AbstractIterable {
 		if (iterator.return) {
 			return iterator;
 		} else {
-			let done = false;
+			let done = false,
+				oldNext = iterator.next.bind(iterator);
 			return {
 				next() {
 					return done ? Promise.resolve({ done: true }) 
-						: iterator.next();
+						: oldNext();
 				},
 				return() { 
 					done = true; 
@@ -33,7 +34,9 @@ class AsyncIterable extends AbstractIterable {
 		}
 	}
 
-	/** 
+	/** All `AsyncIterable` instances are (of course) _iterable_, hence they 
+	 * have a `Symbol.asyncIterator` method that returns an asynchronous 
+	 * iterator.
 	 */
 	[Symbol.asyncIterator](){
 		let iterator = typeof source === 'function' ? source() 
@@ -44,8 +47,9 @@ class AsyncIterable extends AbstractIterable {
 	/**
 	 */
 	filteredMap(valueFunction, checkFunction) {
-		return new AsyncIterable(generators.filteredMap, this, valueFunction,
-			checkFunction);
+		let source = generators.filteredMap.bind(generators, this, 
+			valueFunction, checkFunction);
+		return new AsyncIterable(source);
 	}
 
 	/**
@@ -53,7 +57,10 @@ class AsyncIterable extends AbstractIterable {
 	async forEach(doFunction, ifFunction) {
 		let result;
 		for await (result of this.filteredMap(doFunction, ifFunction)) {
-			// Do nothing
+			if (!ifFunction || await ifFunction(value, i, iter)) {
+				result = doFunction ? await doFunction(value, i, iter) 
+					: value;
+			}
 		}
 		return result;
 	}
@@ -61,7 +68,8 @@ class AsyncIterable extends AbstractIterable {
 // Builders ////////////////////////////////////////////////////////////////////
 
 	ticks(step, end) {
-		return new AsyncIterator(generators.async.ticks, step, end);
+		let source = generators.async.bind(generators, ticks, step, end);
+		return new AsyncIterator(source);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
