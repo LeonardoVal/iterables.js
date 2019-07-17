@@ -7,13 +7,14 @@ class Iterable extends AbstractIterable {
 		super(source);
 	}
 
-	/**
+	/** `isAsync` returns `false` for `Iterable`.
 	 */
 	get isAsync() {
 		return false;
 	}
 
-	/** 
+	/** All `Iterable` instances are (of course) _iterable_, hence they have a
+	 * `Symbol.iterator` method that returns an iterator.
 	 */
 	[Symbol.iterator](){
 		let source = this.source,
@@ -22,7 +23,9 @@ class Iterable extends AbstractIterable {
 		return this.constructor.__iter__(iterator);
 	}
 
-	/**
+	/** A `filteredMap` makes a new sequence. For each value in this sequence
+	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
+	 * is called. The results are yielded in the same order. 
 	 */
 	filteredMap(valueFunction, checkFunction) {
 		let source = generators.filteredMap.bind(generators, this,
@@ -39,7 +42,7 @@ class Iterable extends AbstractIterable {
 				result = (doFunction ? doFunction(value, i, iter) : value);
 			}
 		}
-		return result; //FIXME Should forEach return something.
+		return result; //FIXME Should forEach return something?
 	}
 
 // Builders ////////////////////////////////////////////////////////////////////
@@ -47,36 +50,43 @@ class Iterable extends AbstractIterable {
 	/**
 	 */
 	range(from, to, step) {
-		return new this.constructor(generators.range, from, to, step);
+		let source = generators.range.bind(generators, from, to, step);
+		return new this.constructor(source);
 	}
 
 	/**
 	 */
 	enumFromThenTo(from, then, to) {
-		return new this.constructor(generators.enumFromThenTo, from, then, to);
+		let source = generators.enumFromThenTo.bind(generators, from, to, 
+			step);
+		return new this.constructor(source);
 	}
 
 	/**
 	 */
 	enumFromThen(from, then) {
-		return new this.constructor(generators.enumFromThen, from, then);
+		let source = generators.enumFromThenTo.bind(generators, from, to);
+		return new this.constructor(source);
 	}
 
 	/**
 	 */
 	enumFrom(from) {
-		return new this.constructor(generators.enumFrom, from);
+		let source = generators.enumFromThenTo.bind(generators, from);
+		return new this.constructor(source);
 	}
 
 	/**
 	 */
 	repeat(value, n) {
-		return new this.constructor(generators.repeat, value, n);
+		let source = generators.repeat.bind(generators, value, n);
+		return new this.constructor(source);
 	}
 
 	/**
 	 */
 	iterate(f, arg, n) {
+		let source = generators.iterate.bind(generators, f, arg, n);
 		return new this.constructor(generators.iterate, f, arg, n);
 	}
 
@@ -86,33 +96,9 @@ class Iterable extends AbstractIterable {
 	 * sequence.
 	 */
 	scanl(foldFunction, initial) {
-		let source = generators.scanl
-			.bind(generators, this, foldFunction, initial);
+		let source = generators.scanl.bind(generators, this, foldFunction, 
+			initial);
 		return new this.constructor(source);
-	}
-
-	/** 
-	 */
-	static fromArray(array) {
-		return new ArrayIterable(array);
-	}
-
-	/** 
-	 */
-	static fromValues() {
-		return this.fromArray(Array.prototype.slice.call(arguments));
-	}
-
-	/**
-	 */
-	static fromObject(obj, sortKeys) {
-		return new ObjectIterable(obj, sortKeys);
-	}
-
-	/**
-	 */
-	static fromString(string) {
-		return new StringIterable(string);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
@@ -226,7 +212,8 @@ class Iterable extends AbstractIterable {
 	 * Warning! This iterable's elements are stored in memory for sorting.
 	 */
 	sorted(sortFunction) {
-		return this.constructor.fromArray(this.toArray().sort(sortFunction));
+		let sortedArray = this.toArray().sort(sortFunction);
+		return this.constructor.fromArray(sortedArray);
 	}
 
 	/** `reverse()` returns an iterable with this iterable elements in reverse
@@ -235,7 +222,8 @@ class Iterable extends AbstractIterable {
 	 * Warning! It stores all this iterable's elements in memory.
 	 */
 	reverse() {
-		return this.constructor.fromArray(this.toArray().reverse());
+		let reversedArray = this.toArray().reverse();
+		return this.constructor.fromArray(reversedArray);
 	}
 
 	/** `buffered(array)` stores all elements of the iterable in an `array` and
@@ -243,7 +231,16 @@ class Iterable extends AbstractIterable {
 	 */
 	buffered(array) {
 		array = array || [];
-		return this.constructor.fromArray(this.toArray(array));
+		let source = generators.buffered.bind(generators, this, array);
+		return new this.constructor(source);
+	}
+
+	/** `cycle(n = +Infinity)` returns an iterable that loops `n` times (or 
+	 * forever by default) over the elements of this `Iterable`.
+	 */
+	cycle(n = +Infinity) {
+		let source = generators.cycle.bind(generators, this, n);
+		return new Iterable(source);
 	}
 
 // Variadic operations /////////////////////////////////////////////////////////
@@ -257,6 +254,23 @@ class Iterable extends AbstractIterable {
 	static zipWith(zipFunction, ...iterables) {
 		let source = generators.zipWith.bind(generators, zipFunction, 
 			...iterables);
+		return new Iterable(source);
+	}
+
+	/** `product(iterables...)` builds an iterable that iterates over the 
+	 * [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product) of 
+	 * this and all the given iterables, yielding an array of the values of
+	 * each.
+	 */
+	static product(...iterables) {
+		let source = generators.product.bind(generators, ...iterables);
+		return new Iterable(source);
+	}
+
+	/** 
+	 */
+	static concat(...iterables) {
+		let source = generators.concat.bind(generators, ...iterables);
 		return new Iterable(source);
 	}
 } // class Iterable
