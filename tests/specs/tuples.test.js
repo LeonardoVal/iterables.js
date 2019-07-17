@@ -45,10 +45,13 @@
 				test = function (testCase) {
 					var func = testCase.func,
 						lists = testCase.lists;
-					expectList(Iterable.prototype.zipWith.call(lists[0], func, ...lists.slice(1)),
-						testCase.expectedResult);
+					expectList(
+						new Iterable(lists[0]).zipWith(func, ...lists.slice(1)),
+						testCase.expectedResult
+					);
 					expectList(Iterable.zipWith(func, ...lists), 
-						testCase.expectedResult); 
+						testCase.expectedResult
+					); 
 				};
 			test({
 				func: function (vs) { return vs[0] + vs[1]; },
@@ -72,15 +75,15 @@
 			});
 		});
 
-		xit("product()", function () {
-			var Iterable = list_utils.Iterable;
+		it("product()", function () {
+			var Iterable = listUtils.Iterable;
 			expect(Iterable.prototype.product).toBeOfType('function');
 			expect(Iterable.product).toBeOfType('function');
 			var test = function (testCase) {
 					var lists = testCase.lists;
-					expectList(Iterable.prototype.product.call(lists[0], lists.slice(1)),
+					expectList(new Iterable(lists[0]).product(...lists.slice(1)),
 						testCase.expectedResult);
-					expectList(Iterable.product.call(Iterable, lists),
+					expectList(Iterable.product(...lists),
 						testCase.expectedResult);
 				};
 			test({
