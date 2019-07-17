@@ -1,8 +1,28 @@
-/**
+/** `generators` is a namespace for utility functions related to iterators and
+ * generators.
  */
 let generators = {
 
 // Sequence builders ///////////////////////////////////////////////////////////
+
+	/** `empty()` returns an iterator of an empty sequence. 
+	 */
+	empty() {
+		return {
+			next() { 
+				return { done: true };
+			},
+			return() {
+				return { done: true };
+			}
+		}; 
+	},
+
+	/** `singleton(value)` returns an iterator of a sequence with one `value`.
+	 */
+	*singleton(value) {
+		yield value;
+	},
 
 	/** `range(from=0, to, step=1)` generates a sequence of numbers from `from`
 	 * upto `to` with the given `step`. For example, `range(2,12,3)` represents
@@ -103,6 +123,27 @@ let generators = {
 
 // Operations on one sequence //////////////////////////////////////////////////
 
+	/** `buffered` iterates over the given sequence once, storing the values in
+	 * an array, so it can be reiterated without being recalculated.
+	 */
+	buffered(seq, array) {
+		array = array || [];
+		let iter = seq[Symbol.iterator]();
+		return function* () {
+			for (let value of array) {
+				yield value;
+			}
+			for (let entry = iter.next(); !entry.done; entry = iter.next()) {
+				array.push(entry.value);
+				yield entry.value;
+			}
+		};
+	},
+
+	/** A `filteredMap` makes a new sequence. For each value in this sequence
+	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
+	 * is called. The results are yielded in the same order. 
+	 */
 	*filteredMap(seq, valueFunction, checkFunction) {
 		let i = 0,
 			iter = seq[Symbol.iterator]();
@@ -132,7 +173,25 @@ let generators = {
 		}
 	},
 
+	/** `cycle(seq, n = +Infinity)` returns an iterable that loops n times (or 
+	 * forever by default) over the elements of the given sequence `seq`.
+	 */
+	*cycle(seq, n = +Infinity) {
+		for (; n > 0; n--) {
+			yield *seq;
+		}
+	},
+
 // Operations on many sequences ////////////////////////////////////////////////
+
+	iterators(...iterables) {
+		return iterables.map((iterable) => {
+			if (typeof iterable[Symbol.iterator] !== 'function') {
+				throw new Error(`Object ${iterable} is not iterable!`);
+			}
+			return iterable[Symbol.iterator]();
+		});
+	},
 
 	/** `zipWith(zipFunction, ...seqs)` generates a sequence that iterates over
 	 * all the given iterables at the same time, stopping at the first sequence 
@@ -140,12 +199,7 @@ let generators = {
 	 * given `zipFunction` with an array of the values of each iterable.
 	 */
 	*zipWith(zipFunction, ...iterables) {
-		let iters = iterables.map((iterable) => {
-				if (typeof iterable[Symbol.iterator] !== 'function') {
-					throw new Error(`Object ${iterable} is not iterable!`);
-				}
-				return iterable[Symbol.iterator]();
-			}),
+		let iters = generators.iterators(...iterables),
 			done = false, 
 			values;
 		while (!done) {
@@ -158,7 +212,44 @@ let generators = {
 				yield zipFunction(values);
 			}
 		}
-	} 
+	},
+
+	/** `product(iterables...)` builds an iterable that iterates over the 
+	 * [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product) of 
+	 * this and all the given iterables, yielding an array of the values of
+	 * each.
+	 */
+	*product(...iterables) {
+		let iters = generators.iterators(...iterables),
+			tuple = iters.map((iter) => iter.next()),
+			length = iters.length,
+			done = tuple.reduce((acc, entry) => acc || entry.done, false);
+		while (!done) {
+			yield tuple.map((entry) => entry.value);
+			for (let i = 0; i < length; i++) {
+				tuple[i] = iters[i].next();
+				if (tuple[i].done) {
+					done = i === length - 1;
+					if (done) {
+						break;
+					}
+					iters[i] = iterables[i][Symbol.iterator]();
+					tuple[i] = iters[i].next();
+				} else {
+					break;
+				}
+			}
+		}
+	},
+
+	/** `concat(iterables...)` returns an iterable that iterates over the 
+	 * concatenation of this and all the given iterables.
+	 */
+	*concat(...iterables) {
+		for (let iterable of iterables) {
+			yield *iterable;
+		}
+	}
 }; // generators
 
 exports.generators = generators;
