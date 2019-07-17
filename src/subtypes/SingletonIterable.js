@@ -2,32 +2,26 @@
  */
 class SingletonIterable extends Iterable {
 	constructor (value) {
-		super(value, SingletonIterable.generator);
-	}
-
-	static *generator(value) { //FIXME
-		yield value;
+		let source = generators.singleton.bind(generators, value);
+		super(source);
+		this.__value__ = value;
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `isEmpty()` returns if the sequence has no elements.
-	 */
+	/** @inheritdoc */
 	isEmpty() {
 		return false;
 	}
 
-	/** `length` is the amount of values in the sequence.
-	 */
+	/** @inheritdoc */
 	get length() {
 		return 1;
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
 
-	/** `toArray(array=[])`: appends to `array` the elements of the sequence 
-	 * and returns it. If no array is given, a new one is used.
-	 */
+	/** @inheritdoc */
 	toArray(array) {
 		return (array || []).concat([this.__value__]);
 	}
