@@ -1,29 +1,20 @@
 /**
  */
-const EMPTY_ITERATOR = {
-	next() { 
-		return { done: true };
-	},
-	return() {
-		return { done: true };
-	}
-};
-
 let SINGLETON_EmptyIterable;
 
+/** 
+ */
 class EmptyIterable extends Iterable {
 	constructor() {
 		if (SINGLETON_EmptyIterable) {
 			return SINGLETON_EmptyIterable;
 		} else {
-			super(undefined);
+			let source = generators.empty.bind(generators);
+			super(source);
 			SINGLETON_EmptyIterable = this;
 		}
 	}
 
-	[Symbol.iterator]() {
-		return EMPTY_ITERATOR;
-	}
 // Conversions /////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
