@@ -7,7 +7,7 @@ class Iterable extends AbstractIterable {
 		super(source);
 	}
 
-	/** `isAsync` returns `false` for `Iterable`.
+	/** `isAsync` is `false` for `Iterable`.
 	 */
 	get isAsync() {
 		return false;
@@ -23,18 +23,27 @@ class Iterable extends AbstractIterable {
 		return this.constructor.__iter__(iterator);
 	}
 
-	/** A `filteredMap` makes a new sequence. For each value in this sequence
-	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
-	 * is called. The results are yielded in the same order. 
+	/** A synchronous iterator can be transformed to an asynchronous iterator,
+	 * by returning resolved promises. This may be useful for mocking 
+	 * asynchronous iterables with synchronous ones.
 	 */
+	[Symbol.asyncIterator]() {
+		let iter = this[Symbol.iterator]();
+		return this.__aiter__({
+			next() { 
+				return Promise.resolve(iter.next());
+			}
+		});
+	}
+
+	/** @inheritdoc */
 	filteredMap(valueFunction, checkFunction) {
 		let source = generators.filteredMap.bind(generators, this,
 			valueFunction, checkFunction);
 		return new Iterable(source);
 	}
 
-	/**
-	 */
+	/** @inheritdoc */
 	forEach(doFunction, ifFunction) {
 		let result;
 		for (result of this) {
@@ -49,45 +58,53 @@ class Iterable extends AbstractIterable {
 
 	/**
 	 */
-	range(from, to, step) {
+	static range(from, to, step) {
 		let source = generators.range.bind(generators, from, to, step);
-		return new this.constructor(source);
+		return new this(source);
 	}
 
 	/**
 	 */
-	enumFromThenTo(from, then, to) {
+	static enumFromThenTo(from, then, to) {
 		let source = generators.enumFromThenTo.bind(generators, from, to, 
 			step);
-		return new this.constructor(source);
+		return new this(source);
 	}
 
 	/**
 	 */
-	enumFromThen(from, then) {
+	static enumFromThen(from, then) {
 		let source = generators.enumFromThenTo.bind(generators, from, to);
-		return new this.constructor(source);
+		return new this(source);
 	}
 
 	/**
 	 */
-	enumFrom(from) {
+	static enumFromTo(from, to) {
+		let source = generators.enumFromThenTo.bind(generators, from, 
+			from + 1, to);
+		return new this(source);
+	}
+
+	/**
+	 */
+	static enumFrom(from) {
 		let source = generators.enumFromThenTo.bind(generators, from);
-		return new this.constructor(source);
+		return new this(source);
 	}
 
 	/**
 	 */
-	repeat(value, n) {
+	static repeat(value, n) {
 		let source = generators.repeat.bind(generators, value, n);
-		return new this.constructor(source);
+		return new this(source);
 	}
 
 	/**
 	 */
-	iterate(f, arg, n) {
+	static iterate(f, arg, n) {
 		let source = generators.iterate.bind(generators, f, arg, n);
-		return new this.constructor(generators.iterate, f, arg, n);
+		return new this(generators.iterate, f, arg, n);
 	}
 
 	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
@@ -119,14 +136,12 @@ class Iterable extends AbstractIterable {
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `has(value)` checks if the given `value` occurs in the iterable.
-	 */
+	/** @inheritdoc */
 	has(value) {
 		return this.indexOf(value) >= 0;
 	}
 
-	/** `isEmpty()` returns if the sequence has no elements.
-	 */
+	/** @inheritdoc */
 	isEmpty() {
 		for (let v in this) {
 			return false;
@@ -134,8 +149,7 @@ class Iterable extends AbstractIterable {
 		return true;
 	}
 
-	/** `length` is the amount of values in the sequence.
-	 */
+	/** @inheritdoc */
 	get length() {
 		let result = 0;
 		for (let _ of this) {
@@ -146,11 +160,7 @@ class Iterable extends AbstractIterable {
 
 // Reductions //////////////////////////////////////////////////////////////////
 
-	/** `reduce(foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. The `initial` value 
-	 * is used as a starting point, but if it is not defined, then the first 
-	 * element in the sequence is used.
-	 */
+	/** @inheritdoc */
 	reduce(foldFunction, initial) {
 		let folded = initial,
 			iter = this[Symbol.iterator](),
@@ -164,9 +174,7 @@ class Iterable extends AbstractIterable {
 
 // Selections //////////////////////////////////////////////////////////////////
 
-	/** `head(defaultValue)` returns the first element. If the sequence is 
-	 * empty it returns `defaultValue`, or raise an exception if none is given.
-	 */
+	/** @inheritdoc */
 	head(defaultValue) {
 		for (let v of this) {
 			return v;
@@ -245,6 +253,12 @@ class Iterable extends AbstractIterable {
 
 // Variadic operations /////////////////////////////////////////////////////////
 	
+	/** @borrows generators.concat */
+	static concat(...iterables) {
+		let source = generators.concat.bind(generators, ...iterables);
+		return new Iterable(source);
+	}
+
 	/** `zipWith(zipFunction, ...iterables)` builds an iterable that iterates 
 	 * over all the given iterables at the same time, stopping at the first 
 	 * sequence finishing. Each value in the generated sequence is made by 
@@ -267,12 +281,6 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
-	/** 
-	 */
-	static concat(...iterables) {
-		let source = generators.concat.bind(generators, ...iterables);
-		return new Iterable(source);
-	}
 } // class Iterable
 
 exports.Iterable = Iterable;
