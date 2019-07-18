@@ -7,7 +7,32 @@ class AbstractIterable {
 		Object.defineProperty(this, 'source', { value: source });
 	}
 
-	/** 
+	/** `__aiter__` instruments an asynchronous iterator with a `return` method 
+	 * if it lacks one. This is necessary in order to interrupt an iteration, 
+	 * which is required for many optimization strategies.
+	 */
+	static __aiter__(iterator) {
+		if (iterator.return) {
+			return iterator;
+		} else {
+			let done = false,
+				oldNext = iterator.next.bind(iterator);
+			return {
+				next() {
+					return done ? Promise.resolve({ done: true }) 
+						: oldNext();
+				},
+				return() { 
+					done = true; 
+					return Promise.resolve({ done: true });
+				}
+			};
+		}
+	}
+
+	/** `__iter__` instruments an iterator with a `return` method if it lacks
+	 * one. This is necessary in order to interrupt an iteration, which is
+	 * required for many optimization strategies.
 	 */
 	static __iter__(iterator) {
 		if (!iterator.return) {
@@ -24,6 +49,32 @@ class AbstractIterable {
 			};
 		}
 		return iterator;
+	}
+
+	/** The abstract iterable base class cannot be iterated.
+	 */
+	[Symbol.iterator]() {
+		throwUnimplemented('[@@iterator]', this.constructor.name);
+	}
+
+	/** The abstract iterable base class cannot be asynchronously iterated.
+	 */
+	[Symbol.asyncIterator]() {
+		throwUnimplemented('[@@asyncIterator]', this.constructor.name);
+	}
+
+	/** A `filteredMap` makes a new sequence. For each value in this sequence
+	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
+	 * is called. The results are yielded in the same order. 
+	 */
+	filteredMap(valueFunction, checkFunction) {
+		throwUnimplemented('filteredMap', this.constructor.name);
+	}
+
+	/** TODO 
+	 */
+	forEach(doFunction, ifFunction) {
+		throwUnimplemented('forEach', this.constructor.name);
 	}
 
 // Builders ////////////////////////////////////////////////////////////////////
@@ -65,6 +116,27 @@ class AbstractIterable {
 	 */
 	map(mapFunction) {
 		return this.filteredMap(mapFunction);
+	}
+
+	/** `peephole(n, mapFunction)` is like a map, but takes `n` consequent 
+	 * values from the sequence.
+	 */
+	peephole(n, mapFunction) {
+		n = isNaN(n) ? 1 : Math.floor(n);
+		let window;
+		return this.filteredMap(() => {
+			let args = window.slice(); // Shallow copy.
+			return mapFunction ? mapFunction(args) : args;
+		}, (value, i) => {
+			if (i === 0) {
+				window = [];
+			}
+			window.push(value);
+			if (window.length > n) {
+				window.shift();
+			}
+			return window.length === n;
+		});
 	}
 
 	/** `toArray(array=[])`: appends to `array` the elements of the sequence
@@ -112,6 +184,12 @@ class AbstractIterable {
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
+
+	/** `has(value)` checks if the given `value` occurs in the iterable.
+	 */
+	has(value) {
+		throwUnimplemented('has', this.constructor.name);
+	}
 
 	/** `indexOf(value, from=0)` is analogous to the array's namesake method. 
 	 * Returns the first position of the given `value`, or -1 if it is not 
@@ -205,7 +283,7 @@ class AbstractIterable {
 	 * in a new one by default.
 	 */
 	histogram(key, map = null) {
-		let grouping = (group, _value, _i) => (group || 0) + 1;
+		let grouping = (count, _value, _i) => (count || 0) + 1;
 		return this.groupBy(key, grouping, map);
 	}
 
@@ -291,6 +369,15 @@ class AbstractIterable {
 		return this.scanl(foldFunction, initial).lastValue(initial);
 	}
 
+	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
+	 * with `foldFunction` as a left associative operator. Instead of returning 
+	 * the last result, it iterates over the intermediate values in the folding 
+	 * sequence.
+	 */
+	scanl(foldFunction, initial) {
+		throwUnimplemented('scanl', this.constructor.name);
+	}
+
 	/** `sum(n=0)` returns the sum of all numbers in the sequence, or `n` if
 	 * the sequence is empty.
 	 */
@@ -300,6 +387,14 @@ class AbstractIterable {
 	}
 
 // Selections //////////////////////////////////////////////////////////////////
+
+	/** `compress(flags)` selects values from this iterable that have a truthy
+	 * flag in the same position in the iterable `flags`.
+	 */
+	compress(flags) {
+		return this.zip(flags)
+			.filteredMap(([value,]) => value, ([, flag]) => flag);
+	}
 
 	/** `drop(n=1)` returns an iterable with the same elements than this, 
 	 * except the first `n` ones.
@@ -326,6 +421,13 @@ class AbstractIterable {
 	 */
 	filter(condition) {
 		return this.filteredMap(null, condition || __toBool__);
+	}
+
+	/** `head(defaultValue)` returns the first element. If the sequence is 
+	 * empty it returns `defaultValue`, or raise an exception if none is given.
+	 */
+	head(defaultValue) {
+		throwUnimplemented('head', this.constructor.name);
 	}
 
 	/** `get(index, defaultValue)` returns the value at the given `index`, or
@@ -375,6 +477,64 @@ class AbstractIterable {
 		}, result);
 	}
 
+	/** The `nub` of a sequence is another sequence with each element only
+	 * appearing once. Basically repeated elements are removed. The argument 
+	 * `equality` may have a function to compare the sequence's values.
+	 * 
+	 * Warning! All the elements of the result are stored in memory.
+	 */
+	nub(equality = null) {
+		let buffer;
+		if (equality) {
+			return this.filter((value, i) => {
+				if (i === 0) {
+					buffer = [value];
+					return true;
+				} else {
+					for (let prev of buffer) {
+						if (equality(value, prev)) {
+							return false;
+						}
+					}
+					buffer.push(value);
+					return true;
+				}
+			});
+		} else {
+			return this.filter((value, i) => {
+				if (i === 0) {
+					buffer = new Set();
+					buffer.add(value);
+					return true;
+				} else if (buffer.has(value)) {
+					return false;
+				} else {
+					buffer.add(value);
+					return true;
+				}
+			});
+		}
+	}
+
+	/** `sample(n=1, rng=Math.random)` gathers `n` values from this iterable at
+	 * random, and returns them in an array.
+	 */
+	sample(n, rng = null) {
+		n = +n >= 1 ? Math.floor(n) : 1; 
+		rng = rng || Math.random;
+		return this.reduce((selected, value, i) => {
+			if (i < n) {
+				selected.push(value);
+			} else {
+				let r = Math.floor(rng() * i);
+				if (r < n) {
+					selected[r] = value;
+				}
+			}
+			return selected;
+		}, []);
+	}
+
 	/** `slice(begin=0, end=Infinity)` return an iterable over a portion of the
 	 * this sequence from `begin` to `end`.
 	 */
@@ -422,8 +582,74 @@ class AbstractIterable {
 
 // Unary operations ////////////////////////////////////////////////////////////
 
+
+
 // Variadic operations /////////////////////////////////////////////////////////
 	
+	/** 
+	 */
+	concat(...iterables) {
+		return this.constructor.concat(this, ...iterables);
+	}
+
+	/** The `difference(lists, equality)` methods treats the given `lists` as
+	 * sets, and calculates the difference of the first with the rest of them.
+	 * The `equality` function is used to compare values. If it is not given, 
+	 * the standard equality operator (`===`) is used.
+	 * 
+	 * Warning! Repeated values in this iterable will still be repeated.
+	 */
+	differenceBy(equality, ...iterables) {
+		equality = equality || ((v1, v2) => v1 === v2);
+		return this.filter((value) => {
+			mainLoop: for (let iterable of iterables) {
+				for (let other of iterable) {
+					if (equality(value, other)) {
+						return false;
+					}
+					return false;
+				}
+				return false;
+			}
+		});
+	}
+
+	difference(...iterables) {
+		return this.differenceBy(null, ...iterables);
+	}
+	
+	/** The `intersectionBy(equality, ...iterables)` methods treats the given 
+	 * `iterables` as sets, and calculates the intersection of all of them with
+	 * this iterable. The `equality` function is used to compare values. If it
+	 * is not given, the standard equality operator (`===`) is used.
+	 * 
+	 * Warning! Repeated values in this iterable will still be repeated.
+	 */
+	intersectionBy(equality, ...iterables) {
+		equality = equality || ((v1, v2) => v1 === v2);
+		return this.filter((value) => {
+			mainLoop: for (let iterable of iterables) {
+				for (let other of iterable) {
+					if (equality(value, other)) {
+						continue mainLoop;
+					}
+					return false;
+				}
+				return false;
+			}
+		});
+	}
+
+	intersection(...iterables) {
+		return this.intersectionBy(null, ...iterables);
+	}
+
+	/** 
+	 */
+	product(...iterables) {
+		return this.constructor.product(this, ...iterables);
+	}
+
 	/** 
 	 */
 	static zip(...iterables) {
@@ -440,18 +666,6 @@ class AbstractIterable {
 	 */
 	zipWith(zipFunction, ...iterables) {
 		return this.constructor.zipWith(zipFunction, this, ...iterables);
-	}
-
-	/** 
-	 */
-	product(...iterables) {
-		return this.constructor.product(this, ...iterables);
-	}
-
-	/** 
-	 */
-	concat(...iterables) {
-		return this.constructor.concat(this, ...iterables);
 	}
 
 } // class AbstractIterable
