@@ -7,31 +7,10 @@ class AsyncIterable extends AbstractIterable {
 		super(source);
 	}
 
-	/** `isAsync` returns `true` for `Iterable`.
+	/** `isAsync` is `true` for `Iterable`.
 	 */
 	get isAsync() {
 		return true;
-	}
-
-	/** 
-	 */
-	static __aiter__(iterator) {
-		if (iterator.return) {
-			return iterator;
-		} else {
-			let done = false,
-				oldNext = iterator.next.bind(iterator);
-			return {
-				next() {
-					return done ? Promise.resolve({ done: true }) 
-						: oldNext();
-				},
-				return() { 
-					done = true; 
-					return Promise.resolve({ done: true });
-				}
-			};
-		}
 	}
 
 	/** All `AsyncIterable` instances are (of course) _iterable_, hence they 
@@ -44,16 +23,14 @@ class AsyncIterable extends AbstractIterable {
 		return AsyncIterable.__aiter__(iterator);
 	}
 	
-	/**
-	 */
+	/** @inheritdoc */
 	filteredMap(valueFunction, checkFunction) {
-		let source = generators.filteredMap.bind(generators, this, 
+		let source = generators.async.filteredMap.bind(generators, this, 
 			valueFunction, checkFunction);
 		return new AsyncIterable(source);
 	}
 
-	/**
-	 */
+	/** @inheritdoc */
 	async forEach(doFunction, ifFunction) {
 		let result;
 		for await (result of this.filteredMap(doFunction, ifFunction)) {
@@ -67,6 +44,8 @@ class AsyncIterable extends AbstractIterable {
 
 // Builders ////////////////////////////////////////////////////////////////////
 
+	/** TODO 
+	 */
 	ticks(step, end) {
 		let source = generators.async.bind(generators, ticks, step, end);
 		return new AsyncIterator(source);
@@ -74,19 +53,23 @@ class AsyncIterable extends AbstractIterable {
 
 // Conversions /////////////////////////////////////////////////////////////////
 
-
-
 // Properties //////////////////////////////////////////////////////////////////
-
-
 
 // Reductions //////////////////////////////////////////////////////////////////
 
-	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. Instead of returning 
-	 * the last result, it iterates over the intermediate values in the folding 
-	 * sequence.
-	 */
+	/** @inheritdoc */
+	async reduce(foldFunction, initial) {
+		let folded = initial,
+			iter = this[Symbol.iterator](),
+			i = 0;
+		for (let entry = await iter.next(); !entry.done; entry = await iter.next()) {
+			folded = foldFunction(folded, entry.value, i, iter);
+			i++;
+		} 
+		return folded;
+	}
+
+	/** @inheritdoc */
 	scanl(foldFunction, initial) {
 		return new AsyncIterable(generators.async.scanl, this, foldFunction, 
 			initial);
@@ -94,12 +77,10 @@ class AsyncIterable extends AbstractIterable {
 
 // Selections //////////////////////////////////////////////////////////////////
 
-
 // Unary operations ////////////////////////////////////////////////////////////
-
 
 // Variadic operations /////////////////////////////////////////////////////////
 	
-} // class Iterable
+} // class AsyncIterable
 
 exports.AsyncIterable = AsyncIterable;
