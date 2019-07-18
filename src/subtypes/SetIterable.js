@@ -9,22 +9,37 @@ class SetIterable extends Iterable {
 		super(set);
 	}
 
+	/** @inheritdoc */
 	[Symbol.iterator]() {
 		return this.source[Symbol.iterator]();
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `isEmpty()` returns if the sequence has no elements.
-	 */
+	/** @inheritdoc */
+	has(value) {
+		return this.source.has(value);
+	}
+
+	/** @inheritdoc */
 	isEmpty() {
 		return this.source.size() < 1;
 	}
 
-	/** `length` is the amount of values in the sequence.
-	 */
+	/** @inheritdoc */
 	get length() {
 		return this.source.size();
+	}
+
+// Selections //////////////////////////////////////////////////////////////////
+
+	/** @inheritdoc */
+	nub(equality = null) {
+		if (!equality) {
+			return new this.constructor(new Set(this.source));
+		} else {
+			return super.nub(equality);
+		}
 	}
 
 } // class SetIterable
