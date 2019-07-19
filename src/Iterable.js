@@ -115,14 +115,25 @@ class Iterable extends AbstractIterable {
 	scanl(foldFunction, initial) {
 		let source = generators.scanl.bind(generators, this, foldFunction, 
 			initial);
-		return new this.constructor(source);
+		return new Iterable(source);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
 
+	/** 
+	*/
+	flat(depth = +Infinity) {
+		let source = generators.flat.bind(generators, this, depth);
+		return new Iterable(source);
+	}
+
+	flatMap(mapFunction) {
+		return this.map(mapFunction).flat(1);
+	}
+
 	/** `toArray(array=[])`: appends to `array` the elements of the sequence
 	 * and returns it. If no array is given, a new one is used.
-	 */
+	*/
 	toArray(array = null) {
 		if (!array) {
 			array = [...this];
@@ -214,14 +225,55 @@ class Iterable extends AbstractIterable {
 
 // Unary operations ////////////////////////////////////////////////////////////
 
-	/** `sorted(sortFunction)` returns an iterable that goes through this 
-	 * iterable's elements in order. 
-	 * 
-	 * Warning! This iterable's elements are stored in memory for sorting.
+	/** `buffered(array)` stores all elements of the iterable in an `array` and
+	 * returns it as an iterable.
 	 */
-	sorted(sortFunction) {
-		let sortedArray = this.toArray().sort(sortFunction);
-		return this.constructor.fromArray(sortedArray);
+	buffered(array) {
+		array = array || [];
+		let source = generators.buffered.bind(generators, this, array);
+		return new Iterable(source);
+	}
+
+	/** TODO
+	*/
+	combinations(k) { //FIXME
+		let elements = this.toArray(),
+			suffixes = Iterable.range(elements.length)
+				.map((i) => new ArrayIterable(elements, i))
+				.toArray(),
+			EMPTY = [],
+			SINGLE_EMPTY = new SingletonIterable(EMPTY),
+			combRec = (i, k) => {
+				if (k < 1 || i >= suffixes.length) {
+					return SINGLE_EMPTY;
+				} else {
+					return suffixes[i].flatMap((value, j, iter) => {
+						if (i + j + (k - 1) < suffixes.length) {
+							return combRec(i + j + 1, k - 1)
+								.map((comb) => [value, ...comb]);
+						} else {
+							iter.return();
+							return EMPTY;
+						}
+					});
+				}
+			}; 
+		return combRec(0, k);
+	}
+
+	/** TODO
+	 */
+	cons(value) {
+		let source = generators.cons.bind(generators, value, this);
+		return new Iterable(source);
+	}
+
+	/** `cycle(n = +Infinity)` returns an iterable that loops `n` times (or 
+	 * forever by default) over the elements of this `Iterable`.
+	 */
+	cycle(n = +Infinity) {
+		let source = generators.cycle.bind(generators, this, n);
+		return new Iterable(source);
 	}
 
 	/** `reverse()` returns an iterable with this iterable elements in reverse
@@ -234,21 +286,14 @@ class Iterable extends AbstractIterable {
 		return this.constructor.fromArray(reversedArray);
 	}
 
-	/** `buffered(array)` stores all elements of the iterable in an `array` and
-	 * returns it as an iterable.
+	/** `sorted(sortFunction)` returns an iterable that goes through this 
+	 * iterable's elements in order. 
+	 * 
+	 * Warning! This iterable's elements are stored in memory for sorting.
 	 */
-	buffered(array) {
-		array = array || [];
-		let source = generators.buffered.bind(generators, this, array);
-		return new this.constructor(source);
-	}
-
-	/** `cycle(n = +Infinity)` returns an iterable that loops `n` times (or 
-	 * forever by default) over the elements of this `Iterable`.
-	 */
-	cycle(n = +Infinity) {
-		let source = generators.cycle.bind(generators, this, n);
-		return new Iterable(source);
+	sorted(sortFunction) {
+		let sortedArray = this.toArray().sort(sortFunction);
+		return this.constructor.fromArray(sortedArray);
 	}
 
 // Variadic operations /////////////////////////////////////////////////////////
