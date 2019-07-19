@@ -139,6 +139,22 @@ let generators = {
 			}
 		};
 	},
+	
+	/** TODO
+	*/
+	*cons(head, tail) {
+		yield head;
+		yield *tail;
+	},
+
+	/** `cycle(seq, n = +Infinity)` returns an iterable that loops n times (or 
+	 * forever by default) over the elements of the given sequence `seq`.
+	 */
+	*cycle(seq, n = +Infinity) {
+		for (; n > 0; n--) {
+			yield *seq;
+		}
+	},
 
 	/** A `filteredMap` makes a new sequence. For each value in this sequence
 	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
@@ -156,6 +172,20 @@ let generators = {
 		}
 	},
 
+	/** 
+	 * 
+	*/
+	*flat(seq, depth = +Infinity) {
+		depth = isNaN(depth) ? Infinity : +depth;
+		for (let value of seq) {
+			if (typeof value[Symbol.iterator] === 'function' && depth > 0) {
+				yield *generators.flat(value, depth - 1);
+			} else {
+				yield value;
+			} 
+		}
+	},
+
 	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
 	 * with `foldFunction` as a left associative operator. Instead of returning 
 	 * the last result, it iterates over the intermediate values in the folding 
@@ -170,15 +200,6 @@ let generators = {
 			folded = foldFunction(folded, value, i, iter);
 			yield folded;
 			i++;
-		}
-	},
-
-	/** `cycle(seq, n = +Infinity)` returns an iterable that loops n times (or 
-	 * forever by default) over the elements of the given sequence `seq`.
-	 */
-	*cycle(seq, n = +Infinity) {
-		for (; n > 0; n--) {
-			yield *seq;
 		}
 	},
 
