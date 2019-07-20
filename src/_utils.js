@@ -1,6 +1,6 @@
 /**
 */
-
+const MAX_INTEGER = Math.pow(2, 53) - 1;
 
 function __toBool__(x) {
 	return !!x;
