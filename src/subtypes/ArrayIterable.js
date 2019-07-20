@@ -27,8 +27,12 @@ class ArrayIterable extends Iterable {
 // Conversions /////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
-	toArray() {
-		return this.source.slice(this.__indexFrom__, this.__indexTo__);
+	toArray(array = null) {
+		if (!array) {
+			return this.source.slice(this.__indexFrom__, this.__indexTo__);
+		} else {
+			return super.toArray(array);
+		}
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
