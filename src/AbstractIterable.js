@@ -360,6 +360,14 @@ class AbstractIterable {
 		);
 	}
 	
+	/** `multiplication(n=1)` returns the product of all numbers in the 
+	 * sequence, or `n` if the sequence is empty.
+	 */
+	multiplication(n = 1) {
+		n = isNaN(n) ? 1 : +n;
+		return this.reduce((n1, n2) => n1 * n2, n);
+	}
+
 	/** `reduce(foldFunction, initial)` folds the elements of this iterable 
 	 * with `foldFunction` as a left associative operator. The `initial` value 
 	 * is used as a starting point, but if it is not defined, then the first 
