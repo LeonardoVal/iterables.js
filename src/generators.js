@@ -140,8 +140,41 @@ let generators = {
 		};
 	},
 	
-	/** TODO
-	*/
+	/** `combinations(seq, k)` returns an iterator that runs over the 
+	 * combinations of `k` elements of the given sequence `seq`. Combinations 
+	 * are generated in lexicographical order.
+	 * 
+	 * Warning! It stores all `seq`'s elements in memory.
+	 */
+	*combinations(seq, k = 1) {
+		let elements = [...seq],
+			suffixes = Iterable.range(elements.length)
+				.map((i) => new ArrayIterable(elements, i))
+				.toArray(),
+			emptyArray = [],
+			combRec = function* (i, k) {
+				if (k < 1 || i >= suffixes.length) {
+					yield emptyArray;
+				} else {
+					let j = 0;
+					for (let value of suffixes[i]) {
+						if (i + j + (k - 1) < suffixes.length) {
+							for (let comb of combRec(i + j + 1, k - 1)) {
+								yield [value, ...comb];
+							}
+						} else {
+							break;
+						}
+						j++;
+					}
+				}
+			};
+		yield* combRec(0, k);
+	},
+
+	/** As the namesake from functional programming, `cons` generates a new
+	 * sequence with the `head` first and the `tail` afterwards.
+	 */
 	*cons(head, tail) {
 		yield head;
 		yield *tail;
@@ -183,6 +216,43 @@ let generators = {
 			} else {
 				yield value;
 			} 
+		}
+	},
+
+	/** TODO 
+	 */
+	map(seq, mapFunction) {
+		return generators.filteredMap(seq, mapFunction, null);
+	},
+
+	/** `permutations(seq, k)` returns an iterable that runs over the 
+	 * permutations of `k` elements of his iterable. Permutations are not 
+	 * generated in any particular order.
+	 * 
+	 * Warning! It stores all this iterable's elements in memory.
+	 */
+	*permutations(seq, k = NaN) { //FIXME
+		let pool = [...seq],
+			n = pool.length;
+		k = isNaN(k) ? n : +k;
+		if (k > 0 && k <= n) {
+			let count = Iterable.range(n - k + 1, n + 1).multiplication(); // factorial(n) / factorial (k)
+			if (count > MAX_INTEGER) {
+				throw new Error(`Number of permutations cannot be greater `+
+					`than ${MAX_INTEGER}, and it is ${count}!`);
+			}
+			let indices = [...generators.range(n)],
+				result, is, i;
+			for (let current = 0; current < count; current++) {
+				result = new Array(k);
+				is = indices.slice();
+				i = current;
+				for (let p = 0; p < k; ++p) {
+					result[p] = pool[is.splice(i % (n - p), 1)[0]];
+					i = Math.floor(i / (n - p));
+				}
+				yield result;
+			}
 		}
 	},
 
