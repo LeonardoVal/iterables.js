@@ -234,31 +234,11 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
-	/** TODO
+	/** 
 	*/
-	combinations(k) { //FIXME
-		let elements = this.toArray(),
-			suffixes = Iterable.range(elements.length)
-				.map((i) => new ArrayIterable(elements, i))
-				.toArray(),
-			EMPTY = [],
-			SINGLE_EMPTY = new SingletonIterable(EMPTY),
-			combRec = (i, k) => {
-				if (k < 1 || i >= suffixes.length) {
-					return SINGLE_EMPTY;
-				} else {
-					return suffixes[i].flatMap((value, j, iter) => {
-						if (i + j + (k - 1) < suffixes.length) {
-							return combRec(i + j + 1, k - 1)
-								.map((comb) => [value, ...comb]);
-						} else {
-							iter.return();
-							return EMPTY;
-						}
-					});
-				}
-			}; 
-		return combRec(0, k);
+	combinations(k = 1) {
+		let source = generators.combinations.bind(generators, this, k); 
+		return new Iterable(source);
 	}
 
 	/** TODO
