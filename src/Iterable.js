@@ -58,39 +58,33 @@ class Iterable extends AbstractIterable {
 
 	/**
 	 */
-	static range(from, to, step) {
-		let source = generators.range.bind(generators, from, to, step);
-		return new this(source);
+	static range(from, to, step, rightInclusive = false) {
+		return new EnumerationIterable(from, to, step, rightInclusive);
 	}
 
 	/**
 	 */
 	static enumFromThenTo(from, then, to) {
-		let source = generators.enumFromThenTo.bind(generators, from, to, 
-			step);
-		return new this(source);
+		return Iterable.range(from, then - from, to, true);
 	}
 
 	/**
 	 */
 	static enumFromThen(from, then) {
-		let source = generators.enumFromThenTo.bind(generators, from, to);
-		return new this(source);
+		return Iterable.enumFromThenTo(from, then,
+			then > from ? +Infinity : -Infinity);
 	}
 
 	/**
 	 */
 	static enumFromTo(from, to) {
-		let source = generators.enumFromThenTo.bind(generators, from, 
-			from + 1, to);
-		return new this(source);
+		return Iterable.enumFromThenTo(from, from + 1, to);
 	}
 
 	/**
 	 */
 	static enumFrom(from) {
-		let source = generators.enumFromThenTo.bind(generators, from);
-		return new this(source);
+		return Iterable.enumFromTo(from, +Infinity);
 	}
 
 	/**
