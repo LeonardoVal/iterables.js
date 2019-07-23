@@ -28,23 +28,24 @@ let generators = {
 	 * upto `to` with the given `step`. For example, `range(2,12,3)` represents
 	 * the sequence `[2, 5, 8, 11]`.
 	 */
-	*range(from, to, step) {
-		if (typeof from === 'undefined') {
-			from = 0;
+	*range(from, to, step, rightInclusive = false) {
+		from = isNaN(from) ? 0 : +from;
+		if (isNaN(step)) {
+			step = isNaN(to) || to >= from ? 1 : -1;
+		} else {
+			step = +step;
 		}
-		if (typeof to === 'undefined') {
-			to = from;
-			from = 0;
+		if (isNaN(to)) {
+			to = step > 0 ? +Infinity : -Infinity;
+		} else {
+			to = +to;
 		}
-		if (typeof step === 'undefined') {
-			step = 1;
-		}
-		from = +from;
-		to = +to;
-		step = +step;
-		while (from < to) {
+		let stepSign = Math.sign(step),
+			diff = (to - from) * stepSign;
+		while (rightInclusive ? diff > 0 : diff >= 0) {
 			yield from;
 			from += step;
+			diff = (to - from) * stepSign;
 		}
 	},
 
@@ -57,29 +58,19 @@ let generators = {
 	 * direction. For example, `enumFromThenTo(10,7,0)` represents the 
 	 * sequence `[10,7,4,1]`.
 	 */
-	*enumFromThenTo(from, then, to) {
-		if (typeof from === 'undefined') {
-			from = 0;
-		}
-		if (typeof then === 'undefined') {
-			then = from + 1;
-		}
-		if (typeof to === 'undefined') {
-			to = then > from ? +Infinity : -Infinity;
-		}
-		let step = then - from;
-		while (step > 0 ? from <= to : from >= to) {
-			yield from;
-			from += step;
-		}
+	enumFromThenTo(from, then, to) {
+		from = isNaN(from) ? 0 : +from;
+		then = isNaN(then) ? from + 1 : +then;
+		return generators.range(from, then, to, true);
 	},
 
-	*enumFromThen(from, then) {
-		yield* this.enumFromThenTo(from, then, undefined);
+	enumFromThen(from, then) {
+		return generators.enumFromThenTo(from, then, 
+			then > from ? +Infinity : -Infinity);
 	},
 
-	*enumFrom(from = 0) {
-		yield* this.enumFromThen(from, undefined);
+	enumFrom(from = 0) {
+		return generators.enumFromThen(from, from + 1);
 	},
 
 	/** `repeat(value, n=Infinity)` generates a sequence that repeats the given 
