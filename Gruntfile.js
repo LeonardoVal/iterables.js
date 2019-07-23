@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 			'AbstractIterable', 'Iterable', 'AsyncIterable',
 		// builders
 			'subtypes/EmptyIterable', 'subtypes/SingletonIterable',
+			'subtypes/EnumerationIterable',
 			'subtypes/ArrayIterable', 'subtypes/StringIterable',
 			'subtypes/ObjectIterable', 'subtypes/MapIterable',
 			'subtypes/SetIterable',
