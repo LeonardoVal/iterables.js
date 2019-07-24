@@ -42,7 +42,7 @@ let generators = {
 		}
 		let stepSign = Math.sign(step),
 			diff = (to - from) * stepSign;
-		while (rightInclusive ? diff > 0 : diff >= 0) {
+		while (rightInclusive ? diff >= 0 : diff > 0) {
 			yield from;
 			from += step;
 			diff = (to - from) * stepSign;
