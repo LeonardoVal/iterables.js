@@ -142,13 +142,15 @@ class Iterable extends AbstractIterable {
 // Properties //////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
-	has(value) {
-		return this.indexOf(value) >= 0;
+	has(value, equality = null) {
+		let i = equality ? this.indexWhere(equality.bind(null, value)) : 
+			this.indexOf(value);
+		return i >= 0;
 	}
 
 	/** @inheritdoc */
 	isEmpty() {
-		for (let v in this) {
+		for (let v of this) {
 			return false;
 		}
 		return true;
