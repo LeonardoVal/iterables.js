@@ -17,13 +17,13 @@ class SetIterable extends Iterable {
 // Properties //////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
-	has(value) {
-		return this.source.has(value);
+	has(value, equality = null) {
+		return equality ? super.has(value, equality) : this.source.has(value);
 	}
 
 	/** @inheritdoc */
 	isEmpty() {
-		return this.source.size() < 1;
+		return this.length === 0;
 	}
 
 	/** @inheritdoc */
