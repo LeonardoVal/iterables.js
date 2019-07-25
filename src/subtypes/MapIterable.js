@@ -18,7 +18,7 @@ class MapIterable extends Iterable {
 	/** `isEmpty()` returns if the sequence has no elements.
 	 */
 	isEmpty() {
-		return this.source.size() < 1;
+		return this.length === 0;
 	}
 
 	/** `length` is the amount of values in the sequence.

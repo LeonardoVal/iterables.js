@@ -39,12 +39,13 @@ class ArrayIterable extends Iterable {
 
 	/** @inheritdoc */
 	isEmpty() {
-		return this.length < 1;
+		return this.length === 0;
 	}
 
 	/** @inheritdoc */
 	get length() {
-		return Math.min(this.source.length, this.__indexTo__) - this.__indexFrom__;
+		return Math.max(0, Math.min(this.source.length, this.__indexTo__) -
+			this.__indexFrom__);
 	}
 
 // Reductions //////////////////////////////////////////////////////////////////
