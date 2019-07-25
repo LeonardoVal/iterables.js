@@ -185,9 +185,10 @@ class AbstractIterable {
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `has(value)` checks if the given `value` occurs in the iterable.
+	/** `has(value, equality)` checks if the given `value` occurs in the
+	 * iterable.
 	 */
-	has(value) {
+	has(value, equality = null) {
 		throwUnimplemented('has', this.constructor.name);
 	}
 
