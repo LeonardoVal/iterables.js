@@ -1,14 +1,38 @@
 define([], function () {
+	function equality(value1, value2) {
+		return value1 === value2 || 
+			JSON.stringify(value1) === JSON.stringify(value2);
+	}
+
 	function expectList(list, expectedList) {
-		expect(list[Symbol.iterator]).toBeOfType('function');
 		expect(list.length).toBe(expectedList.length);
+		expect(list.isEmpty()).toBe(expectedList.length === 0);
+
 		expectedList.forEach(function (expectedValue, index) {
 			expect(list.get(index)).toEqual(expectedValue);
+			expect(list.has(expectedValue, equality)).toBe(true);
+			let equalToExpectedValue = equality.bind(null, expectedValue),
+				i = list.indexWhere(equalToExpectedValue);
+			expect(i).not.toBeLessThan(0);
+			expect(equality(list.get(i), expectedValue)).toBe(true);
+			let is = list.indicesWhere(equalToExpectedValue);
+			expect(is.indexOf(index)).not.toBeLessThan(0);
+
+			if (typeof expectedValue !== 'object') {
+				expect(list.has(expectedValue)).toBe(true);
+				let i = list.indexOf(expectedValue);
+				expect(i).not.toBeLessThan(0);
+				expect(list.get(i)).toEqual(expectedValue);
+				let is = list.indicesOf(expectedValue);
+				expect(is.indexOf(index)).not.toBeLessThan(0);
+			}
 		});
 		expect(list.get.bind(list, expectedList.length + 1)).toThrow();
 		expect(list.get.bind(list, -1)).toThrow();
 		expect(list.get(expectedList.length + 1, null)).toBe(null);
 		expect(list.get(-1, '-1')).toBe('-1');
+		
+		expect(list[Symbol.iterator]).toBeOfType('function');
 		expectIterator(list[Symbol.iterator](), expectedList);
 	}
 
