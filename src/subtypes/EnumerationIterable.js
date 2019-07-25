@@ -55,14 +55,28 @@ class EnumerationIterable extends Iterable {
 // Properties //////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
+	has(value, equality = null) {
+		if (!equality && (typeof value !== 'number' || 
+			this.step * (value - this.numTo) > 0 ||
+			this.step * (this.numFrom - value) > 0
+			)) {
+			return false;
+		}
+		return super.has(value); //FIXME
+	}
+
+	/** @inheritdoc */
 	isEmpty() {
-		return this.step > 0 ? this.numFrom > this.numTo : 
-			this.numFrom < this.numTo;
+		return this.length === 0;
 	}
 
 	/** @inheritdoc */
 	get length() {
-		return super.length; //FIXME
+		let result = (this.numTo - this.numFrom) / this.step;
+		if (Math.floor(result) !== result || this.rightInclusive) {
+			result++;
+		}
+		return result < 0 ? 0 : Math.floor(result);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
