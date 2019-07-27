@@ -1,15 +1,19 @@
-/**
+/** Base abstract superclass for all iterable types.
  */
 class AbstractIterable {
-	/**
+	/** The base constructor simply defines the `source` property.
+	 * 
+	 * @param {any} source - The iterable source may be a function that makes
+	 * 	the iterator, or other way to get the sequence's values.
 	 */
 	constructor (source) {
 		Object.defineProperty(this, 'source', { value: source });
 	}
 
-	/** `__aiter__` instruments an asynchronous iterator with a `return` method 
-	 * if it lacks one. This is necessary in order to interrupt an iteration, 
-	 * which is required for many optimization strategies.
+	/** Instruments an asynchronous iterator with a `return` method if it lacks 
+	 * one. This is necessary in order to interrupt an iteration, which is 
+	 * required for many optimization strategies.
+	 * @protected
 	 */
 	static __aiter__(iterator) {
 		if (iterator.return) {
@@ -30,9 +34,10 @@ class AbstractIterable {
 		}
 	}
 
-	/** `__iter__` instruments an iterator with a `return` method if it lacks
-	 * one. This is necessary in order to interrupt an iteration, which is
-	 * required for many optimization strategies.
+	/** Instruments an iterator with a `return` method if it lacks one. This is
+	 * necessary in order to interrupt an iteration, which is required for many
+	 * optimization strategies.
+	 * @protected
 	 */
 	static __iter__(iterator) {
 		if (!iterator.return) {
@@ -52,26 +57,48 @@ class AbstractIterable {
 	}
 
 	/** The abstract iterable base class cannot be iterated.
+	 * @abstract
 	 */
 	[Symbol.iterator]() {
 		throwUnimplemented('[@@iterator]', this.constructor.name);
 	}
 
 	/** The abstract iterable base class cannot be asynchronously iterated.
+	 * @abstract
 	 */
 	[Symbol.asyncIterator]() {
 		throwUnimplemented('[@@asyncIterator]', this.constructor.name);
 	}
 
-	/** A `filteredMap` makes a new sequence. For each value in this sequence
-	 * the `checkFunction` is called. If it returns `true`, the `valueFunction`
-	 * is called. The results are yielded in the same order. 
+	/** Makes a new sequence, with the values of this sequence that comply with
+	 * the `checkFunction`, transformed by the `valueFunction`. Both arguments
+	 * can be ommited.
+	 * 
+	 * @param {function} [valueFunction=null] - A callback function that 
+	 * 	transforms the value of this sequence into the values of the resuling
+	 * 	sequence.
+	 * @param {function} [checkFunction=null] - A condition all values of this
+	 * 	sequence have to comply in order to be in the resulting sequence. If
+	 * 	`null` all values are considered.
+	 * @returns {AbstractIterable} A new iterable.
+	 * 
+	 * @abstract
 	 */
-	filteredMap(valueFunction, checkFunction) {
+	filteredMap(valueFunction = null, checkFunction = null) {
 		throwUnimplemented('filteredMap', this.constructor.name);
 	}
 
-	/** TODO 
+	/** Iterates over this sequence. The `doFunction` is called with all the 
+	 * values that comply with `ifFunction`. The last result of `doFunction` is
+	 * returned when the iteration finishes.
+	 * 
+	 * @param {function(T):R} doFunction - A function to call with each value
+	 * 	that complies with `ifFunction`.
+	 * @param {function(T):boolean} [ifFunction=null] - A function to check
+	 * 	each value in the iteration. If `null` all values are accepted.
+	 * @returns {R} The last result of calling `doFunction`.
+	 * 
+	 * @abstract
 	 */
 	forEach(doFunction, ifFunction) {
 		throwUnimplemented('forEach', this.constructor.name);
@@ -79,7 +106,10 @@ class AbstractIterable {
 
 // Builders ////////////////////////////////////////////////////////////////////
 
-	/** `fromArray` makes an `Iterable` for the given `array`. 
+	/** Makes an `Iterable` for the given `array`.
+	 * 
+	 * @param {T[]} array
+	 * @returns {ArrayIterable<T>} 
 	 */
 	static fromArray(array) {
 		if (!Array.isArray(array)) {
@@ -88,22 +118,32 @@ class AbstractIterable {
 		return new ArrayIterable(array);
 	}
 
-	/** `fromValues` makes an `Iterable` for the given arguments. 
+	/** Makes an `Iterable` for the given arguments.
+	 * 
+	 * @param {...T} arguments
+	 * @returns {ArrayIterable<T>} 
 	 */
 	static fromValues() {
 		return this.fromArray(Array.prototype.slice.call(arguments));
 	}
 
-	/** `fromObject` makes an `Iterable` for the given object `obj`. The
-	 * sequence goes over array in the shape `[key, value]`. Key may be sorted
-	 * if `sortKeys` is truthy.
+	/** Makes an `Iterable` for the given object `obj`. The sequence goes over
+	 * array in the shape `[key, value]`.
+	 * 
+	 * @param {object} obj - The object to be used as a source.
+	 * @param {boolean} [sortKeys=false] - If truthy the object keys are 
+	 * 	sorted.
+	 * @returns {ObjectIterable<any[]>}
 	 */
 	static fromObject(obj, sortKeys = false) {
 		return new ObjectIterable(obj, sortKeys);
 	}
 
-	/** `fromString` makes an `Iterable` for the given `string`. If the 
-	 * argument is not a string, it is converted to one. 
+	/** Makes an `Iterable` for the given `string`. If the argument is not a 
+	 * string, it is converted to one.
+	 * 
+	 * @param {any} string - The string to be used as a source.
+	 * @returns {StringIterable<string>}  
 	 */
 	static fromString(string) {
 		return new StringIterable(string +"");
@@ -111,17 +151,30 @@ class AbstractIterable {
 
 // Conversions /////////////////////////////////////////////////////////////////
 
-	/** `map(mapFunction)` returns an iterable iterating on the results of 
-	 * applying `mapFunction` to each of this iterable elements.
+	/** Makes a new iterable, with the values of this one transformed by the 
+	 * `mapFunction`.
+	 * 
+	 * @param {function(T):R} mapFunction - A callback function that calculates
+	 * 	the values for the new sequence.
+	 * @returns {AbstractIterable<R>}
+	 * 
+	 * @see AbstractIterable.filteredMap
 	 */
 	map(mapFunction) {
 		return this.filteredMap(mapFunction);
 	}
 
-	/** `peephole(n, mapFunction)` is like a map, but takes `n` consequent 
-	 * values from the sequence.
+	/** Builds a new iterable with values calculated using values from this 
+	 * iterable, in a similar fashion that `map`. The main difference is that
+	 * the `mapFunction` is called with `n` consequent values.
+	 * 
+	 * @param {integer} [n=1] - The number of consequent values with which the
+	 * 	`mapFunction` is called.
+	 * @param {function(T[]):R} mapFunction - A callback function that 
+	 * 	calculates the values for the new sequence.
+	 * @returns {AbstractIterable<R>}
 	 */
-	peephole(n, mapFunction) {
+	peephole(n, mapFunction = null) {
 		n = isNaN(n) ? 1 : Math.floor(n);
 		let window;
 		return this.filteredMap(() => {
@@ -139,8 +192,12 @@ class AbstractIterable {
 		});
 	}
 
-	/** `toArray(array=[])`: appends to `array` the elements of the sequence
-	 * and returns it. If no array is given, a new one is used.
+	/** Appends to `array` the elements of the sequence and returns it. If no 
+	 * array is given, a new one is used.
+	 * 
+	 * @param {any[]} [array=null] - The array to which to add this sequence's
+	 * 	values. If `null` a new one is created.
+	 * @returns {any[]} The `array` argument, if given.
 	 */
 	toArray(array = null) {
 		array = array || [];
@@ -150,8 +207,12 @@ class AbstractIterable {
 			}, array);
 	}
 
-	/** `toMap(map=new Map())` takes a sequence of `[key,value]` pairs and puts
-	 * each in the given `map` (or a new one by default).
+	/** Takes a sequence of `[key,value]` pairs and puts each in the given 
+	 * `map` (or a new one by default).
+	 * 
+	 * @param {Map} [map=null] - The `Map` to which to add this sequence's
+	 * 	values. If `null` a new one is created.
+	 * @returns {Map} The argument `map`, if given.  
 	 */
 	toMap(map = null) {
 		map = map || new Map();
@@ -161,8 +222,12 @@ class AbstractIterable {
 			}, map);
 	}
 
-	/** `toObject(obj={})` takes a sequence of `[key,value]` pairs and assigns
-	 * each as a property of `obj` (or a new object by default).
+	/** Takes a sequence of `[key,value]` pairs and assigns each as a property
+	 * of `obj` (or a new object by default).
+	 * 
+	 * @param {object} [obj=null] - The object to which to add this sequence's
+	 * 	values. If `null` a new one is created.
+	 * @returns {object} The argument `obj`, if given.
 	 */
 	toObject(obj = null) {
 		obj = obj || {};
@@ -172,8 +237,12 @@ class AbstractIterable {
 			}, obj);
 	}
 
-	/** `toSet(set=new Set())` adds all the values in this sequence to the
-	 * given `set`, or a new one by default.
+	/** Adds all the values in this sequence to the given `set`, or a new one 
+	 * by default.
+	 * 
+	 * @param {Set} [set=null] - The `Set` instance to which to add this 
+	 * 	sequence's values. If `null` a new one is created.
+	 * @returns {Set} The argument `set`, if given.
 	 */
 	toSet(set = null) {
 		set = set || new Set();
@@ -185,22 +254,34 @@ class AbstractIterable {
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** `has(value)` checks if the given `value` occurs in the iterable.
+	/** Checks if the given `value` occurs in the iterable.
+	 * 
+	 * @param {any} value - The value to seek in the sequence.
+	 * @return {boolean} Whether the given `value` is in the sequence or not.
+	 * @abstract
 	 */
 	has(value) {
 		throwUnimplemented('has', this.constructor.name);
 	}
 
-	/** `indexOf(value, from=0)` is analogous to the array's namesake method. 
-	 * Returns the first position of the given `value`, or -1 if it is not 
-	 * found.
+	/** Analogously to the array's namesake method, returns the first position
+	 * of the given `value`, or -1 if it is not found.
+	 * 
+	 * @param {any} value - The value to seek in the sequence.
+	 * @param {integer} [from=0] - The index from which to start seeking.
+	 * @returns {integer} The index of the value in the sequence, or `-1` if 
+	 * 	absent.
 	 */
 	indexOf(value, from = 0) {
 		return this.indicesOf(value, from).head(-1);
 	}
 
-	/** `indicesOf(value, from=0)` is a sequence of the positions of the value
-	 * in this iterable.
+	/** Returns a sequence of the positions of the value in this sequence.
+	 * 
+	 * @param {any} value - The value to seek in the sequence.
+	 * @param {integer} [from=0] - The index from which to start seeking.
+	 * @returns {AbstractIterable<integer>} A sequence of the indices of the 
+	 * 	given `value` in this sequence.
 	 */
 	indicesOf(value, from = 0) {
 		from = Math.floor(from) || 0;
@@ -210,17 +291,28 @@ class AbstractIterable {
 		);
 	}
 
-	/** `indexWhere(condition, from=0)` returns the position of the first value
-	 * of this iterable that complies with the given `condition`, or -1 if 
-	 * there is none.
+	/** Returns the position of the first value in this sequence that comply 
+	 * with the given `condition`, or -1 if it is not found.
+	 * 
+	 * @param {function(T):boolean} condition - The condition for the values to
+	 * 	seek in the sequence.
+	 * @param {integer} [from=0] - The index from which to start seeking.
+	 * @returns {integer} The index of the compliant value in the sequence, or 
+	 * 	`-1` if absent.
 	 */
 	indexWhere(condition, from = 0) {
 		return this.indicesWhere(condition, from).head(-1);
 	}
 
-	/** `indicesWhere(condition, from=0)` is a sequence of the positions in 
-	 * this iterable of values that comply with the given `condition`.
- 	 */
+	/** Returns a sequence of the positions of the values in this sequence that
+	 * comply with the given `condition`.
+	 * 
+	 * @param {function(T):boolean} condition - The condition for the values to
+	 * 	seek in the sequence.
+	 * @param {integer} [from=0] - The index from which to start seeking.
+	 * @returns {AbstractIterable<integer>} A sequence of the indices of the 
+	 * 	values in this sequence compliant with the given `condition`.
+	 */
 	indicesWhere(condition, from = 0) {
 		return this.filteredMap( 
 			(_, i) => i,
@@ -228,7 +320,10 @@ class AbstractIterable {
 		);
 	}
 
-	/** `isEmpty()` returns if the sequence has no elements.
+	/** Returns whether the sequence has elements or not.
+	 * 
+	 * @returns {boolean} `true` if this sequence is empty, or `false` 
+	 * 	otherwise.
 	 */
 	isEmpty() {
 		return this.reduce((accum, _value, _i, iter) => {
@@ -237,7 +332,9 @@ class AbstractIterable {
 		}, true);
 	}
 
-	/** `length` is the amount of values in the sequence.
+	/** Returns the amount of values in the sequence.
+	 * 
+	 * @returns {integer}
 	 */
 	get length() {
 		return this.reduce((accum) => accum + 1, 0);
@@ -245,11 +342,18 @@ class AbstractIterable {
 
 // Reductions //////////////////////////////////////////////////////////////////
 
-	/** `all(predicate, strict=false)` returns true if for all elements in the 
-	 * sequence `predicate` returns true, or if they are all truthy if no 
-	 * predicate is given. If the sequence is empty, true is returned.
+	/** Returns `true` if for all elements in the sequence comply with the 
+	 * given `predicate`, or if they are all truthy if no predicate is given. 
+	 * If the sequence is empty, `true` is returned.
+	 * 
+	 * @param {function(T):boolean} [predicate=null] - The condition to check
+	 * 	with all values in this sequence.
+	 * @param {boolean} [strict=false] - If `false` the iteration is stopped at
+	 * 	the first non compliant value encountered in the sequence. Else, all
+	 * 	values are checked.
+	 * @returns {boolean}
 	 */
-	all(predicate, strict = false) {
+	all(predicate = null, strict = false) {
 		predicate = typeof predicate === 'function' ? predicate : __toBool__;
 		return this.reduce((result, value, i, iter) => {
 			if (!predicate(value, i, iter)) {
@@ -262,8 +366,16 @@ class AbstractIterable {
 		}, true);
 	}
 
-	/** `any(predicate, strict=false)` returns false if for all elements in the
-	 * sequence `predicate` returns false, or if the sequence is empty.
+	/** Returns `false` if for all elements in the sequence do not comply with
+	 * the given `predicate`, or if they are all truthy if no predicate is 
+	 * given. If the sequence is empty, `false` is returned.
+	 * 
+	 * @param {function(T):boolean} [predicate=null] - The condition to check
+	 * 	with all values in this sequence.
+	 * @param {boolean} [strict=false] - If `false` the iteration is stopped at
+	 * 	the first compliant value encountered in the sequence. Else, all
+	 * 	values are checked.
+	 * @returns {boolean}
 	 */
 	any(predicate, strict = false) {
 		predicate = typeof predicate === 'function' ? predicate : __toBool__;
@@ -278,24 +390,35 @@ class AbstractIterable {
 		}, false);
 	}
 
-	/** `histogram(key, map = null)` iterates over the whole sequence, counting
-	 * the occurance of each value. The results are kept in the given `map`, or
-	 * in a new one by default.
+	/** Iterates over the whole sequence, counting the occurance of each value.
+	 * The results are kept in the given `map`, or in a new one by default.
+	 * 
+	 * @param {function(T,integer):K} [key=null] - A function to get a key 
+	 * 	for every value in the sequence. Values are grouped by this keys. If 
+	 * 	`null`, the values are grouped with themselves.
+	 * @param {Map<K,integer>} [map=null] - A map to use to store the 
+	 * 	frequencies. If `null` a new one is created.
+	 * @returns {Map<K, integer>} The `map` argument if given.
 	 */
-	histogram(key, map = null) {
+	histogram(key = null, map = null) {
 		let grouping = (count, _value, _i) => (count || 0) + 1;
 		return this.groupBy(key, grouping, map);
 	}
 
-	/** `groupBy(key, grouping, map = null)` iterates over the whole sequence,
-	 * grouping its values according to the key function (`key(value, i)`). 
-	 * These keys are used to build a `Map`, where groups are stored. If no 
-	 * `key` is given, the values themselves are used as keys.
+	/** Iterates over the whole sequence, grouping its values according to the 
+	 * `key` function. These keys are used to build a `Map`, where groups are 
+	 * stored. If no `key` is given, the values themselves are used as keys.
 	 * 
-	 * The `grouping` function (`grouping(group, value, i)`) adds values to 
-	 * each group. By default values are grouped in arrays. 
+	 * @param {function(T,integer):K} [key=null] - A function to get a key 
+	 * 	for every value in the sequence. Values are grouped by this keys. If 
+	 * 	`null`, the values are grouped with themselves.
+	 * @param {function(G,K,integer):G} [grouping=null] - A function to add 
+	 * 	values to each group. By default values are grouped in arrays.
+	 * @param {Map<K,G>} [map=null] - A map to use to store the groups of 
+	 * 	values. If `null` a new one is created.
+	 * @returns {Map<K,G>} The `map` argument if given. 
 	 */
-	groupBy(key, grouping = null, map = null) {
+	groupBy(key = null, grouping = null, map = null) {
 		grouping = grouping || ((group, value, i) => {
 				group = group || [];
 				group.push(value);
@@ -309,8 +432,14 @@ class AbstractIterable {
 		}, map);
 	}
 
-	/** `join(sep='')` concatenates all strings in the sequence using `sep` as
-	 * separator. If `sep` is not given, '' is assumed.
+	/** Concatenates all values in the sequence as strings, using `sep` as 
+	 * separator (or `''` is assumed).
+	 * 
+	 * @param {string} [sep=''] - The string to intersperse betwen values in
+	 * 	the resulting string. 
+	 * @param {string} [prefix=''] - A string to add at the beginning of the
+	 * 	result.
+	 * @returns {string}
 	 */
 	join(sep = '', prefix = '') {
 		sep = ''+ sep;
@@ -322,17 +451,28 @@ class AbstractIterable {
 		}
 	}
 
-	/** `max(n=-Infinity)` returns the maximum of all numbers in the sequence,
-	 * or `-Infinity` if the sequence is empty.
+	/** Returns the maximum of all numbers in the sequence.
+	 * 
+	 * @param {number} [n=-Infinity] - A minimum number to consider. If all 
+	 * 	numbers in the sequence are smaller than `n`, it will be returned as
+	 * 	the result.
+	 * @returns {number}
 	 */
 	max(n = -Infinity) {
 		n = isNaN(n) ? -Infinity : +n;
 		return this.reduce((n1, n2) => Math.max(n1, n2), n);
 	}
 
-	/** `maxBy(compareFunction, defaultValue)` returns the maximum of all 
-	 * numbers in the sequence, according to the given `compareFunction`, or 
-	 * `defaultValue` if the sequence is empty.
+	/** Returns the maximum of all values in the sequence, using the given 
+	 * `compareFunction`.
+	 * 
+	 * @param {function(T,T):number} compareFunction - The function used to 
+	 * 	compare two values in the sequence. It must follow the protocol of 
+	 * 	functions [used to sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
+	 * @param {number} [defaultValue=-Infinity] - A minimum number to consider.
+	 * 	If all numbers in the sequence are smaller than `defaultValue`, it 
+	 * 	will be returned as the result.
+	 * @returns {number}
 	 */
 	maxBy(compareFunction, defaultValue = -Infinity) {
 		return this.reduce(
@@ -341,17 +481,28 @@ class AbstractIterable {
 		);
 	}
 
-	/** `min(n=Infinity)` returns the minimum of all numbers in the sequence,
-	 * or `Infinity` if the sequence is empty.
+	/** Returns the minimum of all numbers in the sequence.
+	 * 
+	 * @param {number} [n=+Infinity] - A maximum number to consider. If all 
+	 * 	numbers in the sequence are bigger than `n`, it will be returned as
+	 * 	the result.
+	 * @returns {number}
 	 */
 	min(n = +Infinity) {
 		n = isNaN(n) ? +Infinity : +n;
 		return this.reduce((n1, n2) => Math.min(n1, n2), n);
 	}
 
-	/** `minBy(compareFunction, defaultValue)` returns the maximum of all
-	 * numbers in the sequence, according to the given `compareFunction`, or
-	 * `defaultValue` if the sequence is empty.
+	/** Returns the minimum of all values in the sequence, using the given 
+	 * `compareFunction`.
+	 * 
+	 * @param {function(T,T):number} compareFunction - The function used to 
+	 * 	compare two values in the sequence. It must follow the protocol of 
+	 * 	functions [used to sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#Syntax).
+	 * @param {number} [defaultValue=+Infinity] - A maximum number to consider.
+	 * 	If all numbers in the sequence are bigger than `defaultValue`, it will
+	 * 	be returned as the result.
+	 * @returns {number}
 	 */
 	minBy(compareFunction, defaultValue = +Infinity) {
 		return this.reduce(
@@ -360,34 +511,48 @@ class AbstractIterable {
 		);
 	}
 	
-	/** `multiplication(n=1)` returns the product of all numbers in the 
-	 * sequence, or `n` if the sequence is empty.
+	/** Returns the product of all numbers in the sequence, or `n` if the 
+	 * sequence is empty.
+	 * 
+	 * @param {number} [n=1] - A starting value for the multiplication.
+	 * @returns {number}
 	 */
 	multiplication(n = 1) {
 		n = isNaN(n) ? 1 : +n;
 		return this.reduce((n1, n2) => n1 * n2, n);
 	}
 
-	/** `reduce(foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. The `initial` value 
-	 * is used as a starting point, but if it is not defined, then the first 
-	 * element in the sequence is used.
+	/** Folds the elements of this iterable with `foldFunction` as a left 
+	 * associative accumulator. 
+	 * 
+	 * @param {function(A,T,integer):A} foldFunction - The operation is to 
+	 * 	reduce this sequence's values into one.
+	 * @param {A} initial - The `initial` value is used as a starting point.
+	 * @return {A}
 	 */
 	reduce(foldFunction, initial) {
 		return this.scanl(foldFunction, initial).lastValue(initial);
 	}
 
-	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. Instead of returning 
-	 * the last result, it iterates over the intermediate values in the folding 
+	/** Folds the elements of this iterable with `foldFunction` as a left 
+	 * associative accumulator. Instead of returning the last result (as 
+	 * `reduce` does), it iterates over the intermediate values in the folding 
 	 * sequence.
+	 * 
+	 * @param {function(A,T,integer):A} foldFunction - The operation is to 
+	 * 	reduce this sequence's values into one.
+	 * @param {A} initial - The `initial` value is used as a starting point.
+	 * @return {AbstractIterable<A>}
 	 */
 	scanl(foldFunction, initial) {
 		throwUnimplemented('scanl', this.constructor.name);
 	}
 
-	/** `sum(n=0)` returns the sum of all numbers in the sequence, or `n` if
-	 * the sequence is empty.
+	/** Returns the sum of all numbers in the sequence, or `n` if the sequence
+	 * is empty.
+	 * 
+	 * @param {number} [n=0] - A starting value for the sum.
+	 * @returns {number}
 	 */
 	sum(n = 0) {
 		n = isNaN(n) ? 0 : +n;
