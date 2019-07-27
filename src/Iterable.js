@@ -1,13 +1,15 @@
-/**
+/** General class for representing synchronous sequences.
+ * 
+ * @see AbstractIterable
  */
 class Iterable extends AbstractIterable {
-	/**
-	 */
+	/** @inheritdoc */
 	constructor (source) {
 		super(source);
 	}
 
-	/** `isAsync` is `false` for `Iterable`.
+	/** Instances of `Iterable` are always synchronous, hence `isAsync` is 
+	 * always `false`.
 	 */
 	get isAsync() {
 		return false;
