@@ -561,24 +561,37 @@ class AbstractIterable {
 
 // Selections //////////////////////////////////////////////////////////////////
 
-	/** `compress(flags)` selects values from this iterable that have a truthy
-	 * flag in the same position in the iterable `flags`.
+	/** Selects values from this iterable that have a truthy flag in the same 
+	 * position in the argument `flags`. It is inspired by the [namesake 
+	 * function](https://docs.python.org/3.7/library/itertools.html?highlight=itertools#itertools.compress) 
+	 * in the [Python standard library `itertools`](http://docs.python.org).
+	 * 
+	 * @param {iterable<boolean>} flags - A sequence of flags
+	 * @returns {iterable<T>} Selected values from this sequence.
 	 */
 	compress(flags) {
 		return this.zip(flags)
 			.filteredMap(([value,]) => value, ([, flag]) => flag);
 	}
 
-	/** `drop(n=1)` returns an iterable with the same elements than this, 
-	 * except the first `n` ones.
+	/** Returns an iterable with the same elements than this, except the first 
+	 * `n` ones.
+	 * 
+	 * @param {integer} [n=1] - An amount of values to drop.
+	 * @returns {iterable<T>} The values not dropped.
 	 */
 	drop(n = 1) {
 		n = isNaN(n) ? 1 : Math.floor(n);
 		return this.slice(n);
 	}
 
-	/** `dropWhile(condition)` returns an iterable with the same elements than
-	 * this, except the first ones that comply with the condition.
+	/** Returns an iterable with the same elements than this, except the first 
+	 * consecutive ones that comply with the condition.
+	 * 
+	 * @param {function(T):boolean} [condition=null] - A predicate to check 
+	 * 	this sequence values with. If `null`, each values boolean 
+	 * 	interpretation is assumed.
+	 * @returns {iterable<T>} 
 	 */
 	dropWhile(condition = null) {
 		condition = condition || __toBool__;
@@ -589,22 +602,37 @@ class AbstractIterable {
 		});
 	}
 
-	/** `filter(filterFunction)` returns an iterable of this iterable elements
-	 * for which `condition` returns true.
+	/** Returns an iterable of this iterable elements for which `condition` 
+	 * returns true.
+	 * 
+	 * @param {function(T):boolean} [condition=null] - A predicate to check 
+	 * 	this sequence values with. If `null`, each values boolean 
+	 * 	interpretation is assumed.
+	 * @returns {iterable<T>}
 	 */
-	filter(condition) {
+	filter(condition = null) {
 		return this.filteredMap(null, condition || __toBool__);
 	}
 
-	/** `head(defaultValue)` returns the first element. If the sequence is 
-	 * empty it returns `defaultValue`, or raise an exception if none is given.
+	/** Returns the first element. If the sequence is empty it returns 
+	 * `defaultValue`, or raise an exception if none is given.
+	 * 
+	 * @param {T} [defaultValue=undefined] - A default value to return if this
+	 * 	sequence is empty.
+	 * @returns {T} The first value in this sequence.
 	 */
 	head(defaultValue) {
 		throwUnimplemented('head', this.constructor.name);
 	}
 
-	/** `get(index, defaultValue)` returns the value at the given `index`, or
-	 * `defaultValue` if there is not one.  
+	/** Returns the value at the given `index`, or `defaultValue` if there is 
+	 * not one.
+	 * 
+	 * @param {integer} [index] - The index of the value to get from this 
+	 * 	sequence. The first one is zero.
+	 * @param {T} [defaultValue=undefined] - A default value to return if this
+	 * 	sequence is empty.
+	 * @returns {T}  
 	 */
 	get(index, defaultValue) {
 		let filtered = this.filter((_value, i, _iter) => {
@@ -614,8 +642,12 @@ class AbstractIterable {
 			filtered.head(defaultValue);
 	}
 
-	/** `greater(evaluation)` returns an array with the elements of the 
-	 * iterable with greater evaluation (or numerical conversion by default).
+	/** Returns an array with the elements of the iterable with the greater 
+	 * evaluation (or numerical conversion by default).
+	 * 
+	 * @param {function(T):number} [evaluation=null] - A function with which to
+	 * 	evaluate the values in this sequence.
+	 * @returns {T[]}
 	 */
 	greater(evaluation = null) {
 		evaluation = evaluation || __toNumber__;
@@ -632,8 +664,12 @@ class AbstractIterable {
 		}, result);
 	}
 
-	/** `lesser(evaluation)` returns an array with the elements of the iterable
-	 * with lesser evaluation (or numerical conversion by default).
+	/** Returns an array with the elements of the iterable with the lesser 
+	 * evaluation (or numerical conversion by default).
+	 * 
+	 * @param {function(T):number} [evaluation=null] - A function with which to
+	 * 	evaluate the values in this sequence.
+	 * @returns {T[]}
 	 */
 	lesser(evaluation = null) {
 		evaluation = evaluation || __toNumber__;
@@ -650,13 +686,18 @@ class AbstractIterable {
 		}, result);
 	}
 
-	/** The `nub` of a sequence is another sequence with each element only
-	 * appearing once. Basically repeated elements are removed. The argument 
-	 * `equality` may have a function to compare the sequence's values.
+	/** A sequence with each value of this sequence only appearing once. 
+	 * Equal elements are removed, according to the `equality` function, or
+	 * `(===)` by default.
 	 * 
-	 * Warning! All the elements of the result are stored in memory.
+	 * _Warning!_ All the elements of the result are stored in memory.
+	 * 
+	 * @param {function(T,T):boolean} [equality=null] - A function to compare 
+	 * 	the sequence's values.
+	 * @returns {iterable<T>}
 	 */
 	nub(equality = null) {
+		//TODO Split in `nub` and `nubBy`.
 		let buffer;
 		if (equality) {
 			return this.filter((value, i) => {
@@ -689,8 +730,14 @@ class AbstractIterable {
 		}
 	}
 
-	/** `sample(n=1, rng=Math.random)` gathers `n` values from this iterable at
-	 * random, and returns them in an array.
+	/** Gathers `n` values from this iterable at random, and returns them in 
+	 * an array.
+	 * 
+	 * @param {integer} [n=1] - The amount of values to randomly select from 
+	 * 	this sequence.
+	 * @param {function():number} [rng=null] - A pseudo-random generator 
+	 * 	function. Results should always in the range _[0,1)_.
+	 * @returns {T[]}
 	 */
 	sample(n, rng = null) {
 		n = +n >= 1 ? Math.floor(n) : 1; 
@@ -708,8 +755,13 @@ class AbstractIterable {
 		}, []);
 	}
 
-	/** `slice(begin=0, end=Infinity)` return an iterable over a portion of the
-	 * this sequence from `begin` to `end`.
+	/** Return an iterable over a portion of the this sequence from `begin` to 
+	 * `end`.
+	 * 
+	 * @param {integer} [begin=0] - The index of the first value of the slice.
+	 * @param {integer} [end=+Infinity] - The index of the last value of the
+	 * 	slice.
+	 * @returns {T[]}
 	 */
 	slice(begin = 0, end = Infinity) {
 		begin = isNaN(begin) ? 0 : Math.floor(begin);
@@ -724,22 +776,32 @@ class AbstractIterable {
 		});
 	}
 
-	/** `tail()` returns an iterable with the same elements than this, except 
-	 * the first one.
+	/** Returns an iterable with the same elements than this, except the first 
+	 * one.
+	 * 
+	 * @returns {iterable<t>}
 	 */
 	tail() {
 		return this.drop(1); //FIXME Should raise an error if this is empty.
 	}
 
-	/** `take(n=1)` return an iterable with the first `n` elements of this one.
+	/** Return an iterable with the first `n` elements of this one.
+	 * 
+	 * @param {integer} [n=1] - The amount of values to take.
+	 * @returns {iterable<T>}
 	 */
 	take(n = NaN) {
 		n = isNaN(n) ? 1 : Math.floor(n);
 		return this.slice(0, n);
 	}
 
-	/** `takeWhile(condition)` return an iterable with the first elements that
-	 * verify the given `condition`.
+	/** Return an iterable with the first consecutive elements that verify the 
+	 * given `condition`.
+	 * 
+	 * @param {function(T):boolean} [condition=null] - A predicate to check 
+	 * 	this sequence values with. If `null`, each values boolean 
+	 * 	interpretation is assumed.
+	 * @returns {iterable<T>}
 	 */
 	takeWhile(condition = null) {
 		condition = condition || __toBool__;
@@ -755,22 +817,36 @@ class AbstractIterable {
 
 // Unary operations ////////////////////////////////////////////////////////////
 
-
+	//TODO buffered
+	//TODO combinations
+	//TODO cons
+	//TODO cycle
+	//TODO permutations
+	//TODO reverse
+	//TODO sorted
 
 // Variadic operations /////////////////////////////////////////////////////////
 	
-	/** 
+	/** Returns an iterable that goes over the concatenation of this and all
+	 * the given iterables.
+	 * 
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<T>}
 	 */
 	concat(...iterables) {
 		return this.constructor.concat(this, ...iterables);
 	}
 
-	/** The `difference(lists, equality)` methods treats the given `lists` as
-	 * sets, and calculates the difference of the first with the rest of them.
-	 * The `equality` function is used to compare values. If it is not given, 
-	 * the standard equality operator (`===`) is used.
+	/** Calculates the difference of the first with the rest of them. All 
+	 * arguments treat the given `iterables` as sets. The `equality` function 
+	 * is used to compare values.
 	 * 
-	 * Warning! Repeated values in this iterable will still be repeated.
+	 * _Warning!_ Repeated values in this iterable will still be repeated.
+	 * 
+	 * @param {function(T,T):boolean} equality - A function used to compare
+	 * 	values. If `null`, the standard equality operator (`===`) is used.
+	 * @param {...iterable<T>} iterables - Sequences with values to remove.
+	 * @returns {iterable<T>}
 	 */
 	differenceBy(equality, ...iterables) {
 		equality = equality || ((v1, v2) => v1 === v2);
@@ -787,16 +863,28 @@ class AbstractIterable {
 		});
 	}
 
+	/** Calculates the difference of the first with the rest of them. All 
+	 * arguments treat the given `iterables` as sets.
+	 * 
+	 * _Warning!_ Repeated values in this iterable will still be repeated.
+	 * 
+	 * @param {...iterable<T>} iterables - Sequences with values to remove.
+	 * @returns {iterable<T>}
+	 */
 	difference(...iterables) {
 		return this.differenceBy(null, ...iterables);
 	}
 	
-	/** The `intersectionBy(equality, ...iterables)` methods treats the given 
-	 * `iterables` as sets, and calculates the intersection of all of them with
-	 * this iterable. The `equality` function is used to compare values. If it
-	 * is not given, the standard equality operator (`===`) is used.
+	/** Calculates the intersection of this sequence and the given `iterables`
+	 * as sets. The `equality` function is used to compare values. If `null`,
+	 * the standard equality operator (`===`) is used.
 	 * 
-	 * Warning! Repeated values in this iterable will still be repeated.
+	 * _Warning!_ Repeated values in this iterable will still be repeated.
+	 * 	 
+	 * @param {function(T,T):boolean} equality - A function used to compare
+	 * 	values. If `null`, the standard equality operator (`===`) is used.
+	 * @param {...iterable<T>} iterables - Sequences with values to remove.
+	 * @returns {iterable<T>}
 	 */
 	intersectionBy(equality, ...iterables) {
 		equality = equality || ((v1, v2) => v1 === v2);
@@ -813,29 +901,61 @@ class AbstractIterable {
 		});
 	}
 
+	/** Calculates the intersection of this sequence and the given `iterables`
+	 * as sets.
+	 * 
+	 * _Warning!_ Repeated values in this iterable will still be repeated.
+	 * 	 
+	 * @param {...iterable<T>} iterables - Sequences with values to remove.
+	 * @returns {iterable<T>}
+	 */
 	intersection(...iterables) {
 		return this.intersectionBy(null, ...iterables);
 	}
 
-	/** 
+	/** Returns an iterable of the [cartesian product](http://en.wikipedia.org/wiki/Cartesian_product)
+	 * of this sequence and the given `iterables`. Each value of the returned
+	 * sequence is an array of values.
+	 * 
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<T[]>}
 	 */
 	product(...iterables) {
 		return this.constructor.product(this, ...iterables);
 	}
 
-	/** 
+	/** Builds an iterable that goes all the given iterables in parallel,
+	 * stopping at the first sequence that finishes. Each value in the 
+	 * generated sequence is an array of the values of each sequence.
+	 * 
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<R>}
 	 */
 	static zip(...iterables) {
 		return this.zipWith(__id__, ...iterables);
 	}
 
-	/** 
+	/** Builds an iterable that goes over this sequence and all the given 
+	 * iterables in parallel, stopping at the first sequence that finishes. 
+	 * Each value in the generated sequence is an array of the values of each
+	 * sequence.
+	 * 
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<R>}
 	 */
 	zip(...iterables) {
 		return this.constructor.zip(this, ...iterables);
 	}
 
-	/** 
+	/** Builds an iterable that goes over this sequence and all the given 
+	 * iterables in parallel, stopping at the first sequence that finishes. 
+	 * Each value in the generated sequence is made by calling the given 
+	 * `zipFunction` with an array of the values of each sequence.
+	 * 
+	 * @param {function(T[]):R} zipFunction - The function to combine an 
+	 * 	array values into one.
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<R>}
 	 */
 	zipWith(zipFunction, ...iterables) {
 		return this.constructor.zipWith(zipFunction, this, ...iterables);
