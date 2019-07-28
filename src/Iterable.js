@@ -236,14 +236,27 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
-	/** 
-	*/
+	/** Generates all combinations of `k` values of this sequence, in 
+	 * lexicographical order.
+	 * 
+	 * _Warning!_ Values are stored in memory during the iteration.
+	 * 
+	 * @param {integer} [k=1] - The number of values in each combination.
+	 * @returns {iterable<T[]>}
+	 * 
+	 * @see generators.permutations
+	 */
 	combinations(k = 1) {
 		let source = generators.combinations.bind(generators, this, k); 
 		return new Iterable(source);
 	}
 
-	/** TODO
+	/** As the namesake from functional programming, `cons` generates a new
+	 * sequence with the `head` first and the values of this sequence 
+	 * afterwards.
+	 * 
+	 * @param {T} head - The first value in the new sequence.
+	 * @returns {iterable<T>}
 	 */
 	cons(value) {
 		let source = generators.cons.bind(generators, value, this);
@@ -258,10 +271,26 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
+	/** Generates all permutations of `k` values of this sequence, in no 
+	 * particular order.
+	 * 
+	 * _Warning!_ All values are stored in memory during the iteration.
+	 * 
+	 * @param {integer} [k=1] - The amount of values in each permutation. By
+	 * 	default the length of this sequence is assumed.
+	 * @yields {T[]}
+	 * 
+	 * @see generators.combinations
+	*/
+	permutations(k = 1) {
+		let source = generators.permutations.bind(generators, this, k); 
+		return new Iterable(source);
+	}
+
 	/** `reverse()` returns an iterable with this iterable elements in reverse
 	 * order. 
 	 * 
-	 * Warning! It stores all this iterable's elements in memory.
+	 * _Warning!_ It stores all this iterable's elements in memory.
 	 */
 	reverse() {
 		let reversedArray = this.toArray().reverse();
@@ -271,7 +300,7 @@ class Iterable extends AbstractIterable {
 	/** `sorted(sortFunction)` returns an iterable that goes through this 
 	 * iterable's elements in order. 
 	 * 
-	 * Warning! This iterable's elements are stored in memory for sorting.
+	 * _Warning!_ This iterable's elements are stored in memory for sorting.
 	 */
 	sorted(sortFunction) {
 		let sortedArray = this.toArray().sort(sortFunction);
@@ -280,7 +309,12 @@ class Iterable extends AbstractIterable {
 
 // Variadic operations /////////////////////////////////////////////////////////
 	
-	/** @borrows generators.concat */
+	/** Returns an iterable that goes over the concatenation of all the given 
+	 * iterables.
+	 * 
+	 * @param {...iterable<T>} iterables
+	 * @returns {iterable<T>} 
+	 */
 	static concat(...iterables) {
 		let source = generators.concat.bind(generators, ...iterables);
 		return new Iterable(source);
