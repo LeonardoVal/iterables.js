@@ -1,6 +1,6 @@
 /** Class for representing sequences with only one value.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class SingletonIterable extends Iterable {
 	/** The constructor takes the only value in the sequence.

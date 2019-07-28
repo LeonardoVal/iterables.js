@@ -1,7 +1,7 @@
 /** Class for representing sequences based on a `Map` instance, i.e. a sequence
  * of `[key, value]` pairs.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class MapIterable extends Iterable {
 	/** The constructor takes a `Map` instance as a source.

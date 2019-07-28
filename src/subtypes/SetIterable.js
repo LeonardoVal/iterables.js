@@ -1,6 +1,6 @@
 /** Class for representing sequences based on a `Set` instance.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class SetIterable extends Iterable {
 	/** The constructor takes a `Set` instance as a source.

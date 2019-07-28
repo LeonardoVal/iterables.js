@@ -1,6 +1,6 @@
 /** General class for representing synchronous sequences.
  * 
- * @see AbstractIterable
+ * @augments AbstractIterable
  */
 class Iterable extends AbstractIterable {
 	/** @inheritdoc */

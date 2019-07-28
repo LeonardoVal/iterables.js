@@ -1,6 +1,6 @@
 /** Class for representing sequences based on an array, as a whole or in part.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class ArrayIterable extends Iterable {
 	/** The constructor takes an array as a source, and optionally the indices

@@ -3,7 +3,7 @@ let SINGLETON_EmptyIterable;
 
 /** Class for representing empty sequences efficiently.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class EmptyIterable extends Iterable {
 	/** The constructor actually returns a singleton, created the first time it

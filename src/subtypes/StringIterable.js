@@ -1,6 +1,6 @@
 /** Class for representing sequences based on a string, as a whole or in part.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class StringIterable extends Iterable {
 	/** The constructor takes a string as a source, and optionally the indices

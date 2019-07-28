@@ -1,7 +1,7 @@
 /** Class for representing sequences based on objects, i.e. a sequence of 
  * `[key, value]` pairs taken from the object's properties.
  * 
- * @see Iterable
+ * @augments Iterable
  */
 class ObjectIterable extends Iterable {
 	/** The constructor takes an object as a source.
