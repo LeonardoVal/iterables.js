@@ -58,78 +58,112 @@ class Iterable extends AbstractIterable {
 
 // Builders ////////////////////////////////////////////////////////////////////
 
-	/**
-	 */
-	static range(from, to, step, rightInclusive = false) {
-		return new EnumerationIterable(from, to, step, rightInclusive);
-	}
-
-	/**
+	/** Generates an enumeration defined by the given values.
+	 * 
+	 * @param {number} [from=0] - The first value.
+	 * @param {number} [then=1] - The second value.
+	 * @param {number} [to=+Infinity] - A bound for the sequence's values. 
+	 * @returns {iterable<number>}
 	 */
 	static enumFromThenTo(from, then, to) {
 		return Iterable.range(from, then - from, to, true);
 	}
 
-	/**
+	/** Generates an enumeration defined by the given values.
+	 * 
+	 * @param {number} [from=0] - The first value.
+	 * @param {number} [then=1] - The second value.
+	 * @returns {iterable<number>}
 	 */
 	static enumFromThen(from, then) {
 		return Iterable.enumFromThenTo(from, then,
 			then > from ? +Infinity : -Infinity);
 	}
 
-	/**
+	/** Generates an enumeration defined by the given values.
+	 * 
+	 * @param {number} [from=0] - The first value.
+	 * @param {number} [to=+Infinity] - A bound for the sequence's values. 
+	 * @returns {iterable<number>}
 	 */
 	static enumFromTo(from, to) {
 		return Iterable.enumFromThenTo(from, from + 1, to);
 	}
 
-	/**
+	/** Generates an enumeration defined by the given values.
+	 * 
+	 * @param {number} [from=0] - The first value. 
+	 * @returns {iterable<number>}
 	 */
 	static enumFrom(from) {
 		return Iterable.enumFromTo(from, +Infinity);
 	}
 
-	/**
-	 */
-	static repeat(value, n) {
-		let source = generators.repeat.bind(generators, value, n);
-		return new this(source);
-	}
-
-	/**
+	/** Generates a sequence that repeatedly applies the function `f` to the 
+	 * value `arg`, `n` times (or indefinitely by default).
+	 * 
+	 * @param {function (T):T} f - The function to be called.
+	 * @param {T} arg - The first argument with which to call `f`.
+	 * @param {integer} [n=+Infinity] - The length of the sequence.
+	 * @returns {iterable<T>} 
 	 */
 	static iterate(f, arg, n) {
 		let source = generators.iterate.bind(generators, f, arg, n);
 		return new this(generators.iterate, f, arg, n);
 	}
 
-	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
-	 * with `foldFunction` as a left associative operator. Instead of returning 
-	 * the last result, it iterates over the intermediate values in the folding 
-	 * sequence.
+	/** Iterates over a sequence of numbers from `from` upto `to` with the 
+	 * given `step`. 
+	 * 
+	 * @param {number} [from=0] - The first value in the sequence.
+	 * @param {number} to - The last value in the sequence.
+	 * @param {number} [step=1] - The difference between each value and the 
+	 * 	next in the sequence.
+	 * @param {boolean} [rightInclusive=false] - Whether the last values is 
+	 * 	included in the sequence or not.
+	 * @returns {iterable<number>}
 	 */
-	scanl(foldFunction, initial) {
-		let source = generators.scanl.bind(generators, this, foldFunction, 
-			initial);
-		return new Iterable(source);
+	static range(from, to, step, rightInclusive = false) {
+		return new EnumerationIterable(from, to, step, rightInclusive);
+	}
+
+	/** Generates a sequence that repeats the given `value` `n` times (or 
+	 * forever by default).
+	 * 
+	 * @param {T} value - The value to be repeated.
+	 * @param {integer} [n=+Infinity] - The length of the sequence.
+	 * @returns {iterable<T>} 
+	 */
+	static repeat(value, n) {
+		let source = generators.repeat.bind(generators, value, n);
+		return new this(source);
 	}
 
 // Conversions /////////////////////////////////////////////////////////////////
 
-	/** 
-	*/
+	/** Creates a new sequence with all sub-sequence elements of this iterable
+	 * concatenated into it recursively up to the specified `depth`.
+	 * 
+	 * @param {integer} [depth=+Infinity] - A number of recursive steps.
+	 * @returns {iterable<T>}
+	 */
 	flat(depth = +Infinity) {
 		let source = generators.flat.bind(generators, this, depth);
 		return new Iterable(source);
 	}
 
+	/** First maps each element using a `mapFunction`, then flattens the result 
+	 * into a new sequence. It is identical to `map()` followed by `flat()` of 
+	 * depth 1.
+	 *
+	 * @param {function(T):iterable<R>} mapFunction
+	 * @returns {iterable<R>}
+	 */
 	flatMap(mapFunction) {
 		return this.map(mapFunction).flat(1);
 	}
 
-	/** `toArray(array=[])`: appends to `array` the elements of the sequence
-	 * and returns it. If no array is given, a new one is used.
-	*/
+	/** @inheritdoc */
 	toArray(array = null) {
 		if (!array) {
 			array = [...this];
@@ -181,6 +215,17 @@ class Iterable extends AbstractIterable {
 		return folded;
 	}
 
+	/** `scanl(seq, foldFunction, initial)` folds the elements of this iterable 
+	 * with `foldFunction` as a left associative operator. Instead of returning 
+	 * the last result, it iterates over the intermediate values in the folding 
+	 * sequence.
+	 */
+	scanl(foldFunction, initial) {
+		let source = generators.scanl.bind(generators, this, foldFunction, 
+			initial);
+		return new Iterable(source);
+	}
+
 // Selections //////////////////////////////////////////////////////////////////
 
 	/** @inheritdoc */
@@ -195,9 +240,15 @@ class Iterable extends AbstractIterable {
 		}
 	}
 
-	/** 
+	/**  Gets the last value of the sequence `seq`.
+	 * 
+	 * @param {iterable<T>} seq - The sequence to use.
+	 * @param {T} [defaultValue=undefined] - A default value to return if this
+	 * 	sequence is empty.
+	 * @returns {T}
+	 * @throws {Error} If the sequence is empty and no default value is given.
 	 */
-	static lastValue(seq, defaultValue) {
+	static lastValue(seq, defaultValue) { //TODO Move to `generators`
 		let value = defaultValue,
 			empty = true;
 		for (value of seq) {
@@ -210,9 +261,14 @@ class Iterable extends AbstractIterable {
 		}
 	}
 
-	/**
+	/** Gets the last value of this sequence.
+	 * 
+	 * @param {T} [defaultValue=undefined] - A default value to return if this
+	 * 	sequence is empty.
+	 * @returns {T}
+	 * @throws {Error} If the sequence is empty and no default value is given.
 	 */
-	lastValue(defaultValue) {
+	lastValue(defaultValue) { //TODO Move to `AbstractIterable`
 		let iter = this[Symbol.iterator]();
 		if (arguments.length < 1) {
 			return Iterable.lastValue(iter);
@@ -223,8 +279,13 @@ class Iterable extends AbstractIterable {
 
 // Unary operations ////////////////////////////////////////////////////////////
 
-	/** `buffered(array)` stores all elements of the iterable in an `array` and
-	 * returns it as an iterable.
+	/** The returned iterable stores all elements of this iterable in an 
+	 * `array` the first time they are iterated over. The subsequent iterations
+	 * will use the array instead of the source. This prevents the sequence
+	 * values to be calculated more than once.
+	 * 
+	 * @param {T[]} [array=[]] - An array to store the values.
+	 * @returns {iterable<T>}
 	 */
 	buffered(array) {
 		array = array || [];
@@ -259,8 +320,12 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
-	/** `cycle(n = +Infinity)` returns an iterable that loops `n` times (or 
-	 * forever by default) over the elements of this `Iterable`.
+	/** Returns an iterable that loops `n` times (or forever by default) over
+	 * the elements of this iterable.
+	 * 
+	 * @param {integer} [n=+Infinity] - The amount of times this sequence is
+	 *   concatenated with itself.
+	 * @returns {iterable<T>}
 	 */
 	cycle(n = +Infinity) {
 		let source = generators.cycle.bind(generators, this, n);
@@ -283,20 +348,25 @@ class Iterable extends AbstractIterable {
 		return new Iterable(source);
 	}
 
-	/** `reverse()` returns an iterable with this iterable elements in reverse
-	 * order. 
+	/** Returns an iterable with this iterable elements in reverse order. 
 	 * 
 	 * _Warning!_ It stores all this iterable's elements in memory.
+	 * 
+	 * @returns {iterable<T>}
 	 */
 	reverse() {
 		let reversedArray = this.toArray().reverse();
 		return this.constructor.fromArray(reversedArray);
 	}
 
-	/** `sorted(sortFunction)` returns an iterable that goes through this 
-	 * iterable's elements in order. 
+	/** Returns an iterable that goes through this iterable's elements in 
+	 * order. 
 	 * 
 	 * _Warning!_ This iterable's elements are stored in memory for sorting.
+	 * 
+	 * @param {function(T,T):number} sortFunction - A function with which to 
+	 * 	compare the values to sort.
+	 * @returns {iterable<T>}
 	 */
 	sorted(sortFunction) {
 		let sortedArray = this.toArray().sort(sortFunction);
