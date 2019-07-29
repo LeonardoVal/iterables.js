@@ -1,13 +1,15 @@
-/**
+/** General class for representing asynchronous sequences.
+ * 
+ * @augments AbstractIterable
  */
 class AsyncIterable extends AbstractIterable {
-	/**
-	 */
+	/** @inheritdoc */
 	constructor (source) {
 		super(source);
 	}
 
-	/** `isAsync` is `true` for `Iterable`.
+	/** Instances of `AsyncIterable` are always asynchronous, hence `isAsync`
+	 * is always `true`.
 	 */
 	get isAsync() {
 		return true;
@@ -44,7 +46,12 @@ class AsyncIterable extends AbstractIterable {
 
 // Builders ////////////////////////////////////////////////////////////////////
 
-	/** TODO 
+	/** Generates an asynchronous sequence of timestamps, every `step` 
+	 * milliseconds until `end` is reached.
+	 * 
+	 * @param {number} [step=1000] - The time lapse between each value.
+	 * @param {number} [end=+Infinity] - The time when the sequence must stop.
+	 * @yields {asyncIterable<number>}
 	 */
 	ticks(step, end) {
 		let source = generators.async.bind(generators, ticks, step, end);
@@ -80,6 +87,12 @@ class AsyncIterable extends AbstractIterable {
 // Unary operations ////////////////////////////////////////////////////////////
 
 // Variadic operations /////////////////////////////////////////////////////////
+
+	//TODO static concat
+
+	//TODO static product
+
+	//TODO static zipWith
 	
 } // class AsyncIterable
 

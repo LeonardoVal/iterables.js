@@ -1,6 +1,15 @@
-/**
+/** Class for representing sequences based on a `Set` instance.
+ * 
+ * @augments Iterable
  */
 class SetIterable extends Iterable {
+	/** The constructor takes a `Set` instance as a source.
+	 * 
+	 * @param {Map} set - The `Set` instance to be used as a source of the
+	 * 	sequence.
+	 * @throws {TypeError} Raises an error if the given source is not a `Set`
+	 * 	instance.
+	*/
 	constructor (set) {
 		if (!(set instanceof Set)) {
 			throw new TypeError('Argument must be a `Set`, but is a `['+ 

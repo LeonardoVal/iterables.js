@@ -1,10 +1,14 @@
-/**
- */
+/** @ignore */
 let SINGLETON_EmptyIterable;
 
-/** 
+/** Class for representing empty sequences efficiently.
+ * 
+ * @augments Iterable
  */
 class EmptyIterable extends Iterable {
+	/** The constructor actually returns a singleton, created the first time it
+	 * is called.
+	*/
 	constructor() {
 		if (SINGLETON_EmptyIterable) {
 			return SINGLETON_EmptyIterable;
@@ -17,38 +21,45 @@ class EmptyIterable extends Iterable {
 
 // Conversions /////////////////////////////////////////////////////////////////
 
-	/** @inheritdoc */
+	/** An empty sequence converts to an empty array.
+	*/
 	toArray(array) {
 		return (array || []);
 	}
 
-	/** @inheritdoc */
+	/** An empty sequence converts to an empty set.
+	*/
 	toSet(set = null) {
 		return set || new Set();
 	}
 
 // Properties //////////////////////////////////////////////////////////////////
 
-	/** @inheritdoc */
+	/** An empty sequence is always empty, by definition.
+	*/
 	isEmpty() {
 		return true;
 	}
 
-	/** @inheritdoc */
+	/** An empty sequence is always zero, of course.
+	*/
 	get length() {
 		return 0;
 	}
 
 // Reductions //////////////////////////////////////////////////////////////////
 
-	/** @inheritdoc */
+	/** All reductions of empty sequences result in the initial value.
+	*/
 	reduce(foldFunction, initial) {
 		return initial;
 	}
 
 // Selections //////////////////////////////////////////////////////////////////
 
-	/** @inheritdoc */
+	/** Nothing can be got from an empty sequence. So `get` will always fail 
+	 * unless. 
+	 */
 	get(index, defaultValue) {
 		if (arguments.length < 2) {
 			throw new Error(`Cannot get value at ${index}!`);

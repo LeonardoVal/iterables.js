@@ -1,6 +1,18 @@
-/**
+/** Class for representing sequences based on an array, as a whole or in part.
+ * 
+ * @augments Iterable
  */
 class ArrayIterable extends Iterable {
+	/** The constructor takes an array as a source, and optionally the indices
+	 * of a slice of it.
+	 * 
+	 * @param {array} array - The array to be used as a source of the sequence.
+	 * @param {integer} [indexFrom=0] - The starting index of the slice of the 
+	 * 	array to be used.
+	 * @param {integer} [indexTo=+Infinity] - The ending index of the slice of 
+	 * 	the array to be used.
+	 * @throws {TypeError} Raises an error if the given source is not an array.
+	*/
 	constructor (array, indexFrom = 0, indexTo = Infinity) {
 		if (!Array.isArray(array)) {
 			throw new TypeError('Argument must be an array, but is a `'+ typeof array +'`!');
@@ -10,6 +22,7 @@ class ArrayIterable extends Iterable {
 		this.__indexTo__ = isNaN(indexTo) ? Infinity : Math.max(0, +indexTo);
 	}
 
+	/** @inheritdoc */
 	[Symbol.iterator]() {
 		let iter;
 		if (this.__indexFrom__ === 0 && this.__indexTo__ >= this.source.length) {
