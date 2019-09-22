@@ -1,5 +1,5 @@
 {
-	"name": "list-utils",
+	"name": "@creatartis/iterables",
 	"description": "List and iterators utility functions and definitions.",
 	"keywords": [
 		"iterables",
@@ -18,7 +18,7 @@
 		"type": "git",
 		"url": "http://github.com/LeonardoVal/list-utils.js"
 	},
-	"main": "build/list-utils.min.js",
+	"main": "dist/iterables.js",
 	"files": [
 		"build",
 		"LICENSE.md"
