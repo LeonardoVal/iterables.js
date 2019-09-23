@@ -1,6 +1,6 @@
 /** Base abstract superclass for all iterable types.
  */
-class AbstractIterable {
+export class AbstractIterable {
 	/** The base constructor simply defines the `source` property.
 	 * 
 	 * @param {any} source - The iterable source may be a function that makes

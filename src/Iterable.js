@@ -1,8 +1,10 @@
+import AbstractIterable from './AbstractIterable';
+
 /** General class for representing synchronous sequences.
  * 
  * @augments AbstractIterable
  */
-class Iterable extends AbstractIterable {
+export class Iterable extends AbstractIterable {
 	/** @inheritdoc */
 	constructor (source) {
 		super(source);
@@ -409,5 +411,3 @@ class Iterable extends AbstractIterable {
 	}
 
 } // class Iterable
-
-exports.Iterable = Iterable;

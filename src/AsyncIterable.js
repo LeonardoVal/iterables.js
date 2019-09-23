@@ -1,8 +1,10 @@
+import AbstractIterable from './AbstractIterable';
+
 /** General class for representing asynchronous sequences.
  * 
  * @augments AbstractIterable
  */
-class AsyncIterable extends AbstractIterable {
+export class AsyncIterable extends AbstractIterable {
 	/** @inheritdoc */
 	constructor (source) {
 		super(source);
@@ -95,5 +97,3 @@ class AsyncIterable extends AbstractIterable {
 	//TODO static zipWith
 	
 } // class AsyncIterable
-
-exports.AsyncIterable = AsyncIterable;
