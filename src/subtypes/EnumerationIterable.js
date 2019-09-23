@@ -1,3 +1,5 @@
+import Iterable from '../Iterable';
+
 /** `EnumerationIterable` represents a sequence of numerical values, defined by
  * a first number, a step and a bound which can be included or not.
  *
@@ -20,7 +22,7 @@
  * 
  * @see Iterable
  */
-class EnumerationIterable extends Iterable {
+export class EnumerationIterable extends Iterable {
 
 	/** Creates an `EnumerationIterable`.
 	 * @param {number} [numFrom=0] - The first value in the sequence.
@@ -95,5 +97,3 @@ class EnumerationIterable extends Iterable {
 	}
 
 } // class EnumerationIterable
-
-exports.EnumerationIterable = EnumerationIterable;

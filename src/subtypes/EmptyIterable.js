@@ -1,3 +1,5 @@
+import Iterable from '../Iterable';
+
 /** @ignore */
 let SINGLETON_EmptyIterable;
 
@@ -5,7 +7,7 @@ let SINGLETON_EmptyIterable;
  * 
  * @augments Iterable
  */
-class EmptyIterable extends Iterable {
+export class EmptyIterable extends Iterable {
 	/** The constructor actually returns a singleton, created the first time it
 	 * is called.
 	*/
@@ -69,5 +71,3 @@ class EmptyIterable extends Iterable {
 	}
 
 } // class EmptyIterable
-
-exports.EmptyIterable = EmptyIterable;

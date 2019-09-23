@@ -1,9 +1,11 @@
+import Iterable from '../Iterable';
+
 /** Class for representing sequences based on objects, i.e. a sequence of 
  * `[key, value]` pairs taken from the object's properties.
  * 
  * @augments Iterable
  */
-class ObjectIterable extends Iterable {
+export class ObjectIterable extends Iterable {
 	/** The constructor takes an object as a source.
 	 * 
 	 * @param {object} obj - The object instance to be used a the source of the
@@ -43,5 +45,3 @@ class ObjectIterable extends Iterable {
 	}
 
 } // class ObjectIterable
-
-exports.ObjectIterable = ObjectIterable;

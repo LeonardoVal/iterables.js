@@ -1,8 +1,10 @@
+import Iterable from '../Iterable';
+
 /** Class for representing sequences based on a string, as a whole or in part.
  * 
  * @augments Iterable
  */
-class StringIterable extends Iterable {
+export class StringIterable extends Iterable {
 	/** The constructor takes a string as a source, and optionally the indices
 	 * of a slice of it.
 	 * 
@@ -64,5 +66,3 @@ class StringIterable extends Iterable {
 	}
 
 } // class StringIterable
-
-exports.StringIterable = StringIterable;

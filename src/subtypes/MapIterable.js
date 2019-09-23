@@ -1,9 +1,11 @@
+import Iterable from '../Iterable';
+
 /** Class for representing sequences based on a `Map` instance, i.e. a sequence
  * of `[key, value]` pairs.
  * 
  * @augments Iterable
  */
-class MapIterable extends Iterable {
+export class MapIterable extends Iterable {
 	/** The constructor takes a `Map` instance as a source.
 	 * 
 	 * @param {Map} map - The `Map` instance to be used as a source of the
@@ -37,5 +39,3 @@ class MapIterable extends Iterable {
 	}
 
 } // class MapIterable
-
-exports.MapIterable = MapIterable;

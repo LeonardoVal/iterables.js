@@ -1,8 +1,10 @@
+import Iterable from '../Iterable';
+
 /** Class for representing sequences with only one value.
  * 
  * @augments Iterable
  */
-class SingletonIterable extends Iterable {
+export class SingletonIterable extends Iterable {
 	/** The constructor takes the only value in the sequence.
 	 * 
 	 * @param {any} value - The first and only value in the sequence.
@@ -35,5 +37,3 @@ class SingletonIterable extends Iterable {
 	}
 
 } // class SingletonIterable
-
-exports.SingletonIterable = SingletonIterable;

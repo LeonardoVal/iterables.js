@@ -1,8 +1,10 @@
+import Iterable from '../Iterable';
+
 /** Class for representing sequences based on a `Set` instance.
  * 
  * @augments Iterable
  */
-class SetIterable extends Iterable {
+export class SetIterable extends Iterable {
 	/** The constructor takes a `Set` instance as a source.
 	 * 
 	 * @param {Map} set - The `Set` instance to be used as a source of the
@@ -52,5 +54,3 @@ class SetIterable extends Iterable {
 	}
 
 } // class SetIterable
-
-exports.SetIterable = SetIterable;
