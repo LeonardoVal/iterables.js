@@ -1,5 +1,5 @@
 import { properties } from '../generators';
-import Iterable from '../Iterable';
+import { Iterable } from '../Iterable';
 
 /** Class for representing sequences based on objects, i.e. a sequence of
  * `[key, value]` pairs taken from the object's properties.
