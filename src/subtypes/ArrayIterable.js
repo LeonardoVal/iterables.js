@@ -1,4 +1,4 @@
-import Iterable from '../Iterable';
+import { Iterable } from '../Iterable';
 
 /** Class for representing sequences based on an array, as a whole or in part.
  *

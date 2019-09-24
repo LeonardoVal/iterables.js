@@ -1,5 +1,5 @@
 import { empty } from '../generators';
-import Iterable from '../Iterable';
+import { Iterable } from '../Iterable';
 
 /** @ignore */
 let singletonEmptyIterable;

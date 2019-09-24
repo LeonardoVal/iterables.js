@@ -1,5 +1,4 @@
-import { } from '../generators';
-import Iterable from '../Iterable';
+import { Iterable } from '../Iterable';
 
 /** Class for representing sequences based on a string, as a whole or in part.
  *
