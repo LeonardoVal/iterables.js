@@ -1,34 +1,30 @@
+/* eslint-disable object-property-newline */
 import generators from './generators';
 import asyncGenerators from './generators-async';
 import AbstractIterable from './AbstractIterable';
-import Iterable from './Iterable';
-import AsyncIterable from './AsyncIterable';
+import { Iterable, iterate, repeat } from './Iterable';
+import { AsyncIterable } from './AsyncIterable';
 // subtypes
 import { ArrayIterable, fromArray, fromValues } from './subtypes/ArrayIterable';
 import { EmptyIterable, EMPTY } from './subtypes/EmptyIterable';
-import EnumerationIterable from './subtypes/EnumerationIterable';
-import MapIterable from './subtypes/MapIterable';
+import { EnumerationIterable, enumFrom, enumFromThen, enumFromTo, enumFromThenTo, range } from './subtypes/EnumerationIterable';
+import { MapIterable } from './subtypes/MapIterable';
 import { ObjectIterable, fromObject } from './subtypes/ObjectIterable';
-import SetIterable from './subtypes/SetIterable';
-import SingletonIterable from './subtypes/SingletonIterable';
+import { SetIterable } from './subtypes/SetIterable';
+import { SingletonIterable } from './subtypes/SingletonIterable';
 import { StringIterable, fromString } from './subtypes/StringIterable';
 
 export default {
   AbstractIterable,
-  Iterable,
+  Iterable, iterate, repeat,
   AsyncIterable,
-  ArrayIterable,
-  fromArray,
-  fromValues,
-  EmptyIterable,
-  EMPTY,
-  EnumerationIterable,
+  ArrayIterable, fromArray, fromValues,
+  EmptyIterable, EMPTY,
+  EnumerationIterable, enumFrom, enumFromThen, enumFromTo, enumFromThenTo, range,
   MapIterable,
-  ObjectIterable,
-  fromObject,
+  ObjectIterable, fromObject,
   SetIterable,
   SingletonIterable,
-  StringIterable,
-  fromString,
+  StringIterable, fromString,
   generators: { ...generators, async: asyncGenerators },
 };
