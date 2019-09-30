@@ -1,11 +1,12 @@
-﻿define(['list-utils', 'tests-common'], function (listUtils, test_common) { "use strict";
-	var expectList = test_common.expectList;
+﻿/* globals describe expect it */
+/* eslint-disable import/no-unresolved */
+import { Iterable, EmptyIterable } from '../iterables';
+import { expectList } from '../test-common';
 
-	describe("Empty lists:", function () {
-		it("`EmptyIterable` class", function () {
-			expect(listUtils.EmptyIterable).toBeOfType('function');
-			expect(listUtils.EmptyIterable.prototype).toBeOfType(listUtils.Iterable);
-			expectList(new listUtils.EmptyIterable(), []);
-		});
-	}); // describe "Empty lists:"
-}); //// define
+describe('Empty lists:', () => {
+  it('`EmptyIterable` class', () => {
+    expect(EmptyIterable).toBeOfType('function');
+    expect(EmptyIterable.prototype).toBeOfType(Iterable);
+    expectList(new EmptyIterable(), []);
+  });
+}); // describe "Empty lists:"

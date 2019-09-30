@@ -1,14 +1,15 @@
-﻿define(['list-utils'], function (listUtils) { "use strict";
-	describe("Core definitions:", function () {
-		it("`Iterable` class", function () {
-			let Iterable = listUtils.Iterable;
-			expect(Iterable).toBeOfType('function');
-			[
-				'abc', [1,2,3], {x:1, y:2}
-			].forEach((source) => {
-				let iter = new listUtils.Iterable(source);
-				expect(iter.source).toBe(source);
-			});
-		});
-	}); // describe "Core definitions:"
-}); //// define
+﻿/* globals describe expect it */
+/* eslint-disable import/no-unresolved */
+import { Iterable } from '../iterables';
+
+describe('Core definitions:', () => {
+  it('`Iterable` class', () => {
+    expect(Iterable).toBeOfType('function');
+    [
+      'abc', [1, 2, 3], { x: 1, y: 2 },
+    ].forEach((source) => {
+      const iter = new Iterable(source);
+      expect(iter.source).toBe(source);
+    });
+  });
+}); // describe "Core definitions:"
