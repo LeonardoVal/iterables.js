@@ -103,5 +103,5 @@ export function fromArray(array) {
  * @returns {ArrayIterable<T>}
  */
 export function fromValues(...values) {
-  return this.fromArray(values);
+  return fromArray(values);
 }
