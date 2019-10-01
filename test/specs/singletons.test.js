@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { SingletonIterable } from '../iterables';
-import { expectList } from '../test-common';
+import { SingletonIterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Singletons lists:', () => {
   it('`Iterable.singleton` function', () => {

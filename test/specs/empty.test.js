@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { Iterable, EmptyIterable } from '../iterables';
-import { expectList } from '../test-common';
+import { Iterable, EmptyIterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Empty lists:', () => {
   it('`EmptyIterable` class', () => {

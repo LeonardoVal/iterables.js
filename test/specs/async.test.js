@@ -1,7 +1,7 @@
 ﻿/* globals describe expect xit */
 /* eslint-disable import/no-unresolved */
-import { Iterable } from '../iterables';
-import { expectAsyncList, expectAsyncIterator } from '../tests-common';
+import { Iterable } from '../../src/index';
+import { expectAsyncList, expectAsyncIterator } from './tests-common';
 
 describe('Asynchronous lists:', () => {
   xit('`Iterable.mockAsyncIterator` function', (done) => {

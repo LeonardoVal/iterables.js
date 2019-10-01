@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { fromString, fromValues, Iterable } from '../iterables';
-import { expectList } from '../test-common';
+import { fromString, fromValues, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists of tuples:', () => {
   it('zip()', () => {

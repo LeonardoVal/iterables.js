@@ -1,7 +1,7 @@
 ﻿/* globals describe expect xit */
 /* eslint-disable import/no-unresolved */
-import { fromArray, Iterable } from '../iterables';
-import { expectList } from '../tests-common';
+import { fromArray, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Combinatorics:', () => {
   xit('`Iterable.permutations` function', () => {

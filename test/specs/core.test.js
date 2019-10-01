@@ -1,6 +1,6 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { Iterable } from '../iterables';
+import { Iterable } from '../../src/index';
 
 describe('Core definitions:', () => {
   it('`Iterable` class', () => {

@@ -1,11 +1,11 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { fromObject, fromValues, Iterable } from '../iterables';
-import { expectList } from '../test-common';
+import { fromObject, fromValues, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists from objects:', () => {
-  it('`Iterable.fromObject` function', () => {
-    expect(Iterable.fromObject).toBeOfType('function');
+  it('`fromObject` function', () => {
+    expect(fromObject).toBeOfType('function');
     expectList(fromObject({}), []);
     expectList(fromObject({ true: true }), [['true', true]]);
     expectList(fromObject({ x: 1, y: 2 }, true), [['x', 1], ['y', 2]]);

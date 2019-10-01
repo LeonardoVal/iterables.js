@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { fromString, Iterable, StringIterable } from '../iterables';
-import { expectList } from '../test-common';
+import { fromString, Iterable, StringIterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists from strings:', () => {
   it('`StringIterable` class', () => {
@@ -13,7 +13,7 @@ describe('Lists from strings:', () => {
   });
 
   it('`Iterable.fromString` function', () => {
-    expect(Iterable.fromString).toBeOfType('function');
+    expect(fromString).toBeOfType('function');
     expectList(fromString(''), []);
     expectList(fromString('a'), ['a']);
     expectList(fromString('ab'), ['a', 'b']);

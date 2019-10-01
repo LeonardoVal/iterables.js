@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { ArrayIterable, fromArray, fromValues, Iterable } from '../iterables';
-import { expectList } from '../tests-common';
+import { ArrayIterable, fromArray, fromValues, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists from arrays:', () => {
   it('`ArrayIterable` class', () => {
@@ -13,7 +13,7 @@ describe('Lists from arrays:', () => {
   });
 
   it('`Iterable.fromArray` function', () => {
-    expect(Iterable.fromArray).toBeOfType('function');
+    expect(fromArray).toBeOfType('function');
     expectList(fromArray([]), []);
     expectList(fromArray([true]), [true]);
     expectList(fromArray([1, 2]), [1, 2]);
@@ -21,7 +21,7 @@ describe('Lists from arrays:', () => {
   });
 
   it('`Iterable.fromValues` function', () => {
-    expect(Iterable.fromValues).toBeOfType('function');
+    expect(fromValues).toBeOfType('function');
     expectList(fromValues(), []);
     expectList(fromValues(true), [true]);
     expectList(fromValues(1, 2), [1, 2]);

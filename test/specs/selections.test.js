@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { fromArray, Iterable } from '../iterables';
-import { expectList } from '../test-common';
+import { fromArray, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists selections:', () => {
   it('`Iterable.filter` function', () => {

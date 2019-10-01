@@ -1,13 +1,13 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { Iterable } from '../iterables';
-import { expectList } from '../test-common';
+import { fromArray, Iterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('Lists indices:', () => {
   it('`Iterable.indexOf` function', () => {
     expect(Iterable.prototype.indexOf).toBeOfType('function');
     const array = [7, 'a', false, null];
-    const arrayIterable = Iterable.fromArray(array);
+    const arrayIterable = fromArray(array);
     array.forEach((value, index) => {
       expect(arrayIterable.indexOf(value)).toBe(index);
       expect(arrayIterable.indexOf(value, index + 1)).toBeLessThan(0);
@@ -18,7 +18,7 @@ describe('Lists indices:', () => {
   it('`Iterable.indicesOf` function', () => {
     expect(Iterable.prototype.indicesOf).toBeOfType('function');
     const array = [0, 1, 2, 3, 2, 4, 1, 0, 1, 3];
-    const arrayIterable = Iterable.fromArray(array);
+    const arrayIterable = fromArray(array);
     expectList(arrayIterable.indicesOf(0), [0, 7]);
     expectList(arrayIterable.indicesOf(1), [1, 6, 8]);
     expectList(arrayIterable.indicesOf(1, 2), [6, 8]);
@@ -37,7 +37,7 @@ describe('Lists indices:', () => {
   it('`Iterable.indexWhere` function', () => {
     expect(Iterable.prototype.indexWhere).toBeOfType('function');
     const array = [7, 'a', false, null];
-    const arrayIterable = Iterable.fromArray(array);
+    const arrayIterable = fromArray(array);
     array.forEach((value, index) => {
       expect(arrayIterable.indexWhere((v) => typeof v === typeof value))
         .toBe(index);

@@ -1,7 +1,7 @@
 ﻿/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
-import { EnumerationIterable } from '../iterables';
-import { expectList } from '../test-common';
+import { EnumerationIterable } from '../../src/index';
+import { expectList } from './tests-common';
 
 describe('EnumerationIterable:', () => {
   it('`EnumerationIterable` class', () => {
