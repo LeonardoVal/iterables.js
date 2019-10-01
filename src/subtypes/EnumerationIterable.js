@@ -63,7 +63,7 @@ export class EnumerationIterable extends Iterable {
     )) {
       return false;
     }
-    return super.has(value); //FIXME
+    return super.has(value); // FIXME
   }
 
   /** @inheritdoc */

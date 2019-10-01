@@ -577,7 +577,7 @@ export default class AbstractIterable {
    * @returns {T} The first value in this sequence.
    */
   head() {
-    throwUnimplemented('head', this.constructor.name); //TODO Can this be implemented like isEmpty()?
+    throwUnimplemented('head', this.constructor.name); // TODO Can this be implemented like isEmpty()?
   }
 
   /** Returns the value at the given `index`, or `defaultValue` if there is
@@ -649,7 +649,7 @@ export default class AbstractIterable {
    * @returns {iterable<T>}
    */
   nub(equality = null) {
-    //TODO Split in `nub` and `nubBy`.
+    // TODO Split in `nub` and `nubBy`.
     let buffer;
     if (equality) {
       return this.filter((value, i) => {
@@ -731,7 +731,7 @@ export default class AbstractIterable {
    * @returns {iterable<t>}
    */
   tail() {
-    return this.drop(1); //FIXME Should raise an error if this is empty.
+    return this.drop(1); // FIXME Should raise an error if this is empty.
   }
 
   /** Return an iterable with the first `n` elements of this one.
@@ -765,13 +765,13 @@ export default class AbstractIterable {
 
   // Unary operations ////////////////////////////////////////////////////////////
 
-  //TODO buffered
-  //TODO combinations
-  //TODO cons
-  //TODO cycle
-  //TODO permutations
-  //TODO reverse
-  //TODO sorted
+  // TODO buffered
+  // TODO combinations
+  // TODO cons
+  // TODO cycle
+  // TODO permutations
+  // TODO reverse
+  // TODO sorted
 
   // Variadic operations /////////////////////////////////////////////////////////
 
@@ -898,7 +898,7 @@ export default class AbstractIterable {
    * @param {...iterable<T>} iterables
    * @returns {iterable<R>}
    */
-  static zip(...iterables) { //TODO Refactor out of class
+  static zip(...iterables) { // TODO Refactor out of class
     return this.zipWith(id, ...iterables);
   }
 

@@ -177,7 +177,7 @@ export class Iterable extends AbstractIterable {
    * @returns {T}
    * @throws {Error} If the sequence is empty and no default value is given.
    */
-  static lastValue(seq, defaultValue) { //TODO Move to `generators`
+  static lastValue(seq, defaultValue) { // TODO Move to `generators`
     let value = defaultValue;
     let empty = true;
     for (value of seq) {
