@@ -56,6 +56,17 @@
     }
   },
   "eslintIgnore": [
-    "build/**/*.js"
-  ]
+    "dist/**/*.js"
+  ],
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./dist/tests-common.js"
+    ],
+    "testPathIgnorePatterns": [
+      "node_modules/",
+      "src/",
+      "test/"
+    ],
+    "verbose": true
+  }
 }
