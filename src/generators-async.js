@@ -92,3 +92,9 @@ export async function* scanl(seq, foldFunction, initial) {
     i += 1;
   }
 }
+
+export default {
+  filteredMap,
+  scanl,
+  ticks,
+};

@@ -318,7 +318,7 @@ export function map(seq, mapFunction) {
  *
  * @see combinations
  */
-export function* permutations(seq, k = NaN) { //FIXME
+export function* permutations(seq, k = NaN) { // FIXME
   const pool = [...seq];
   const n = pool.length;
   k = Number.isNaN(k) ? n : +k;
@@ -454,3 +454,27 @@ export function* zipWith(zipFunction, ...iterables) {
     }
   }
 }
+
+/* eslint-disable object-property-newline */
+export default {
+  buffered,
+  combinations,
+  concat,
+  cons,
+  cycle,
+  empty,
+  enumFromThenTo, enumFromThen, enumFrom,
+  filteredMap,
+  flat,
+  iterate,
+  iterators,
+  map,
+  permutations,
+  product,
+  properties,
+  range,
+  repeat,
+  scanl,
+  singleton,
+  zipWith,
+};

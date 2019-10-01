@@ -14,6 +14,22 @@ import { SetIterable } from './subtypes/SetIterable';
 import { SingletonIterable } from './subtypes/SingletonIterable';
 import { StringIterable, fromString } from './subtypes/StringIterable';
 
+export {
+  AbstractIterable,
+  Iterable, iterate, repeat,
+  AsyncIterable,
+  ArrayIterable, fromArray, fromValues,
+  EmptyIterable, EMPTY,
+  EnumerationIterable, enumFrom, enumFromThen, enumFromTo, enumFromThenTo, range,
+  MapIterable,
+  ObjectIterable, fromObject,
+  SetIterable,
+  SingletonIterable,
+  StringIterable, fromString,
+  generators,
+  asyncGenerators,
+};
+
 export default {
   AbstractIterable,
   Iterable, iterate, repeat,
@@ -26,5 +42,6 @@ export default {
   SetIterable,
   SingletonIterable,
   StringIterable, fromString,
-  generators: { ...generators, async: asyncGenerators },
+  generators,
+  asyncGenerators,
 };
