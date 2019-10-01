@@ -31,6 +31,18 @@
   "scripts": {
     "test": "grunt test"
   },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -60,13 +72,16 @@
   ],
   "jest": {
     "setupFilesAfterEnv": [
-      "./dist/tests-common.js"
+      "./node_modules/@creatartis/creatartis-build/dist/jest-setup.js"
     ],
     "testPathIgnorePatterns": [
       "node_modules/",
       "src/",
-      "test/"
+      "dist/"
     ],
+    "transform": {
+      "\\.jsx?$": "babel-jest"
+    },
     "verbose": true
   }
 }
