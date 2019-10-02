@@ -119,7 +119,7 @@ export class Iterable extends AbstractIterable {
   /** @inheritdoc */
   isEmpty() {
     const iter = this[Symbol.iterator]();
-    return !iter.next().done;
+    return !!iter.next().done;
   }
 
   /** @inheritdoc */
