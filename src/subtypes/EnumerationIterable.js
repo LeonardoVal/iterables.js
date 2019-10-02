@@ -34,13 +34,13 @@ export class EnumerationIterable extends Iterable {
    *   the sequence or not.
    */
   constructor(numFrom, numTo, step, rightInclusive = false) {
-    numFrom = Number.isNaN(numFrom) ? 0 : +numFrom;
-    if (Number.isNaN(step)) {
-      step = Number.isNaN(numTo) || numTo >= numFrom ? 1 : -1;
+    numFrom = Number.isNaN(+numFrom) ? 0 : +numFrom;
+    if (Number.isNaN(+step)) {
+      step = Number.isNaN(+numTo) || numTo >= numFrom ? 1 : -1;
     } else {
       step = +step;
     }
-    if (Number.isNaN(numTo)) {
+    if (Number.isNaN(+numTo)) {
       numTo = step > 0 ? +Infinity : -Infinity;
     } else {
       numTo = +numTo;
