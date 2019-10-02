@@ -178,23 +178,22 @@ export function buffered(seq, array = null) {
   };
 }
 
-/** An iterator that runs over the combinations of `k` elements of the
+/** An iterator that runs over the combinations of `count` elements of the
  * given sequence `seq`. Combinations are generated in lexicographical
  * order.
  *
  * _Warning!_ All `seq`'s values are stored in memory during the iteration.
  *
  * @param {iterable<T>} seq - The sequence with the values to combine.
- * @param {integer} [k=1] - The number of values in each combination.
+ * @param {integer} [count=1] - The number of values in each combination.
  * @yields {T[]}
  *
  * @see permutations
  */
-export function* combinations(seq, k = 1) {
+export function* combinations(seq, count = 1) {
   const elements = [...seq];
-  const suffixes = Iterable.range(elements.length)
-    .map((i) => new ArrayIterable(elements, i))
-    .toArray();
+  const suffixes = [...range(elements.length)]
+    .map((i) => elements.slice(i));
   const emptyArray = [];
   const combRec = function* combinationsGenerator(i, k) {
     if (k < 1 || i >= suffixes.length) {
@@ -213,7 +212,7 @@ export function* combinations(seq, k = 1) {
       }
     }
   };
-  yield* combRec(0, k);
+  yield* combRec(0, count);
 }
 
 /** As the namesake from functional programming, `cons` generates a new
