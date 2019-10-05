@@ -36,7 +36,8 @@ export class Iterable extends AbstractIterable {
    */
   [Symbol.iterator]() {
     const { source } = this;
-    const iterator = typeof source === 'function' ? source() : source[Symbol.iterator]();
+    const iterator = typeof source === 'function' ? source()
+      : source[Symbol.iterator]();
     return this.constructor.__iter__(iterator);
   }
 
@@ -73,7 +74,7 @@ export class Iterable extends AbstractIterable {
     return result;
   }
 
-  // Conversions /////////////////////////////////////////////////////////////////
+  // Conversions ///////////////////////////////////////////////////////////////
 
   /** Creates a new sequence with all sub-sequence elements of this iterable
    * concatenated into it recursively up to the specified `depth`.
@@ -107,7 +108,7 @@ export class Iterable extends AbstractIterable {
     return array;
   }
 
-  // Properties //////////////////////////////////////////////////////////////////
+  // Properties ////////////////////////////////////////////////////////////////
 
   /** @inheritdoc */
   has(value, equality = null) {
@@ -131,7 +132,7 @@ export class Iterable extends AbstractIterable {
     return result;
   }
 
-  // Reductions //////////////////////////////////////////////////////////////////
+  // Reductions ////////////////////////////////////////////////////////////////
 
   /** @inheritdoc */
   reduce(foldFunction, initial) {
@@ -155,7 +156,7 @@ export class Iterable extends AbstractIterable {
     return new Iterable(source);
   }
 
-  // Selections //////////////////////////////////////////////////////////////////
+  // Selections ////////////////////////////////////////////////////////////////
 
   /** @inheritdoc */
   head(defaultValue) {
@@ -204,7 +205,7 @@ export class Iterable extends AbstractIterable {
     return Iterable.lastValue(iter, defaultValue);
   }
 
-  // Unary operations ////////////////////////////////////////////////////////////
+  // Unary operations //////////////////////////////////////////////////////////
 
   /** The returned iterable stores all elements of this iterable in an
    * `array` the first time they are iterated over. The subsequent iterations
@@ -300,7 +301,7 @@ export class Iterable extends AbstractIterable {
     return this.constructor.fromArray(sortedArray);
   }
 
-  // Variadic operations /////////////////////////////////////////////////////////
+  // Variadic operations ///////////////////////////////////////////////////////
 
   /** Returns an iterable that goes over the concatenation of all the given
    * iterables.
