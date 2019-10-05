@@ -99,7 +99,7 @@ export class EnumerationIterable extends Iterable {
 /** Iterates over a sequence of numbers from `from` upto `to` with the
  * given `step`.
  *
- * @param {number} [from=0] - The first value in the sequence.
+ * @param {number} from - The first value in the sequence.
  * @param {number} to - The last value in the sequence.
  * @param {number} [step=1] - The difference between each value and the
  *   next in the sequence.

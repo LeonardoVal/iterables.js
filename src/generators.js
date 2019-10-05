@@ -94,10 +94,10 @@ export function* properties(obj, keys = null) {
   }
 }
 
-/** `range(from=0, to, step=1)` Iterates over a sequence of numbers from
- * `from` upto `to` with the given `step`.
+/** `range()` Iterates over a sequence of numbers from `from` upto `to` with the
+ * given `step`.
  *
- * @param {number} [from=0] - The first value in the sequence.
+ * @param {number} from - The first value in the sequence.
  * @param {number} to - The last value in the sequence.
  * @param {number} [step=1] - The difference between each value and the
  *   next in the sequence.
@@ -109,13 +109,13 @@ export function* properties(obj, keys = null) {
  * range(2,12,3)
  */
 export function* range(from, to, step, rightInclusive = false) {
-  from = Number.isNaN(from) ? 0 : +from;
-  if (Number.isNaN(step)) {
-    step = Number.isNaN(to) || to >= from ? 1 : -1;
+  from = Number.isNaN(+from) ? 0 : +from;
+  if (Number.isNaN(+step)) {
+    step = Number.isNaN(+to) || to >= from ? 1 : -1;
   } else {
     step = +step;
   }
-  if (Number.isNaN(to)) {
+  if (Number.isNaN(+to)) {
     to = step > 0 ? +Infinity : -Infinity;
   } else {
     to = +to;
@@ -192,7 +192,7 @@ export function buffered(seq, array = null) {
  */
 export function* combinations(seq, count = 1) {
   const elements = [...seq];
-  const suffixes = [...range(elements.length)]
+  const suffixes = [...range(0, elements.length)]
     .map((i) => elements.slice(i));
   const emptyArray = [];
   const combRec = function* combinationsGenerator(i, k) {
@@ -326,7 +326,7 @@ export function* permutations(seq, k = NaN) { // FIXME
     if (count > MAX_INTEGER) {
       throw new Error(`Number of permutations cannot be greater than ${MAX_INTEGER}, and it is ${count}!`);
     }
-    const indices = [...range(n)];
+    const indices = [...range(0, n)];
     let result;
     let is;
     let i;
