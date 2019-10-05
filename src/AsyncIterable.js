@@ -1,4 +1,9 @@
-import { filteredMap } from './generators-async';
+/* TODO concat, product, zipWith */
+import {
+  filteredMap,
+  scanl,
+  ticks,
+} from './generators-async';
 import AbstractIterable from './AbstractIterable';
 
 /** General class for representing asynchronous sequences.
@@ -39,16 +44,18 @@ export class AsyncIterable extends AbstractIterable {
   /** @inheritdoc */
   async forEach(doFunction, ifFunction) {
     let result;
-    for await (result of this.filteredMap(doFunction, ifFunction)) {
+    let i = 0;
+    const iter = this[Symbol.iterator]();
+    for await (const value of iter) {
       if (!ifFunction || await ifFunction(value, i, iter)) {
-        result = doFunction ? await doFunction(value, i, iter)
-          : value;
+        result = (doFunction ? await doFunction(value, i, iter) : value);
       }
+      i += 1;
     }
     return result;
   }
 
-  // Builders ////////////////////////////////////////////////////////////////////
+  // Builders //////////////////////////////////////////////////////////////////
 
   /** Generates an asynchronous sequence of timestamps, every `step`
    * milliseconds until `end` is reached.
@@ -58,44 +65,28 @@ export class AsyncIterable extends AbstractIterable {
    * @yields {asyncIterable<number>}
    */
   ticks(step, end) {
-    let source = generators.async.bind(generators, ticks, step, end);
-    return new AsyncIterator(source);
+    const source = ticks.bind(null, step, end);
+    return new AsyncIterable(source);
   }
 
-  // Conversions /////////////////////////////////////////////////////////////////
-
-  // Properties //////////////////////////////////////////////////////////////////
-
-  // Reductions //////////////////////////////////////////////////////////////////
+  // Reductions ////////////////////////////////////////////////////////////////
 
   /** @inheritdoc */
   async reduce(foldFunction, initial) {
-    let folded = initial,
-      iter = this[Symbol.iterator](),
-      i = 0;
+    let folded = initial;
+    const iter = this[Symbol.iterator]();
+    let i = 0;
+    // eslint-disable-next-line no-await-in-loop
     for (let entry = await iter.next(); !entry.done; entry = await iter.next()) {
       folded = foldFunction(folded, entry.value, i, iter);
-      i++;
+      i += 1;
     }
     return folded;
   }
 
   /** @inheritdoc */
   scanl(foldFunction, initial) {
-    return new AsyncIterable(generators.async.scanl, this, foldFunction,
-      initial);
+    const source = scanl.bind(null, this, foldFunction, initial);
+    return new AsyncIterable(source);
   }
-
-  // Selections //////////////////////////////////////////////////////////////////
-
-  // Unary operations ////////////////////////////////////////////////////////////
-
-  // Variadic operations /////////////////////////////////////////////////////////
-
-  //TODO static concat
-
-  //TODO static product
-
-  //TODO static zipWith
-
 } // class AsyncIterable
