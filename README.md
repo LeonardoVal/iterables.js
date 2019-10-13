@@ -1,4 +1,4 @@
-﻿# list-utils.js
+﻿# @creatartis/iterables.js
 
 Bundle of utility functions and definitions for handling lists, sequences and iterators.
 
