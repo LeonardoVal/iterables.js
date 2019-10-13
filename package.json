@@ -25,7 +25,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "@creatartis/creatartis-build": "^0.0.1-alpha",
+    "@creatartis/creatartis-build": "^0.0.1",
     "karma-chrome-launcher": "~1.0.1"
   },
   "scripts": {
