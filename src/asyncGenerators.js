@@ -1,6 +1,6 @@
 /** A namespace for utility functions related to [asynchronous iterators and
  * generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of).
- * @namespace generators.async
+ * @namespace asyncGenerators
  */
 
 // Sequence builders ///////////////////////////////////////////////////////////

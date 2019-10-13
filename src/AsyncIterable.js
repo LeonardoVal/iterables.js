@@ -3,7 +3,7 @@ import {
   filteredMap,
   scanl,
   ticks,
-} from './generators-async';
+} from './asyncGenerators';
 import AbstractIterable from './AbstractIterable';
 
 /** General class for representing asynchronous sequences.

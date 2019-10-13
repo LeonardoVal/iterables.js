@@ -1,6 +1,6 @@
 /* eslint-disable object-property-newline */
 import generators from './generators';
-import asyncGenerators from './generators-async';
+import asyncGenerators from './asyncGenerators';
 import AbstractIterable from './AbstractIterable';
 import { Iterable, iterate, repeat } from './Iterable';
 import { AsyncIterable } from './AsyncIterable';
