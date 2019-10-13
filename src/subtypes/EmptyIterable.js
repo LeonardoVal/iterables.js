@@ -1,73 +1,74 @@
+import { empty } from '../generators';
+import { Iterable } from '../Iterable';
+
 /** @ignore */
-let SINGLETON_EmptyIterable;
+let singletonEmptyIterable;
 
 /** Class for representing empty sequences efficiently.
- * 
+ *
  * @augments Iterable
  */
-class EmptyIterable extends Iterable {
-	/** The constructor actually returns a singleton, created the first time it
-	 * is called.
-	*/
-	constructor() {
-		if (SINGLETON_EmptyIterable) {
-			return SINGLETON_EmptyIterable;
-		} else {
-			let source = generators.empty.bind(generators);
-			super(source);
-			SINGLETON_EmptyIterable = this;
-		}
-	}
+export class EmptyIterable extends Iterable {
+  /** The constructor actually returns a singleton, created the first time it
+   * is called.
+  */
+  constructor() {
+    if (singletonEmptyIterable) {
+      return singletonEmptyIterable;
+    }
+    const source = empty;
+    super(source);
+    singletonEmptyIterable = this;
+  }
 
-// Conversions /////////////////////////////////////////////////////////////////
+  // Conversions /////////////////////////////////////////////////////////////////
 
-	/** An empty sequence converts to an empty array.
-	*/
-	toArray(array) {
-		return (array || []);
-	}
+  /** An empty sequence converts to an empty array.
+  */
+  toArray(array) {
+    return (array || []);
+  }
 
-	/** An empty sequence converts to an empty set.
-	*/
-	toSet(set = null) {
-		return set || new Set();
-	}
+  /** An empty sequence converts to an empty set.
+  */
+  toSet(set = null) {
+    return set || new Set();
+  }
 
-// Properties //////////////////////////////////////////////////////////////////
+  // Properties //////////////////////////////////////////////////////////////////
 
-	/** An empty sequence is always empty, by definition.
-	*/
-	isEmpty() {
-		return true;
-	}
+  /** An empty sequence is always empty, by definition.
+  */
+  isEmpty() {
+    return true;
+  }
 
-	/** An empty sequence is always zero, of course.
-	*/
-	get length() {
-		return 0;
-	}
+  /** An empty sequence is always zero, of course.
+  */
+  get length() {
+    return 0;
+  }
 
-// Reductions //////////////////////////////////////////////////////////////////
+  // Reductions //////////////////////////////////////////////////////////////////
 
-	/** All reductions of empty sequences result in the initial value.
-	*/
-	reduce(foldFunction, initial) {
-		return initial;
-	}
+  /** All reductions of empty sequences result in the initial value.
+  */
+  reduce(foldFunction, initial) {
+    return initial;
+  }
 
-// Selections //////////////////////////////////////////////////////////////////
+  // Selections //////////////////////////////////////////////////////////////////
 
-	/** Nothing can be got from an empty sequence. So `get` will always fail 
-	 * unless. 
-	 */
-	get(index, defaultValue) {
-		if (arguments.length < 2) {
-			throw new Error(`Cannot get value at ${index}!`);
-		} else {
-			return defaultValue;
-		}
-	}
-
+  /** Nothing can be got from an empty sequence. So `get` will always fail
+   * unless.
+   */
+  get(index, defaultValue) {
+    if (arguments.length < 2) {
+      throw new Error(`Cannot get value at ${index}!`);
+    } else {
+      return defaultValue;
+    }
+  }
 } // class EmptyIterable
 
-exports.EmptyIterable = EmptyIterable;
+export const EMPTY = new EmptyIterable();
