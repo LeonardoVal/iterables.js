@@ -1,4 +1,4 @@
-﻿/* globals describe expect it */
+/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
 import { EnumerationIterable } from '../../src/index';
 import { expectList } from './tests-common';
