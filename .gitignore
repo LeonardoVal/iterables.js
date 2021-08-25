@@ -12,3 +12,4 @@ dist/
 docs/jsdoc/
 docs/jsdoc-conf.json
 npm-debug.log
+test/specs/coverage/
