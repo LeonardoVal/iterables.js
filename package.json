@@ -33,10 +33,10 @@
     "test": "npx creatartis-build lint test"
   },
   "babel": {
-    "extends": "./node_modules/@creatartis/creatartis-build.js/dist/babel-config.js"
+    "extends": "./node_modules/@creatartis/creatartis-build/dist/babel-config.js"
   },
   "eslintConfig": {
-    "extends": "./node_modules/@creatartis/creatartis-build.js/dist/eslint-config.js",
+    "extends": "./node_modules/@creatartis/creatartis-build/dist/eslint-config.js",
     "rules": {
       "no-await-in-loop": 0,
       "no-console": 0,
