@@ -1,4 +1,3 @@
-/* globals describe expect it */
 /* eslint-disable import/no-unresolved */
 import { fromObject, fromValues, Iterable } from '../../src/index';
 import { expectList } from './tests-common';

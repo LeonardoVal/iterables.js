@@ -1,4 +1,3 @@
-/* globals describe expect xit */
 /* eslint-disable import/no-unresolved */
 import { Iterable } from '../../src/index';
 import { expectAsyncList, expectAsyncIterator } from './tests-common';
