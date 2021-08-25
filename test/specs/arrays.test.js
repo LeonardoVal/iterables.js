@@ -1,5 +1,7 @@
 /* eslint-disable import/no-unresolved */
-import { ArrayIterable, fromArray, fromValues, Iterable } from '../../src/index';
+import {
+  ArrayIterable, fromArray, fromValues, Iterable,
+} from '../../src/index';
 import { expectList } from './tests-common';
 
 describe('Lists from arrays:', () => {

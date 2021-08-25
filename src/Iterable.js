@@ -11,7 +11,8 @@ import {
   product,
   repeat as repeatGenerator,
   scanl,
-  zipWith } from './generators';
+  zipWith,
+} from './generators';
 import AbstractIterable from './AbstractIterable';
 
 /** General class for representing synchronous sequences.
@@ -19,11 +20,6 @@ import AbstractIterable from './AbstractIterable';
  * @augments AbstractIterable
  */
 export class Iterable extends AbstractIterable {
-  /** @inheritdoc */
-  constructor(source) {
-    super(source);
-  }
-
   /** Instances of `Iterable` are always synchronous, hence `isAsync` is
    * always `false`.
    */

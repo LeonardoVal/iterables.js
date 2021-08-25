@@ -7,7 +7,10 @@ import { AsyncIterable } from './AsyncIterable';
 // subtypes
 import { ArrayIterable, fromArray, fromValues } from './subtypes/ArrayIterable';
 import { EmptyIterable, EMPTY } from './subtypes/EmptyIterable';
-import { EnumerationIterable, enumFrom, enumFromThen, enumFromTo, enumFromThenTo, range } from './subtypes/EnumerationIterable';
+import {
+  EnumerationIterable,
+  enumFrom, enumFromThen, enumFromTo, enumFromThenTo, range,
+} from './subtypes/EnumerationIterable';
 import { MapIterable } from './subtypes/MapIterable';
 import { ObjectIterable, fromObject } from './subtypes/ObjectIterable';
 import { SetIterable } from './subtypes/SetIterable';

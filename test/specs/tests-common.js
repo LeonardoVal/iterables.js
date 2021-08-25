@@ -1,7 +1,21 @@
-/* globals expect fail */
+/* globals fail */
 // eslint-disable-next-line import/no-amd
 function equality(value1, value2) {
   return value1 === value2 || JSON.stringify(value1) === JSON.stringify(value2);
+}
+
+export function expectIterator(iterator, expectedList) {
+  expect(iterator.next).toBeOfType('function');
+  expect(iterator.return).toBeOfType('function');
+  let x;
+  for (let i = 0; i < expectedList.length; i += 1) {
+    x = iterator.next();
+    expect(x.done).toBeFalsy();
+    expect(x.value).toEqual(expectedList[i]);
+  }
+  x = iterator.next();
+  expect(x.done).toBeTruthy();
+  expect(x.value).not.toBeDefined();
 }
 
 export function expectList(list, expectedList) {
@@ -36,18 +50,26 @@ export function expectList(list, expectedList) {
   expectIterator(list[Symbol.iterator](), expectedList);
 }
 
-export function expectIterator(iterator, expectedList) {
+export function expectAsyncIterator(iterator, expectedList) {
   expect(iterator.next).toBeOfType('function');
   expect(iterator.return).toBeOfType('function');
-  let x;
-  for (let i = 0; i < expectedList.length; i += 1) {
-    x = iterator.next();
-    expect(x.done).toBeFalsy();
-    expect(x.value).toEqual(expectedList[i]);
-  }
-  x = iterator.next();
-  expect(x.done).toBeTruthy();
-  expect(x.value).not.toBeDefined();
+  let p = iterator.next();
+  let i = 0;
+  const callback = (x) => {
+    if (i < expectedList.length) {
+      expect(x.done).toBeFalsy();
+      expect(x.value).toEqual(expectedList[i]);
+      i += 1;
+      p = iterator.next();
+      expect(p).toBeOfType(Promise);
+      return p.then(callback);
+    }
+    expect(x.done).toBeTruthy();
+    expect(x.value).not.toBeDefined();
+    return x;
+  };
+  expect(p).toBeOfType(Promise);
+  return p.then(callback);
 }
 
 export function expectAsyncList(list, expectedList) {
@@ -86,28 +108,6 @@ export function expectAsyncList(list, expectedList) {
   }).then(
     () => expectAsyncIterator(list[Symbol.asyncIterator](), expectedList),
   );
-}
-
-export function expectAsyncIterator(iterator, expectedList) {
-  expect(iterator.next).toBeOfType('function');
-  expect(iterator.return).toBeOfType('function');
-  let p = iterator.next();
-  let i = 0;
-  const callback = (x) => {
-    if (i < expectedList.length) {
-      expect(x.done).toBeFalsy();
-      expect(x.value).toEqual(expectedList[i]);
-      i += 1;
-      p = iterator.next();
-      expect(p).toBeOfType(Promise);
-      return p.then(callback);
-    }
-    expect(x.done).toBeTruthy();
-    expect(x.value).not.toBeDefined();
-    return x;
-  };
-  expect(p).toBeOfType(Promise);
-  return p.then(callback);
 }
 
 export default {

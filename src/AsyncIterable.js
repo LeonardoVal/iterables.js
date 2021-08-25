@@ -12,11 +12,6 @@ import AbstractIterable from './AbstractIterable';
  */
 // eslint-disable-next-line import/prefer-default-export
 export class AsyncIterable extends AbstractIterable {
-  /** @inheritdoc */
-  constructor(source) {
-    super(source);
-  }
-
   /** Instances of `AsyncIterable` are always asynchronous, hence `isAsync`
    * is always `true`.
    */

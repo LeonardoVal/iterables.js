@@ -1,5 +1,7 @@
 /* eslint-disable no-tabs */
-import { id, throwUnimplemented, toBool, toNumber } from './utils';
+import {
+  id, throwUnimplemented, toBool, toNumber,
+} from './utils';
 
 /** Base abstract superclass for all iterable types.
  */
