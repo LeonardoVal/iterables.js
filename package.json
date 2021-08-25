@@ -6,7 +6,7 @@
     "list",
     "iterators"
   ],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Leonardo Val",
     "email": "leonardo.val@creatartis.com"
@@ -25,50 +25,29 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "@creatartis/creatartis-build": "^0.0.1",
-    "karma-chrome-launcher": "~3.1.0"
+    "@creatartis/creatartis-build": "0.2.2"
   },
   "scripts": {
-    "test": "grunt test"
+    "build": "npx creatartis-build lint build:esm test doc",
+    "lint": "npx creatartis-build lint",
+    "test": "npx creatartis-build lint test"
   },
   "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ]
+    "extends": "./node_modules/@creatartis/creatartis-build.js/dist/babel-config.js"
   },
   "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es6": true
-    },
-    "extends": [
-      "airbnb-base"
-    ],
-    "globals": {},
-    "parser": "babel-eslint",
-    "parserOptions": {
-      "ecmaVersion": 2018
-    },
+    "extends": "./node_modules/@creatartis/creatartis-build.js/dist/eslint-config.js",
     "rules": {
-      "no-useless-constructor": 0,
-      "class-methods-use-this": 0,
-      "no-underscore-dangle": 0,
-      "no-param-reassign": 0,
+      "no-await-in-loop": 0,
+      "no-console": 0,
+      "import/no-dynamic-require": 0,
       "no-restricted-syntax": 0,
-      "no-use-before-define": 0,
-      "guard-for-in": 0,
-      "object-curly-newline": 0
+      "no-unused-vars": 0
     }
   },
   "eslintIgnore": [
-    "dist/**/*.js"
+    "dist/",
+    "node_modules/"
   ],
   "jest": {
     "setupFilesAfterEnv": [
